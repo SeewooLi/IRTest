@@ -1,2 +1,2 @@
 # IRTest
-IRT par estmation in R
+A R package for IRT parameter estimation with latent distribution estimation.
