@@ -1,0 +1,19 @@
+---
+title: "vignette_for_IRTest"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{IRT without the normality assumption}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(IRTest)
+```
