@@ -17,7 +17,5 @@ a function
 }
 \examples{
 hello("Seewoo")
-\dontrun{
-hello("NAGAP")
-}
+
 }

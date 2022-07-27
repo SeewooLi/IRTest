@@ -7,9 +7,7 @@
 #'
 #' @examples
 #' hello("Seewoo")
-#' \dontrun{
-#' hello("NAGAP")
-#' }
+#'
 hello <- function(x) {
   print("Hello, world!")
 }
