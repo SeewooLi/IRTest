@@ -2,20 +2,10 @@
 % Please edit documentation in R/hello.R
 \name{hello}
 \alias{hello}
-\title{title}
+\title{Title}
 \usage{
-hello(x)
-}
-\arguments{
-\item{x}{as}
-}
-\value{
-the output from \code{\link{print}}
+hello()
 }
 \description{
-a function
-}
-\examples{
-hello("Seewoo")
-
+Title
 }
