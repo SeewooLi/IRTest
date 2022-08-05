@@ -1,8 +1,6 @@
-#' title
-#' @param x as
-#' @description a function
-#' @return the output from \code{\link{print}}
+#' Title
 #'
+#' @return
 #' @export
 #'
 #' @examples
