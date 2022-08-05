@@ -4,6 +4,8 @@
 #' @export
 #'
 #' @examples
-hello <- function() {
-  print("Hello, new world!")
+#' hello("Seewoo")
+#'
+hello <- function(x) {
+  print("Hello, its a new world!")
 }
