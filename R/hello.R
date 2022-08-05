@@ -9,5 +9,5 @@
 #' hello("Seewoo")
 #'
 hello <- function(x) {
-  print("Hello, its a new world!")
+  print("Hello, world!")
 }
