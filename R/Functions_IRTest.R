@@ -374,8 +374,13 @@ Mstep_Poly <- function(E, item, max_iter=10, threshold=1e-7, EMiter){
       repeat{
         iter <- iter+1
         pmat <- P_P(theta = X, a=par[1], b=par[-1])
-        fW <- f*p*(1-p)
-        diff <- as.vector(sum(r[i,]-f*p)/sum(fW))
+        par[1] <- max(0.1,par[1])
+
+        Gradient
+
+        Information_matrix
+
+
 
         if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
           par <- par
