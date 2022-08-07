@@ -6,12 +6,21 @@ P <- function(theta,a=1,b,c=0){
 }
 
 P_P <- function(theta, a, b){
-  if(is.vector(b)){
+  if(length(theta)==1 & is.vector(b)){
     ps <- c(1,exp(a*cumsum(theta-b)))
-    ps <- ps/sum(ps)
-  }else{
+    ps <- ps/sum(ps, na.rm = T)
+  }else if(length(theta)==1 & is.matrix(b)){
     ps <- cbind(1,exp(t(apply(a*(theta-b),1,cumsum))))
     ps <- ps/rowSums(ps, na.rm = T)
+  }else if(length(theta)!=1 & is.vector(b)){
+    b <- b[!is.na(b)]
+    ps <- matrix(nrow = length(theta), ncol = length(b))
+    ps[,1] <- theta-b[1]
+    for(i in 2:length(b)){
+      ps[,i] <- ps[,i-1]+(theta-b[i])
+    }
+    ps <- exp(cbind(1,ps))
+    ps <- ps/rowSums(ps)
   }
   return(ps)
 }
@@ -47,7 +56,7 @@ logLikeli_Poly <- function(item, data, theta){
   pmat <- P_P(theta = theta, a = item[,1], b = item[,-1])
   N <- nrow(data)
   n <- ncol(data)
-  L <- log(matrix(pmat[matrix(cbind(rep(1:n, each = N),as.vector(data)),ncol=2)], nrow = N, ncol = n))
+  L <- log(matrix(pmat[cbind(rep(1:n, each = N),as.vector(data)+1)], nrow = N, ncol = n))
   L[L==-Inf] <- -.Machine$double.xmax
   L <- rowSums(L)
   L[L==-Inf] <- -.Machine$double.xmax
@@ -77,6 +86,18 @@ DataGeneration <- function(seed=1, N=2000, nitem=10, prob=0.5, d=1.7,
     item <- round(item, digits = 2)
     initialitem <- matrix(c(rep((a_l+a_u)/2,nitem),
                             rep(0,2*nitem)), ncol=3)
+  } else if(model=="GPCM"){
+    set.seed(seed)
+    item <- matrix(nrow = nitem, ncol = 7)
+    item[,1] <- runif(nitem,a_l,a_u)
+    for(i in 1:nitem){
+      item[i,2:(4+1)] <- rnorm(4,0,.5)
+    }
+    initialitem <- matrix(nrow = nitem, ncol = 7)
+    initialitem[,1] <- 1
+    for(i in 1:nitem){
+      initialitem[i,2:(4+1)] <- (-2:1+.5)/3
+    }
   }
 
   if(latent_dist=="beta"){
@@ -112,6 +133,16 @@ DataGeneration <- function(seed=1, N=2000, nitem=10, prob=0.5, d=1.7,
       for(j in 1:N){
         p <- P(theta = theta[j], a = item[i,1], b = item[i,2], c= item[i,3])
         data[j,i] <- rbinom(1,1,prob = p)
+      }
+    }
+  }else if(model=="GPCM"){
+    set.seed(seed)
+    for(i in 1:nitem){
+      for(j in 1:N){
+        p <- P_P(theta = theta[j], a = item[i,1], b = item[i,2:7])
+        p <- p[!is.na(p)]
+        categ <- length(p)-1
+        data[j,i] <- sample(x = 0:categ,1,prob=p)
       }
     }
   }
@@ -175,8 +206,26 @@ Estep <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
   fk <- colSums(Pk) # expected frequency of examinees
   return(list(Xk=Xk, Ak=Ak, fk=fk, rik=rik,Pk=Pk))
 }
-gamma_jk <- function(i){
-  Pk[,i] <- exp(logLikeli(item = item, data = data, theta = Xk[i]))*Ak[i]
+
+Estep_Poly <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
+                  sd_ratio = 1,Xk=NULL, Ak=NULL){
+  if(is.null(Xk)) {
+    # quadrature points
+    Xk <- seq(range[1],range[2],length=q)
+  }
+  if(is.null(Ak)) {
+    # heights for quadrature points
+    Ak <- dist2(Xk, prob, d, sd_ratio)/sum(dist2(Xk, prob, d, sd_ratio))
+  }
+  Pk <- matrix(nrow = nrow(data), ncol = q)
+  for(i in 1:q){
+    # weighted likelihood where the weight is the latent distribution
+    Pk[,i] <- exp(logLikeli_Poly(item = item, data = data, theta = Xk[i]))*Ak[i]
+  }
+  Pk <- Pk/rowSums(Pk) # posterior weights
+
+  fk <- colSums(Pk) # expected frequency of examinees
+  return(list(Xk=Xk, Ak=Ak, fk=fk, Pk=Pk))
 }
 
 #################################################################################################################
@@ -300,6 +349,49 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
       par[3] <- max(0,par[3])
       item_estimated[i,c(1,2,3)] <- par
       se[i,c(1,2,3)] <- sqrt(-c(inv_L2[1,1], inv_L2[2,2], inv_L2[3,3])) # asymptotic S.E.
+    } else warning("model is incorrect or unspecified.")
+
+  }
+  return(list(item_estimated, se))
+}
+
+
+Mstep_Poly <- function(E, item, max_iter=10, threshold=1e-7, EMiter){
+  nitem <- nrow(item)
+  item_estimated <- matrix(nrow = nrow(item), ncol = 3)
+  se <- matrix(nrow = nrow(item), ncol = 7)
+  X <- E$Xk
+  f <- E$fk
+  ####item parameter estimation####
+  for(i in 1:nitem){
+    if(model %in% c("GPCM")){
+
+      iter <- 0
+      div <- 3
+      par <- item[i,]
+      par <- par[!is.na(par)]
+      ####Newton-Raphson####
+      repeat{
+        iter <- iter+1
+        pmat <- P_P(theta = X, a=par[1], b=par[-1])
+        fW <- f*p*(1-p)
+        diff <- as.vector(sum(r[i,]-f*p)/sum(fW))
+
+        if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
+          par <- par
+        } else{
+          if( sum(abs(diff)) > div){
+            par <- par-div/sum(abs(diff))*diff/10
+          } else {
+            par <- par-diff
+            div <- sum(abs(diff))
+          }
+        }
+        if( div <= threshold | iter > max_iter) break
+      }
+      item_estimated[i,2] <- par
+      se[i,2] <- sqrt(1/sum(fW)) # asymptotic S.E.
+
     } else warning("model is incorrect or unspecified.")
 
   }
