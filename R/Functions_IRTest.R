@@ -91,7 +91,8 @@ DataGeneration <- function(seed=1, N=2000, nitem=10, prob=0.5, d=1.7,
     item <- matrix(nrow = nitem, ncol = 7)
     item[,1] <- runif(nitem,a_l,a_u)
     for(i in 1:nitem){
-      item[i,2:(4+1)] <- rnorm(4,0,.5)
+      center <- rnorm(1,0,.5)
+      item[i,2:(4+1)] <- sort(rnorm(4,center,.2))
     }
     initialitem <- matrix(nrow = nitem, ncol = 7)
     initialitem[,1] <- 1
@@ -139,10 +140,10 @@ DataGeneration <- function(seed=1, N=2000, nitem=10, prob=0.5, d=1.7,
     set.seed(seed)
     for(i in 1:nitem){
       for(j in 1:N){
-        p <- P_P(theta = theta[j], a = item[i,1], b = item[i,2:7])
-        p <- p[!is.na(p)]
-        categ <- length(p)-1
-        data[j,i] <- sample(x = 0:categ,1,prob=p)
+        pp <- P_P(theta = theta[j], a = item[i,1], b = item[i,2:7])
+        pp <- pp[!is.na(pp)]
+        categ <- length(pp)-1
+        data[j,i] <- sample(x = 0:categ,1,prob=pp)
       }
     }
   }
@@ -222,10 +223,15 @@ Estep_Poly <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
     # weighted likelihood where the weight is the latent distribution
     Pk[,i] <- exp(logLikeli_Poly(item = item, data = data, theta = Xk[i]))*Ak[i]
   }
+  categ <- max(data)+1
+  nitem <- nrow(item)
   Pk <- Pk/rowSums(Pk) # posterior weights
-
+  rik <- array(dim = c(nitem, q, categ))
+  for(i in 1:categ){
+    rik[,,i] <- crossprod(data==i-1,Pk)
+  }
   fk <- colSums(Pk) # expected frequency of examinees
-  return(list(Xk=Xk, Ak=Ak, fk=fk, Pk=Pk))
+  return(list(Xk=Xk, Ak=Ak, fk=fk, rik=rik, Pk=Pk))
 }
 
 #################################################################################################################
@@ -356,13 +362,14 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
 }
 
 
-Mstep_Poly <- function(E, item, data, model, max_iter=10, threshold=1e-7, EMiter){
+Mstep_Poly <- function(E, item, data, model="GPCM", max_iter=3, threshold=1e-7, EMiter){
   nitem <- nrow(item)
   item_estimated <- matrix(nrow = nrow(item), ncol = 7)
   se <- matrix(nrow = nrow(item), ncol = 7)
   X <- E$Xk
   f <- E$fk
   Pk <- E$Pk
+  rik <- E$rik
   N <- nrow(data)
   q <- length(X)
   ####item parameter estimation####
@@ -382,48 +389,44 @@ Mstep_Poly <- function(E, item, data, model, max_iter=10, threshold=1e-7, EMiter
         pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
         tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
         a_supp <- tcum[,2]*pmat[,2]+tcum[,3]*pmat[,3]
-        for(j in 3:(ncol(pmat)-1)){
+        for(j in 3:(npar-1)){
           pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
           tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
           a_supp <- a_supp+tcum[,j+1]*pmat[,j+1]
         }
-        PDs <- NULL
-        for(r in 1:npar){
-          for(co in 1:npar){
-            if(co==1){
-              PDs <- rbind(PDs, cbind(r,co,pmat[,r]*(tcum[,r]-a_supp)))
-            }else{
-              if(co>r){
-                PDs <- rbind(PDs, cbind(r,co,par[1]*pmat[,r]*(pcummat[,co-1]-1)))
-              }else{
-                PDs <- rbind(PDs, cbind(r,co,par[1]*pmat[,r]*pcummat[,co-1]))
-              }
-            }
-          }
-        }
-        colnames(PDs) <- c("r", "c", "v")
-        PDs <- as.data.frame(PDs)
 
         # Gradients
-        Grad <- -sum(Pk*(rep(1,N)%*%t(a_supp)-
-                       matrix(tcum[cbind(rep(1:q, times=N), rep(data[,i]+1, each=q))], ncol=q, byrow = T)))
-        for(j in 1:(npar-1)){
-          Grad <- append(Grad,
-                         par[1]*sum(Pk*(as.numeric(data[,i]<(j))%*%t(1-pcummat[,j])-
-                           as.numeric(data[,i]>=(j))%*%t(pcummat[,j])
-                         ))
-                         )
+        #Grad <- sum(Pk*t(tcum[,data[,i]+1]))-sum(f*a_supp)
+
+        #for(j in 1:(npar-1)){
+        #  Grad <- append(Grad,
+        #                 par[1]*(sum(Pk[data[,i]<j,])-sum(f*pcummat[,j]))
+        #                 )
+        #}
+        Grad <- numeric(npar)
+        for(r in 1:npar){
+          for(co in 1:npar){
+            Grad[co] <- Grad[co]+
+              sum(rik[i,,r]*PDs(probab = r, param = co, pmat,
+                                pcummat, a_supp, par, tcum)/pmat[,r])
+          }
         }
+
+
 
         # Information Matrix
         IM <- matrix(ncol = npar, nrow = npar)
         for(r in 1:npar){
-          for(co in 1:npar){
+          for(co in 1:r){
             ssd <- 0
             for(k in 1:npar){
-              ssd <- ssd+PDs[PDs$r==k & PDs$c==r, 3]*PDs[PDs$r==k & PDs$c==co, 3]/pmat[,k]
+              ssd <- ssd+(PDs(probab = k, param = r, pmat,
+                             pcummat, a_supp, par, tcum)*
+                PDs(probab = k, param = co, pmat,
+                    pcummat, a_supp, par, tcum)/pmat[,k])
             }
             IM[r,co] <- sum(f*ssd)
+            IM[co,r] <- sum(f*ssd)
           }
         }
 
@@ -447,7 +450,19 @@ Mstep_Poly <- function(E, item, data, model, max_iter=10, threshold=1e-7, EMiter
     } else warning("model is incorrect or unspecified.")
 
   }
-  return(list(item_estimated, se))
+  return(list(item_estimated, se, Grad, IM))
+}
+
+PDs <- function(probab, param, pmat, pcummat, a_supp, par, tcum){
+  if(param==1){
+    pmat[,probab]*(tcum[,probab]-a_supp)
+  }else{
+    if(param>probab){
+      -par[1]*pmat[,probab]*(pcummat[,param-1]-1)
+    }else if(param<=probab){
+      -par[1]*pmat[,probab]*pcummat[,param-1]
+    }
+  }
 }
 
 #################################################################################################################
@@ -504,7 +519,7 @@ lin_inex <- function(qp, qh, range, rule=2){
 #################################################################################################################
 # Estimation
 #################################################################################################################
-IRTest <- function(initialitem, data, range = c(-6,6), q = 121, model,
+IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
                          latent_dist="Normal", max_iter=200, threshold=0.0001,
                          bandwidth="nrd", h=NULL){
   Options = list(initialitem=initialitem, data=data, range=range, q=q, latent_dist=latent_dist, max_iter=max_iter, threshold=threshold)
@@ -665,6 +680,169 @@ IRTest <- function(initialitem, data, range = c(-6,6), q = 121, model,
               Options = Options # specified argument values
               ))
 }
+
+IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
+                        latent_dist="Normal", max_iter=200, threshold=0.0001,
+                        bandwidth="nrd", h=NULL){
+  Options = list(initialitem=initialitem, data=data, range=range, q=q, latent_dist=latent_dist, max_iter=max_iter, threshold=threshold)
+  I <- initialitem
+  Xk <- seq(range[1],range[2],length=q)
+  Ak <- dist2(Xk, 0.5, 0, 1)/sum(dist2(Xk, 0.5, 0, 1))
+  iter <- 0
+  diff <- 1
+  prob = 0.5
+  d = 1
+  sd_ratio = 1
+  N = nrow(data)
+  bw <- NULL
+
+  # Normality assumption method
+  if(latent_dist %in% c("Normal", "normal", "N")){
+    while(iter < max_iter & diff > threshold){
+      iter <- iter +1
+
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, data=data)
+      initialitem <- M1[[1]]
+      diff <- max(abs(I-initialitem), na.rm = T)
+      I <- initialitem
+      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      flush.console()
+    }
+    Ak <- E$Ak
+  }
+
+  # Empirical histogram method
+  if(latent_dist=="EHM"){
+    while(iter < max_iter & diff > threshold){
+      iter <- iter +1
+
+      E <- Estep(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range, Xk=Xk, Ak=Ak)
+      M1 <- M1step(E, item=initialitem, model=model)
+      initialitem <- M1[[1]]
+
+      post_den <- E$fk/sum(E$fk)
+      Xk <- E$Xk
+      lin <- lin_inex(Xk, post_den, range = range)
+      Xk <- lin$qp
+      post_den <- lin$qh
+
+      diff <- max(abs(I-initialitem), na.rm = T)
+      I <- initialitem
+      Ak <- post_den
+      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      flush.console()
+    }
+  }
+
+  # Two-component normal mixture distribution
+  if(latent_dist=="Mixture"){
+    while(iter < max_iter & diff > threshold){
+      iter <- iter +1
+
+      E <- Estep(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range)
+      M1 <- M1step(E, item=initialitem, model=model)
+      initialitem <- M1[[1]]
+      M2 <- M2step(E)
+      prob = M2[1];d = M2[3];sd_ratio = M2[4]
+      diff <- max(abs(I-initialitem), na.rm = T)
+      I <- initialitem
+      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      flush.console()
+    }
+    Ak <- E$Ak
+  }
+
+  # Kernel density estimation method
+  if(latent_dist=="KDE"){
+    while(iter < max_iter & diff > threshold){
+      iter <- iter +1
+
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1,
+                 range=range, Xk=Xk, Ak=Ak)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, data=data)
+      initialitem <- M1[[1]]
+
+      post_den <- E$fk/sum(E$fk)
+      Xk <- E$Xk
+      post_den <- lin_inex(Xk, post_den, range = range)$qh
+      nzindex <- round(post_den*N)!=0
+      SJPI <- density(rep(Xk[nzindex], times=round(post_den*N)[nzindex]), bw = bandwidth,n=q, from = range[1], to=range[2])
+      post_den <- lin_inex(Xk, SJPI$y/sum(SJPI$y), range = range)$qh
+
+      diff <- max(abs(I-initialitem), na.rm = T)
+      I <- initialitem
+      Ak <- post_den
+      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      flush.console()
+    }
+    bw <- c(SJPI$bw, SJPI$n)
+  }
+
+  # Davidian curve method
+  if(latent_dist=="DC"){
+    phipar <- nlminb(start = rep(1,h),
+                     objective = optim_phi,
+                     gradient = optim_phi_grad,
+                     hp=h,
+                     lower = -pi/2,
+                     upper = pi/2)$par
+
+    while(iter < max_iter & diff > threshold){
+      iter <- iter +1
+
+      E <- Estep(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
+      M1 <- M1step(E, item=initialitem, model = model)
+      initialitem <- M1[[1]]
+
+      Xk <- E$Xk
+      phipar <- nlminb(start = phipar,
+                       objective = DC.LL,
+                       gradient = DC.grad,
+                       theta=E$Xk,
+                       freq = E$fk)$par
+
+      post_den <- dcurver::ddc(x = Xk, phi = phipar)
+      post_den <- post_den/sum(post_den)
+      lin <- lin_inex(Xk, post_den, range = range, rule = 2)
+      Xk <- lin$qp
+      post_den <- lin$qh
+
+      diff <- max(abs(I-initialitem), na.rm = T)
+      I <- initialitem
+      Ak <- post_den
+      cat("\r","\r","Method = ",latent_dist,h,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      flush.console()
+    }
+  }
+
+  # preparation for outputs
+  EAP <- as.numeric(E$Pk%*%E$Xk)
+  logL <- 0
+  for(i in 1:q){
+    logL <- logL+sum(logLikeli_Poly(initialitem, data, theta = Xk[i])*E$Pk[,i])
+  }
+  E$Pk[E$Pk==0]<- .Machine$double.xmin
+  Ak[Ak==0] <- .Machine$double.xmin
+  logL <- logL + as.numeric(E$fk%*%log(Ak)) - sum(E$Pk*log(E$Pk))
+  return(list(par_est=initialitem,
+              se=M1[[2]],
+              fk=E$fk,
+              iter=iter,
+              prob=prob,
+              d=d,
+              sd_ratio=sd_ratio,
+              quad=Xk,
+              diff=diff,
+              Ak=Ak,
+              Pk=E$Pk,
+              theta = EAP,
+              logL=-2*logL, # deviance
+              bw=bw,
+              Options = Options # specified argument values
+  ))
+}
+
 
 #################################################################################################################
 # Plotting
