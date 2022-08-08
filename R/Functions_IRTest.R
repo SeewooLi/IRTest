@@ -356,12 +356,15 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
 }
 
 
-Mstep_Poly <- function(E, item, max_iter=10, threshold=1e-7, EMiter){
+Mstep_Poly <- function(E, item, data, model, max_iter=10, threshold=1e-7, EMiter){
   nitem <- nrow(item)
-  item_estimated <- matrix(nrow = nrow(item), ncol = 3)
+  item_estimated <- matrix(nrow = nrow(item), ncol = 7)
   se <- matrix(nrow = nrow(item), ncol = 7)
   X <- E$Xk
   f <- E$fk
+  Pk <- E$Pk
+  N <- nrow(data)
+  q <- length(X)
   ####item parameter estimation####
   for(i in 1:nitem){
     if(model %in% c("GPCM")){
@@ -370,17 +373,61 @@ Mstep_Poly <- function(E, item, max_iter=10, threshold=1e-7, EMiter){
       div <- 3
       par <- item[i,]
       par <- par[!is.na(par)]
+      npar <- length(par)
       ####Newton-Raphson####
       repeat{
         iter <- iter+1
-        pmat <- P_P(theta = X, a=par[1], b=par[-1])
         par[1] <- max(0.1,par[1])
+        pmat <- P_P(theta = X, a=par[1], b=par[-1])
+        pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
+        tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
+        a_supp <- tcum[,2]*pmat[,2]+tcum[,3]*pmat[,3]
+        for(j in 3:(ncol(pmat)-1)){
+          pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
+          tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
+          a_supp <- a_supp+tcum[,j+1]*pmat[,j+1]
+        }
+        PDs <- NULL
+        for(r in 1:npar){
+          for(co in 1:npar){
+            if(co==1){
+              PDs <- rbind(PDs, cbind(r,co,pmat[,r]*(tcum[,r]-a_supp)))
+            }else{
+              if(co>r){
+                PDs <- rbind(PDs, cbind(r,co,par[1]*pmat[,r]*(pcummat[,co-1]-1)))
+              }else{
+                PDs <- rbind(PDs, cbind(r,co,par[1]*pmat[,r]*pcummat[,co-1]))
+              }
+            }
+          }
+        }
+        colnames(PDs) <- c("r", "c", "v")
+        PDs <- as.data.frame(PDs)
 
-        Gradient
+        # Gradients
+        Grad <- -sum(Pk*(rep(1,N)%*%t(a_supp)-
+                       matrix(tcum[cbind(rep(1:q, times=N), rep(data[,i]+1, each=q))], ncol=q, byrow = T)))
+        for(j in 1:(npar-1)){
+          Grad <- append(Grad,
+                         par[1]*sum(Pk*(as.numeric(data[,i]<(j))%*%t(1-pcummat[,j])-
+                           as.numeric(data[,i]>=(j))%*%t(pcummat[,j])
+                         ))
+                         )
+        }
 
-        Information_matrix
+        # Information Matrix
+        IM <- matrix(ncol = npar, nrow = npar)
+        for(r in 1:npar){
+          for(co in 1:npar){
+            ssd <- 0
+            for(k in 1:npar){
+              ssd <- ssd+PDs[PDs$r==k & PDs$c==r, 3]*PDs[PDs$r==k & PDs$c==co, 3]/pmat[,k]
+            }
+            IM[r,co] <- sum(f*ssd)
+          }
+        }
 
-
+        diff <- solve(IM)%*%Grad
 
         if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
           par <- par
@@ -394,8 +441,8 @@ Mstep_Poly <- function(E, item, max_iter=10, threshold=1e-7, EMiter){
         }
         if( div <= threshold | iter > max_iter) break
       }
-      item_estimated[i,2] <- par
-      se[i,2] <- sqrt(1/sum(fW)) # asymptotic S.E.
+      item_estimated[i,1:npar] <- par
+      se[i,1:npar] <- sqrt(diag(solve(IM))) # asymptotic S.E.
 
     } else warning("model is incorrect or unspecified.")
 
