@@ -3,4 +3,4 @@
 .RData
 .Ruserdata
 inst/doc
-R/IRTest_examples.R
+IRTest_examples.R
