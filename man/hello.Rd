@@ -4,8 +4,12 @@
 \alias{hello}
 \title{Title}
 \usage{
-hello()
+hello(x)
 }
 \description{
 Title
+}
+\examples{
+hello("Seewoo")
+
 }

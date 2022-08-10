@@ -15,11 +15,11 @@ P_P <- function(theta, a, b){
   }else if(length(theta)!=1 & is.vector(b)){
     b <- b[!is.na(b)]
     ps <- matrix(nrow = length(theta), ncol = length(b))
-    ps[,1] <- theta-b[1]
+    ps[,1] <- a*theta-b[1]
     for(i in 2:length(b)){
-      ps[,i] <- ps[,i-1]+(theta-b[i])
+      ps[,i] <- ps[,i-1]+a*(theta-b[i])
     }
-    ps <- exp(cbind(1,ps))
+    ps <- cbind(1,exp(ps))
     ps <- ps/rowSums(ps)
   }
   return(ps)
@@ -388,12 +388,11 @@ Mstep_Poly <- function(E, item, data, model="GPCM", max_iter=3, threshold=1e-7, 
         pmat <- P_P(theta = X, a=par[1], b=par[-1])
         pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
         tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
-        a_supp <- tcum[,2]*pmat[,2]+tcum[,3]*pmat[,3]
         for(j in 3:(npar-1)){
           pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
           tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
-          a_supp <- a_supp+tcum[,j+1]*pmat[,j+1]
         }
+        a_supp <- diag(tcum[,-1]%*%t(pmat[,-1]))
 
         # Gradients
         #Grad <- sum(Pk*t(tcum[,data[,i]+1]))-sum(f*a_supp)
@@ -406,9 +405,9 @@ Mstep_Poly <- function(E, item, data, model="GPCM", max_iter=3, threshold=1e-7, 
         Grad <- numeric(npar)
         for(r in 1:npar){
           for(co in 1:npar){
-            Grad[co] <- Grad[co]+
-              sum(rik[i,,r]*PDs(probab = r, param = co, pmat,
-                                pcummat, a_supp, par, tcum)/pmat[,r])
+            Grad[r] <- Grad[r]+
+              sum(rik[i,,co]*PDs(probab = co, param = r, pmat,
+                                pcummat, a_supp, par, tcum)/pmat[,co])
           }
         }
 
@@ -425,12 +424,12 @@ Mstep_Poly <- function(E, item, data, model="GPCM", max_iter=3, threshold=1e-7, 
                 PDs(probab = k, param = co, pmat,
                     pcummat, a_supp, par, tcum)/pmat[,k])
             }
-            IM[r,co] <- sum(f*ssd)
-            IM[co,r] <- sum(f*ssd)
+            IM[r,co] <- f%*%ssd
+            IM[co,r] <- IM[r,co]
           }
         }
 
-        diff <- solve(IM)%*%Grad
+        diff <- -solve(IM)%*%Grad
 
         if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
           par <- par
