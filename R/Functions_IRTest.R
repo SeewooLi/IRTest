@@ -15,7 +15,7 @@ P_P <- function(theta, a, b){
   }else if(length(theta)!=1 & is.vector(b)){
     b <- b[!is.na(b)]
     ps <- matrix(nrow = length(theta), ncol = length(b))
-    ps[,1] <- a*theta-b[1]
+    ps[,1] <- a*(theta-b[1])
     for(i in 2:length(b)){
       ps[,i] <- ps[,i-1]+a*(theta-b[i])
     }
@@ -140,7 +140,7 @@ DataGeneration <- function(seed=1, N=2000, nitem=10, prob=0.5, d=1.7,
     set.seed(seed)
     for(i in 1:nitem){
       for(j in 1:N){
-        pp <- P_P(theta = theta[j], a = item[i,1], b = item[i,2:7])
+        pp <- P_P(theta = theta[j], a = item[i,1], b = item[i,-1])
         pp <- pp[!is.na(pp)]
         categ <- length(pp)-1
         data[j,i] <- sample(x = 0:categ,1,prob=pp)
