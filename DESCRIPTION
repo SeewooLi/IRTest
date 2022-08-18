@@ -17,6 +17,7 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Imports:
+    betafunctions,
     dcurver
 Depends: 
     R (>= 2.10)

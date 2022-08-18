@@ -1,26 +1,45 @@
-#' IRTest : Item Response Theory Estimation
-#' @description
-#' @param initialitem initial item from DataGeneration.
-#' @param data data from DataGeneration.
-#' @param range range of parameter.
-#' @param q number of quadrature points
-#' @param model parameter logistic model of item response theory.
-#' 1 means one parameter logistic model, 2 means two parameter logistic model, 3 means three parameter logistic model.
-#' @param latent_dist Type of latent distribution.
-#' Normal, EHM(Empirical Histogram Method), Mixture(two component mixture normal), KDE(Kernel Density estimation), DC(Davidian Curve)
-#' @param max_iter Maximum number of iterations
-#' @param threshold Threshold of convergence.
-#' @param bandwidth bandwidth of a kernel density estimator.
-#' @param h the number of hyper-parameters in Davidian Curve.
+#' Simultaneous item and ability parameters estimation for dichotomous items
 #'
-#' @return item parameter estimator and standard error, fk, Number of iteration, prob, d, sd_ration, quadrature points, diff, Ak, Pk,
-#' theta(ability estimator), logL(deviance), bw(bandwidth), Options
-#' @export IRTest
-#' @details fk, Ak, Pk etc
+#' @description IRT item and ability parameters are estimated with this function.
+#' Based on Bock & Aitkin's (1981) marginal maximum likelihood and EM algorithm (EM-MML), this function incorporates latent distribution estimation algorithms which could free the normality assumption on the latent variable.
+#' By reflecting some features of a unknown true latent distribution, application of this latent distribution estimation method could provide more accurate parameter estimates when the normality assumption is violated.
+#'
+#'
+#' @param initialitem
+#' @param data
+#' @param range
+#' @param q
+#' @param model
+#' @param latent_dist
+#' @param max_iter
+#' @param threshold
+#' @param bandwidth
+#' @param h
+#'
+#' @return This function returns a \code{list}. Several objects are in this \code{list}:
+#' \item{par_est}{}
+#' \item{se}{}
+#' \item{fk}{}
+#' \item{iter}{}
+#' \item{prob}{}
+#' \item{d}{}
+#' \item{sd_ratio}{}
+#' \item{quad}{}
+#' \item{diff}{}
+#' \item{Ak}{}
+#' \item{Pk}{}
+#' \item{theta}{}
+#' \item{logL}{}
+#' \item{bw}{}
+#' \item{Options}{}
+#'
+#' @export
+#'
 #' @examples
-IRTest <- function(initialitem, data, range = c(-6,6), q = 121, model,
-                   latent_dist="Normal", max_iter=200, threshold=0.0001,
-                   bandwidth="nrd", h=NULL){
+#'
+IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
+                        latent_dist="Normal", max_iter=200, threshold=0.0001,
+                        bandwidth="nrd", h=NULL){
   Options = list(initialitem=initialitem, data=data, range=range, q=q, latent_dist=latent_dist, max_iter=max_iter, threshold=threshold)
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)
