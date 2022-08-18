@@ -18,3 +18,5 @@ Suggests:
 VignetteBuilder: knitr
 Imports:
     dcurver
+Depends: 
+    R (>= 2.10)

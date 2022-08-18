@@ -2,8 +2,8 @@
     "sortOrder": [
         {
             "columnIndex": 2,
-            "ascending": true
+            "ascending": false
         }
     ],
-    "path": "~/R package/IRTest/man"
+    "path": "~/R package/IRTest"
 }
