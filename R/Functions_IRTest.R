@@ -69,7 +69,7 @@ logLikeli_Poly <- function(item, data, theta){
 library(betafunctions)
 DataGeneration <- function(seed=1, N=2000, nitem=10, prob=0.5, d=1.7,
                            sd_ratio=1, a_l=0.8, a_u=2.5, latent_dist="normal",
-                           model=3, c_l=0, c_u=0.2){
+                           model=3, c_l=0, c_u=0.2, categ){
 
   if(model==2){
     set.seed(seed)
@@ -92,12 +92,12 @@ DataGeneration <- function(seed=1, N=2000, nitem=10, prob=0.5, d=1.7,
     item[,1] <- runif(nitem,a_l,a_u)
     for(i in 1:nitem){
       center <- rnorm(1,0,.5)
-      item[i,2:(4+1)] <- sort(rnorm(4,center,.2))
+      item[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,.2))
     }
     initialitem <- matrix(nrow = nitem, ncol = 7)
     initialitem[,1] <- 1
     for(i in 1:nitem){
-      initialitem[i,2:(4+1)] <- (-2:1+.5)/3
+      initialitem[i,2:(categ[i])] <- 0#(-2:1+.5)/3
     }
   }
 
@@ -388,9 +388,11 @@ Mstep_Poly <- function(E, item, data, model="GPCM", max_iter=3, threshold=1e-7, 
         pmat <- P_P(theta = X, a=par[1], b=par[-1])
         pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
         tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
-        for(j in 3:(npar-1)){
-          pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
-          tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
+        if(npar>3){
+          for(j in 3:(npar-1)){
+            pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
+            tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
+          }
         }
         a_supp <- diag(tcum[,-1]%*%t(pmat[,-1]))
 
