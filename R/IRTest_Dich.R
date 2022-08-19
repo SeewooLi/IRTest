@@ -1,37 +1,94 @@
-#' Simultaneous item and ability parameters estimation for dichotomous items
+#' Item and ability parameters estimation for dichotomous items
 #'
-#' @description IRT item and ability parameters are estimated with this function.
-#' Based on Bock & Aitkin's (1981) marginal maximum likelihood and EM algorithm (EM-MML), this function incorporates latent distribution estimation algorithms which could free the normality assumption on the latent variable.
-#' By reflecting some features of a unknown true latent distribution, application of this latent distribution estimation method could provide more accurate parameter estimates when the normality assumption is violated.
+#' @description This function estimates IRT item and ability parameters when all items are scored dichotomously.
+#' Based on Bock & Aitkin's (1981) marginal maximum likelihood and EM algorithm (EM-MML), this function incorporates several latent distribution methods algorithms which could free the normality assumption on the latent variable.
+#' Reflecting some features of an unknown true latent distribution, application of this latent distribution estimation method could provide more accurate parameter estimates when the normality assumption is violated (Li, 2021; Woods & Lin, 2009; Woods & Thissen, 2006).
+#'
+#' @importFrom stats density nlminb
+#' @importFrom utils flush.console
+#'
+#' @param initialitem A matrix of initial item parameter values for starting the estimation algorithm
+#' @param data A matrix of item responses where responses are coded as 0 or 1.
+#' Rows and columns indicate examinees and items, respectively.
+#' @param range Range of the latent variable to be considered in the quadrature scheme.
+#' The default value is from \code{-6} to \code{6}: \code{c(-6, 6)}.
+#' @param q A numeric value that represents the number of quadrature points. The default value is 121.
+#' @param model A vector that represents types of item characteristic functions applied to each item.
+#' Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
+#' \code{2}, \code{"2PL"} for two-parameter logistic model,
+#' and \code{3}, \code{"3PL"} for three-parameter logistic model.
+#' @param latent_dist A character string that determines latent distribution estimation method.
+#' Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
+#' \code{"EHM"} for empirical histogram method(Mislevy, 1984; Mislevy & Bock, 1985),
+#' \code{"Mixture"} for the method that uses two-component Gaussian mixture distribution(Li, 2021; Mislevy, 1984),
+#' \code{"DC"} for Davidian-curve method(Woods & Lin, 2009),
+#' and \code{"KDE"} for kernel density estimation method(Li, 2022).
+#' The default value is set to \code{"Normal"} to follow the conventional assumption on latent distribution.
+#'
+#' @param max_iter A numeric value that determines the maximum number of iterations in the EM-MML.
+#' The default value is 200.
+#' @param threshold A numeric value that determines the threshold of EM-MML convergence.
+#' A maximum item parameter change is monitored and compared with the threshold.
+#' The default value is 0.0001.
+#' @param bandwidth A character value is needed when \code{"KDE"} is used for the latent distribution estimation.
+#' This argument determines which bandwidth estimation method is used for \code{"KDE"}.
+#' The default value is \code{"SJ-ste"}. See \code{\link{density}} for possible options.
+#' @param h A natural number less than or equal to 10 is needed when \code{"DC"} is used for the latent distribution estimation.
+#' This argument determines the complexity of Davidian-curve.
+#'
+#' @details
+#' The probabilities for correct response (\eqn{u=1}) in one-, two-, and three-parameter logistic models can be expressed as follows;
+#'
+#' 1) One-parameter logistic (1PL) model
+#' \deqn{P(u=1|\theta, b)=\frac{\exp{(\theta-b)}}{1+\exp{(\theta-b)}}}
+#'
+#' 2) Two-parameter logistic (2PL) model
+#' \deqn{P(u=1|\theta, a, b)=\frac{\exp{(a(\theta-b))}}{1+\exp{(a(\theta-b))}}}
+#'
+#' 3) Three-parameter logistic (3PL) model
+#' \deqn{P(u=1|\theta, a, b, c)=c + (1-c)\frac{\exp{(a(\theta-b))}}{1+\exp{(a(\theta-b))}}}
 #'
 #'
-#' @param initialitem
-#' @param data
-#' @param range
-#' @param q
-#' @param model
-#' @param latent_dist
-#' @param max_iter
-#' @param threshold
-#' @param bandwidth
-#' @param h
+#' @return This function returns a \code{list} which contains several objects:
+#' \item{par_est}{The item parameter estimates.}
+#' \item{se}{The standard errors for item parameter estimates.}
+#' \item{fk}{The estimated frequencies of examinees at each each quadrature points.}
+#' \item{iter}{The number of EM-MML iterations required for the convergence.}
+#' \item{prob}{The estimated \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).}
+#' \item{d}{The estimated \eqn{\delta = \frac{\mu_2 - \mu_1}{\bar{\sigma}}} parameter of two-component Gaussian mixture distribution,
+#' where \eqn{\mu_1} is the estimated mean of the first Gaussian component,
+#' \eqn{\mu_2} is the estimated mean of the second Gaussian component,
+#' and \eqn{\bar{\sigma} = 1} is the standard deviation of the latent distribution (Li, 2021).
+#' Without loss of generality, \eqn{\mu_2 \ge \mu_1}, thus \eqn{\delta \ge 0}, is assumed.}
+#' \item{sd_ratio}{The estimated \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} is the estimated standard deviation of the first Gaussian component, \eqn{\sigma_2} is the estimated standard deviation of the second Gaussian component (Li, 2021).}
+#' \item{quad}{The location of quadrature points.}
+#' \item{diff}{The final value of the monitored maximum item parameter change.}
+#' \item{Ak}{The estimated discrete latent distribution.
+#' It is discrete (i.e., probability mass function) since quadrature scheme of EM-MML is used.}
+#' \item{Pk}{The posterior probabilities for each examinees at each quadrature points.}
+#' \item{theta}{The estimated ability parameter values.
+#' Expected \emph{a posteriori} (EAP) is used for ability parameter estimation.}
+#' \item{logL}{The deviance (i.e., \code{-2\emph{log}L}).}
+#' \item{bw}{The bandwidth used.}
+#' \item{Options}{A replication of input arguments.}
 #'
-#' @return This function returns a \code{list}. Several objects are in this \code{list}:
-#' \item{par_est}{}
-#' \item{se}{}
-#' \item{fk}{}
-#' \item{iter}{}
-#' \item{prob}{}
-#' \item{d}{}
-#' \item{sd_ratio}{}
-#' \item{quad}{}
-#' \item{diff}{}
-#' \item{Ak}{}
-#' \item{Pk}{}
-#' \item{theta}{}
-#' \item{logL}{}
-#' \item{bw}{}
-#' \item{Options}{}
+#'
+#' @author Seewoo Li \email{cu@@yonsei.ac.kr}
+#'
+#' @references
+#' Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.
+#'
+#' Li, S. (2021). Using a two-component normal mixture distribution as a latent distribution in estimating parameters of item response models. \emph{Journal of Educational Evaluation, 34}(4), 759-789.
+#'
+#' Li, S. (2022). \emph{The effect of estimating latent distribution using kernel density estimation method on the accuracy and efficiency of parameter estimation of item response models} [Master's thesis, Yonsei University, Seoul]. Yonsei University Library.
+#'
+#' Mislevy, R. J. (1984). Estimating latent distributions. \emph{Psychometrika, 49}(3), 359-381.
+#'
+#' Mislevy, R. J., & Bock, R. D. (1985). Implementation of the EM algorithm in the estimation of item parameters: The BILOG computer program. In D. J. Weiss (Ed.). \emph{Proceedings of the 1982 item response theory and computerized adaptive testing conference} (pp. 189-202). University of Minnesota, Department of Psychology, Computerized Adaptive Testing Conference.
+#'
+#' Woods, C. M., & Lin, N. (2009). Item response theory with estimation of the latent density using Davidian curves. \emph{Applied Psychological Measurement, 33}(2), 102-117.
+#'
+#' Woods, C. M., & Thissen, D. (2006). Item response theory with estimation of the latent population distribution using spline-based densities. \emph{Psychometrika, 71}(2), 281-301.
 #'
 #' @export
 #'
@@ -39,7 +96,7 @@
 #'
 IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
                         latent_dist="Normal", max_iter=200, threshold=0.0001,
-                        bandwidth="nrd", h=NULL){
+                        bandwidth="SJ-ste", h=NULL){
   Options = list(initialitem=initialitem, data=data, range=range, q=q, latent_dist=latent_dist, max_iter=max_iter, threshold=threshold)
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)
