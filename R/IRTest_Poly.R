@@ -1,6 +1,6 @@
-#' Item and ability parameters estimation for dichotomous items
+#' Item and ability parameters estimation for polytomous items
 #'
-#' @description This function estimates IRT item and ability parameters when all items are scored dichotomously.
+#' @description This function estimates IRT item and ability parameters when all items are scored polytomously.
 #' Based on Bock & Aitkin's (1981) marginal maximum likelihood and EM algorithm (EM-MML), this function incorporates several latent distribution estimation algorithms which could free the normality assumption on the latent variable.
 #' Reflecting some features of the unknown true latent distribution, application of this latent distribution estimation method could provide more accurate parameter estimates when the normality assumption is violated (Li, 2021; Woods & Lin, 2009; Woods & Thissen, 2006).
 #'
@@ -121,9 +121,9 @@
 #'
 #' @examples
 #'
-IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
+IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
                         latent_dist="Normal", max_iter=200, threshold=0.0001,
-                        bandwidth="SJ-ste", h=NULL){
+                        bandwidth="nrd", h=NULL){
   Options = list(initialitem=initialitem, data=data, range=range, q=q, latent_dist=latent_dist, max_iter=max_iter, threshold=threshold)
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)
@@ -141,8 +141,8 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range)
-      M1 <- M1step(E, item=initialitem, model=model)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
       diff <- max(abs(I-initialitem), na.rm = T)
       I <- initialitem
@@ -157,8 +157,8 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range, Xk=Xk, Ak=Ak)
-      M1 <- M1step(E, item=initialitem, model=model)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range, Xk=Xk, Ak=Ak)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
       post_den <- E$fk/sum(E$fk)
@@ -180,8 +180,8 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range)
-      M1 <- M1step(E, item=initialitem, model=model)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
       M2 <- M2step(E)
       prob = M2[1];d = M2[3];sd_ratio = M2[4]
@@ -198,9 +198,9 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1,
-                 range=range, Xk=Xk, Ak=Ak)
-      M1 <- M1step(E, item=initialitem, model=model)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1,
+                      range=range, Xk=Xk, Ak=Ak)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
       post_den <- E$fk/sum(E$fk)
@@ -231,8 +231,8 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
-      M1 <- M1step(E, item=initialitem, model = model)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
+      M1 <- Mstep_Poly(E, item=initialitem, model = model)
       initialitem <- M1[[1]]
 
       Xk <- E$Xk
@@ -260,7 +260,7 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
   EAP <- as.numeric(E$Pk%*%E$Xk)
   logL <- 0
   for(i in 1:q){
-    logL <- logL+sum(logLikeli(initialitem, data, theta = Xk[i])*E$Pk[,i])
+    logL <- logL+sum(logLikeli_Poly(initialitem, data, theta = Xk[i])*E$Pk[,i])
   }
   E$Pk[E$Pk==0]<- .Machine$double.xmin
   Ak[Ak==0] <- .Machine$double.xmin

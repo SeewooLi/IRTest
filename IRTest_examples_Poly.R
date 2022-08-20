@@ -26,10 +26,11 @@ M <- Mstep_Poly(E, item, data, model = "GPCM")
 M1 <- IRTest_Poly(initialitem = initialitem,
             data = data,
             model = "GPCM",
-            latent_dist = "KDE",
+            latent_dist = "DC",
             bandwidth = "SJ-ste",
             max_iter = 200,
-            threshold = .001)
+            threshold = .001,
+            h=4)
 
 plot(M1$par_est[,1], item[,1])
 abline(a=0,b=1)

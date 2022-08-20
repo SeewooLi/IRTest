@@ -3,9 +3,4 @@
 .RData
 .Ruserdata
 inst/doc
-IRTest_examples.R
 IRTest_examples_Poly.R
-Functions_IRTest.R
-temp_YES_export.R
-temp_No_export.R
-temp_data.R

@@ -273,7 +273,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
 }
 
 
-Mstep_Poly <- function(E, item, data, model="GPCM", max_iter=3, threshold=1e-7, EMiter){
+Mstep_Poly <- function(E, item, model="GPCM", max_iter=3, threshold=1e-7, EMiter){
   nitem <- nrow(item)
   item_estimated <- matrix(nrow = nrow(item), ncol = 7)
   se <- matrix(nrow = nrow(item), ncol = 7)
@@ -281,7 +281,7 @@ Mstep_Poly <- function(E, item, data, model="GPCM", max_iter=3, threshold=1e-7, 
   f <- E$fk
   Pk <- E$Pk
   rik <- E$rik
-  N <- nrow(data)
+  N <- nrow(Pk)
   q <- length(X)
   ####item parameter estimation####
   for(i in 1:nitem){
