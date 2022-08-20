@@ -1,30 +1,42 @@
-#' Title
+#' Generation of artificial item response data
 #'
-#' @param seed
-#' @param N
-#' @param nitem
-#' @param prob
-#' @param d
-#' @param sd_ratio
-#' @param a_l
-#' @param a_u
-#' @param latent_dist
-#' @param model
-#' @param c_l
-#' @param c_u
-#' @param categ
+#' @description This function generates artificial item response data in which users can specify the types of items and latent distribution.
+#'
+#'
+#' @param seed A numeric value that is used on random sampling.
+#' The seed number can guarantee the replicability of the result.
+#' @param N a
+#' @param nitem a
+#' @param prob a
+#' @param d a
+#' @param sd_ratio a
+#' @param a_l a
+#' @param a_u a
+#' @param latent_dist a
+#' @param model a
+#' @param c_l a
+#' @param c_u a
+#' @param categ a
 #'
 #' @return
 #' @export
 #'
 #' @importFrom betafunctions rBeta.4P
+#' @importFrom stats dnorm rbinom rchisq rnorm runif
 #'
 #' @examples
 DataGeneration <- function(seed=1, N=2000, nitem=10, prob=0.5, d=1.7,
                            sd_ratio=1, a_l=0.8, a_u=2.5, latent_dist="normal",
                            model=3, c_l=0, c_u=0.2, categ){
 
-  if(model==2){
+  if(model==1){
+    set.seed(seed)
+    item <- matrix(c(rep(1,nitem),
+                     sample(seq(-2,2,by=0.01),nitem, prob = dnorm(seq(-2,2,by=0.01)))), ncol=2)
+    item <- round(item, digits = 2)
+    initialitem <- matrix(c(rep((a_l+a_u)/2,nitem),
+                            rep(0,2*nitem)), ncol=3)
+  }else if(model==2){
     set.seed(seed)
     item <- matrix(c(runif(nitem,a_l,a_u),
                      sample(seq(-2,2,by=0.01),nitem, prob = dnorm(seq(-2,2,by=0.01)))), ncol=2)
@@ -73,7 +85,7 @@ DataGeneration <- function(seed=1, N=2000, nitem=10, prob=0.5, d=1.7,
   } else stop("Specify type of theta dist.")
   data <- matrix(nrow = N, ncol = nitem)
 
-  if(model==2){
+  if(model==1|model==2){
     set.seed(seed)
     for(i in 1:nitem){
       for(j in 1:N){

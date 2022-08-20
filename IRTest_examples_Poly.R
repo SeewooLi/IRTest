@@ -5,11 +5,11 @@ ps <- cbind(1,exp(t(apply(a*(theta-b),1,cumsum))))
 ps <- ps/rowSums(ps, na.rm = T)
 ps
 
-category <- c(rep(3,10),rep(5,10),rep(7,10))
+category <- rep(3,30)#category <- c(rep(3,10),rep(5,10),rep(7,10))
 Alldata <- DataGeneration(seed = 1,
                           model = "GPCM",
-                          N=2000,
-                          nitem = 30,
+                          N=500,
+                          nitem = 10,
                           categ = category,
                           d = 1.664,
                           sd_ratio = 2,
@@ -26,7 +26,7 @@ M <- Mstep_Poly(E, item, data, model = "GPCM")
 M1 <- IRTest_Poly(initialitem = initialitem,
             data = data,
             model = "GPCM",
-            latent_dist = "DC",
+            latent_dist = "EHM",
             bandwidth = "SJ-ste",
             max_iter = 200,
             threshold = .001,

@@ -53,7 +53,7 @@ This argument determines which bandwidth estimation method is used for \code{"KD
 The default value is \code{"SJ-ste"}. See \code{\link{density}} for possible options.}
 
 \item{h}{A natural number less than or equal to 10 is needed when \code{"DC"} is used for the latent distribution estimation.
-This argument determines the complexity of Davidian-curve.}
+This argument determines the complexity of Davidian curve.}
 }
 \value{
 This function returns a \code{list} which contains several objects:

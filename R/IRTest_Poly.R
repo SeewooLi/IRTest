@@ -3,6 +3,7 @@
 #' @description This function estimates IRT item and ability parameters when all items are scored polytomously.
 #' Based on Bock & Aitkin's (1981) marginal maximum likelihood and EM algorithm (EM-MML), this function incorporates several latent distribution estimation algorithms which could free the normality assumption on the latent variable.
 #' Reflecting some features of the unknown true latent distribution, application of this latent distribution estimation method could provide more accurate parameter estimates when the normality assumption is violated (Li, 2021; Woods & Lin, 2009; Woods & Thissen, 2006).
+#' Only generalized partial credit model (GPCM) is currently available.
 #'
 #' @importFrom stats density nlminb
 #' @importFrom utils flush.console
@@ -14,8 +15,7 @@
 #' The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.
 #' @param q A numeric value that represents the number of quadrature points. The default value is 121.
 #' @param model A vector that represents types of item characteristic functions applied to each item.
-#' Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
-#' \code{2}, \code{"2PL"} for two-parameter logistic model,
+#' However, only generalized partial credit model (\code{GPCM}) is currently available.
 #' and \code{3}, \code{"3PL"} for three-parameter logistic model.
 #' @param latent_dist A character string that determines latent distribution estimation method.
 #' Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
@@ -34,21 +34,18 @@
 #' This argument determines which bandwidth estimation method is used for \code{"KDE"}.
 #' The default value is \code{"SJ-ste"}. See \code{\link{density}} for possible options.
 #' @param h A natural number less than or equal to 10 is needed when \code{"DC"} is used for the latent distribution estimation.
-#' This argument determines the complexity of Davidian-curve.
+#' This argument determines the complexity of Davidian curve.
 #'
 #' @details
 #' \describe{
 #' \item{
-#' The probabilities for correct response (\eqn{u=1}) in one-, two-, and three-parameter logistic models can be expressed as follows;
+#' The probability for scoring \eqn{k} (i.e., \eqn{u=k; k=0, 1, ..., m; m \ge 2}) in generalized partial credit model (GPCM) can be expressed as follows;
 #' }{
-#' 1) One-parameter logistic (1PL) model
-#' \deqn{P(u=1|\theta, b)=\frac{\exp{(\theta-b)}}{1+\exp{(\theta-b)}}}
-#'
-#' 2) Two-parameter logistic (2PL) model
-#' \deqn{P(u=1|\theta, a, b)=\frac{\exp{(a(\theta-b))}}{1+\exp{(a(\theta-b))}}}
-#'
-#' 3) Three-parameter logistic (3PL) model
-#' \deqn{P(u=1|\theta, a, b, c)=c + (1-c)\frac{\exp{(a(\theta-b))}}{1+\exp{(a(\theta-b))}}}
+#' 1) generalized partial credit model (GPCM)
+#' \deqn{P(u=0|\theta, a, b_1, ..., b_{m})=\frac{1}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{a(\theta-b_v)}\right]}}}}
+#' \deqn{P(u=1|\theta, a, b_1, ..., b_{m})=\frac{\exp{(a(\theta-b_1))}}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{a(\theta-b_v)}\right]}}}}
+#' \deqn{\vdots}
+#' \deqn{P(u=m|\theta, a, b_1, ..., b_{m})=\frac{\exp{\left[\sum_{v=1}^{m}{a(\theta-b_v)}\right]}}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{a(\theta-b_v)}\right]}}}}
 #'
 #' }
 #'

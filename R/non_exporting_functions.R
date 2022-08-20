@@ -85,11 +85,7 @@ logLikeli <- function(item, data, theta){
 
 logLikeli_Poly <- function(item, data, theta){
   pmat <- P_P(theta = theta, a = item[,1], b = item[,-1])
-  N <- nrow(data)
-  n <- ncol(data)
-  L <- log(matrix(pmat[cbind(rep(1:n, each = N),as.vector(data)+1)], nrow = N, ncol = n))
-  L[L==-Inf] <- -.Machine$double.xmax
-  L <- rowSums(L)
+  L <- rowSums(log(matrix(pmat[cbind(rep(1:ncol(data), each = nrow(data)),as.vector(data)+1)], nrow = nrow(data), ncol = ncol(data))))
   L[L==-Inf] <- -.Machine$double.xmax
   return(L)
 }
@@ -308,37 +304,26 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=3, threshold=1e-7, EMiter
         a_supp <- diag(tcum[,-1]%*%t(pmat[,-1]))
 
         # Gradients
-        #Grad <- sum(Pk*t(tcum[,data[,i]+1]))-sum(f*a_supp)
-
-        #for(j in 1:(npar-1)){
-        #  Grad <- append(Grad,
-        #                 par[1]*(sum(Pk[data[,i]<j,])-sum(f*pcummat[,j]))
-        #                 )
-        #}
         Grad <- numeric(npar)
+
+        # Information Matrix
+        IM <- matrix(ncol = npar, nrow = npar)
         for(r in 1:npar){
           for(co in 1:npar){
             Grad[r] <- Grad[r]+
               sum(rik[i,,co]*PDs(probab = co, param = r, pmat,
                                  pcummat, a_supp, par, tcum)/pmat[,co])
-          }
-        }
-
-
-
-        # Information Matrix
-        IM <- matrix(ncol = npar, nrow = npar)
-        for(r in 1:npar){
-          for(co in 1:r){
-            ssd <- 0
-            for(k in 1:npar){
-              ssd <- ssd+(PDs(probab = k, param = r, pmat,
-                              pcummat, a_supp, par, tcum)*
-                            PDs(probab = k, param = co, pmat,
-                                pcummat, a_supp, par, tcum)/pmat[,k])
+            if(r >= co){
+              ssd <- 0
+              for(k in 1:npar){
+                ssd <- ssd+(PDs(probab = k, param = r, pmat,
+                                pcummat, a_supp, par, tcum)*
+                              PDs(probab = k, param = co, pmat,
+                                  pcummat, a_supp, par, tcum)/pmat[,k])
+              }
+              IM[r,co] <- f%*%ssd
+              IM[co,r] <- IM[r,co]
             }
-            IM[r,co] <- f%*%ssd
-            IM[co,r] <- IM[r,co]
           }
         }
 

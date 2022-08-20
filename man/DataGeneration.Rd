@@ -2,7 +2,7 @@
 % Please edit documentation in R/DataGeneration.R
 \name{DataGeneration}
 \alias{DataGeneration}
-\title{Title}
+\title{Generation of artificial item response data}
 \usage{
 DataGeneration(
   seed = 1,
@@ -21,8 +21,33 @@ DataGeneration(
 )
 }
 \arguments{
-\item{categ}{}
+\item{seed}{A numeric value that is used on random sampling.
+The seed number can guarantee the replicability of the result.}
+
+\item{N}{a}
+
+\item{nitem}{a}
+
+\item{prob}{a}
+
+\item{d}{a}
+
+\item{sd_ratio}{a}
+
+\item{a_l}{a}
+
+\item{a_u}{a}
+
+\item{latent_dist}{a}
+
+\item{model}{a}
+
+\item{c_l}{a}
+
+\item{c_u}{a}
+
+\item{categ}{a}
 }
 \description{
-Title
+This function generates artificial item response data in which users can specify the types of items and latent distribution.
 }
