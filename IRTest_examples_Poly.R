@@ -7,9 +7,9 @@ ps
 
 category <- rep(3,30)#category <- c(rep(3,10),rep(5,10),rep(7,10))
 Alldata <- DataGeneration(seed = 1,
-                          model = "GPCM",
-                          N=500,
-                          nitem = 10,
+                          model = "3",
+                          N=2000,
+                          nitem = 40,
                           categ = category,
                           d = 1.664,
                           sd_ratio = 2,
@@ -20,8 +20,8 @@ item <- Alldata$item
 initialitem <- Alldata$initialitem
 theta <- Alldata$theta
 
-E <- Estep_Poly(item, data)
-M <- Mstep_Poly(E, item, data, model = "GPCM")
+#E <- Estep_Poly(item, data)
+#M <- Mstep_Poly(E, item, data, model = "GPCM")
 
 M1 <- IRTest_Poly(initialitem = initialitem,
             data = data,
@@ -31,6 +31,15 @@ M1 <- IRTest_Poly(initialitem = initialitem,
             max_iter = 200,
             threshold = .001,
             h=4)
+M1 <- IRTest_Dich(initialitem = initialitem,
+                  data = data,
+                  model = rep(3,40),
+                  latent_dist = "KDE",
+                  bandwidth = "SJ-ste",
+                  max_iter = 200,
+                  threshold = .001,
+                  h=4)
+
 
 plot(M1$par_est[,1], item[,1])
 abline(a=0,b=1)

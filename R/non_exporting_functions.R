@@ -112,7 +112,7 @@ Estep <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
   Pk <- Pk/rowSums(Pk) # posterior weights
   rik <- crossprod(data,Pk) # observed conditional frequency of correct responses
   fk <- colSums(Pk) # expected frequency of examinees
-  return(list(Xk=Xk, Ak=Ak, fk=fk, rik=rik,Pk=Pk))
+  return(list(Xk=Xk, Ak=Ak, fk=fk, rik_D=rik,Pk=Pk))
 }
 
 Estep_Poly <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
@@ -138,9 +138,35 @@ Estep_Poly <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
     rik[,,i] <- crossprod(data==i-1,Pk)
   }
   fk <- colSums(Pk) # expected frequency of examinees
-  return(list(Xk=Xk, Ak=Ak, fk=fk, rik=rik, Pk=Pk))
+  return(list(Xk=Xk, Ak=Ak, fk=fk, rik_P=rik, Pk=Pk))
 }
 
+Estep_Mix <- function(item_D, item_P, data_D, data_P, range = c(-4,4), q = 100, prob = 0.5, d = 0,
+                       sd_ratio = 1,Xk=NULL, Ak=NULL){
+  if(is.null(Xk)) {
+    # quadrature points
+    Xk <- seq(range[1],range[2],length=q)
+  }
+  if(is.null(Ak)) {
+    # heights for quadrature points
+    Ak <- dist2(Xk, prob, d, sd_ratio)/sum(dist2(Xk, prob, d, sd_ratio))
+  }
+  Pk <- matrix(nrow = nrow(data_D), ncol = q)
+  for(i in 1:q){
+    # weighted likelihood where the weight is the latent distribution
+    Pk[,i] <- exp(logLikeli(item = item_D, data = data_D, theta = Xk[i])+
+                    logLikeli_Poly(item = item_P, data = data_P, theta = Xk[i]))*Ak[i]
+  }
+  categ <- max(data_P)+1
+  Pk <- Pk/rowSums(Pk) # posterior weights
+  rik_D <- crossprod(data_D,Pk)
+  rik_P <- array(dim = c(nrow(item_P), q, categ))
+  for(i in 1:categ){
+    rik_P[,,i] <- crossprod(data_P==i-1,Pk)
+  }
+  fk <- colSums(Pk) # expected frequency of examinees
+  return(list(Xk=Xk, Ak=Ak, fk=fk, rik_D=rik_D, rik_P=rik_P, Pk=Pk))
+}
 #################################################################################################################
 # M1 step
 #################################################################################################################
@@ -152,7 +178,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
   ),nrow = nrow(item), ncol = 3)
   se <- matrix(nrow = nrow(item), ncol = 3)
   X <- E$Xk
-  r <- E$rik
+  r <- E$rik_D
   f <- E$fk
   ####item parameter estimation####
   for(i in 1:nitem){
@@ -276,7 +302,7 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=3, threshold=1e-7, EMiter
   X <- E$Xk
   f <- E$fk
   Pk <- E$Pk
-  rik <- E$rik
+  rik <- E$rik_P
   N <- nrow(Pk)
   q <- length(X)
   ####item parameter estimation####

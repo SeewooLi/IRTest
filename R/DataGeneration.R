@@ -5,6 +5,7 @@
 #'
 #' @param seed A numeric value that is used on random sampling.
 #' The seed number can guarantee the replicability of the result.
+#' @param type a
 #' @param N a
 #' @param nitem a
 #' @param prob a
@@ -25,7 +26,7 @@
 #' @importFrom stats dnorm rbinom rchisq rnorm runif
 #'
 #' @examples
-DataGeneration <- function(seed=1, N=2000, nitem=10, prob=0.5, d=1.7,
+DataGeneration <- function(seed=1, type, N=2000, nitem=10, prob=0.5, d=1.7,
                            sd_ratio=1, a_l=0.8, a_u=2.5, latent_dist="normal",
                            model=3, c_l=0, c_u=0.2, categ){
 

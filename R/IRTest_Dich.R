@@ -124,7 +124,8 @@
 IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
                         latent_dist="Normal", max_iter=200, threshold=0.0001,
                         bandwidth="SJ-ste", h=NULL){
-  Options = list(initialitem=initialitem, data=data, range=range, q=q, latent_dist=latent_dist, max_iter=max_iter, threshold=threshold)
+  Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,
+                 latent_dist=latent_dist, max_iter=max_iter, threshold=threshold)
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)
   Ak <- dist2(Xk, 0.5, 0, 1)/sum(dist2(Xk, 0.5, 0, 1))
