@@ -7,14 +7,16 @@
 DataGeneration(
   seed = 1,
   N = 2000,
-  nitem = 10,
+  nitem_D = NULL,
+  nitem_P = NULL,
   prob = 0.5,
   d = 1.7,
   sd_ratio = 1,
   a_l = 0.8,
   a_u = 2.5,
   latent_dist = "normal",
-  model = 3,
+  model_D,
+  model_P = "GPCM",
   c_l = 0,
   c_u = 0.2,
   categ
@@ -26,7 +28,9 @@ The seed number can guarantee the replicability of the result.}
 
 \item{N}{a}
 
-\item{nitem}{a}
+\item{nitem_D}{a}
+
+\item{nitem_P}{a}
 
 \item{prob}{a}
 
@@ -40,7 +44,9 @@ The seed number can guarantee the replicability of the result.}
 
 \item{latent_dist}{a}
 
-\item{model}{a}
+\item{model_D}{a}
+
+\item{model_P}{a}
 
 \item{c_l}{a}
 

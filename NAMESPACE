@@ -2,6 +2,7 @@
 
 export(DataGeneration)
 export(IRTest_Dich)
+export(IRTest_Mix)
 export(IRTest_Poly)
 importFrom(betafunctions,rBeta.4P)
 importFrom(dcurver,dc_grad)

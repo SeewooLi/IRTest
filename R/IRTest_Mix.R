@@ -1,5 +1,26 @@
+#' Title
+#'
+#' @param initialitem_D
+#' @param initialitem_P
+#' @param data_D
+#' @param data_P
+#' @param range
+#' @param q
+#' @param model_D
+#' @param model_P
+#' @param latent_dist
+#' @param max_iter
+#' @param threshold
+#' @param bandwidth
+#' @param h
+#' @importFrom stats density nlminb
+#' @importFrom utils flush.console
+#' @return
+#' @export
+#'
+#' @examples
 IRTest_Mix <- function(initialitem_D, initialitem_P, data_D, data_P, range = c(-6,6),
-                       q = 121, model_D, model_P,
+                       q = 121, model_D, model_P="GPCM",
                        latent_dist="Normal", max_iter=200, threshold=0.0001,
                        bandwidth="nrd", h=NULL){
   Options = list(initialitem_D=initialitem_D, initialitem_P=initialitem_P,
@@ -28,11 +49,11 @@ if(nrow(data_D)!=nrow(data_P)){
 
       E <- Estep_Mix(item_D=initialitem_D, item_P=initialitem_P, data_D=data_D,
                      data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range)
-      M1_D <- Mstep_Poly(E, item=initialitem_D, model=model_D)
+      M1_D <- M1step(E, item=initialitem_D, model=model_D)
       M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
       initialitem_D <- M1_D[[1]]
       initialitem_P <- M1_P[[1]]
-      diff <- max(C(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
+      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
       I_D <- initialitem_D
       I_P <- initialitem_P
       cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
