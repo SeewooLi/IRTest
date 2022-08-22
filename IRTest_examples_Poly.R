@@ -7,18 +7,18 @@ ps
 
 category <- rep(3:4,each = 5)#category <- c(rep(3,10),rep(5,10),rep(7,10))
 Alldata <- DataGeneration(seed = 1,
-                          model_D = rep(1:3, each=5),
-                          N=2000,
-                          nitem_D = 15,
-                          nitem_P = 10,
+                          model_D = rep(3, 10),
+                          N=5000,
+                          nitem_D = 10,
+                          nitem_P = 0,
                           categ = category,
                           d = 1.664,
                           sd_ratio = 2,
                           prob = 0.3)
 
-data <- Alldata$data
-item <- Alldata$item
-initialitem <- Alldata$initialitem
+data <- Alldata$data_D
+item <- Alldata$item_D
+initialitem <- Alldata$initialitem_D
 theta <- Alldata$theta
 
 #E <- Estep_Poly(item, data)
@@ -34,7 +34,7 @@ M1 <- IRTest_Poly(initialitem = initialitem,
             h=4)
 M1 <- IRTest_Dich(initialitem = initialitem,
                   data = data,
-                  model = rep(3,40),
+                  model = rep(3,10),
                   latent_dist = "KDE",
                   bandwidth = "SJ-ste",
                   max_iter = 200,
@@ -64,12 +64,12 @@ plot_LD(M1)
 # Mixed format
 
 
-category <- rep(3:7,each = 5)
-Alldata <- DataGeneration(seed = 1,
-                          model_D = rep(1:3, each=10),
-                          N=5000,
-                          nitem_D = 30,
-                          nitem_P = 25,
+category <- rep(3:7,each = 2)
+Alldata <- DataGeneration(seed = 2,
+                          model_D = rep(1:2, each=10),
+                          N=10000,
+                          nitem_D = 20,
+                          nitem_P = 10,
                           categ = category,
                           d = 1.664,
                           sd_ratio = 2,
@@ -88,11 +88,11 @@ M1 <- IRTest_Mix(initialitem_D = initialitemD,
                  data_D = DataD,
                  data_P = DataP,
                  model_D = rep(1:3, each=10),
-                 latent_dist = "Normal",
+                 latent_dist = "KDE",
                  bandwidth = "SJ-ste",
                  max_iter = 200,
                  threshold = .001,
-                 h=4)
+                 h=9)
 
 plot(itemD[,1],M1$par_est[[1]][,1])
 abline(a=0,b=1)
@@ -116,7 +116,7 @@ abline(a=0,b=1)
 plot(itemP[,7],M1$par_est[[2]][,7])
 abline(a=0,b=1)
 
-
+plot(M1$quad, M1$fk)
 
 
 

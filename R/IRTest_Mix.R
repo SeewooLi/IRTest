@@ -53,6 +53,7 @@ if(nrow(data_D)!=nrow(data_P)){
       M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
       initialitem_D <- M1_D[[1]]
       initialitem_P <- M1_P[[1]]
+
       diff <- max(c(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
       I_D <- initialitem_D
       I_P <- initialitem_P
@@ -67,9 +68,13 @@ if(nrow(data_D)!=nrow(data_P)){
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range, Xk=Xk, Ak=Ak)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model)
-      initialitem <- M1[[1]]
+      E <- Estep_Mix(item_D=initialitem_D, item_P=initialitem_P, data_D=data_D,
+                     data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range,
+                     Xk = Xk, Ak=Ak)
+      M1_D <- M1step(E, item=initialitem_D, model=model_D)
+      M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
+      initialitem_D <- M1_D[[1]]
+      initialitem_P <- M1_P[[1]]
 
       post_den <- E$fk/sum(E$fk)
       Xk <- E$Xk
@@ -77,8 +82,9 @@ if(nrow(data_D)!=nrow(data_P)){
       Xk <- lin$qp
       post_den <- lin$qh
 
-      diff <- max(abs(I-initialitem), na.rm = T)
-      I <- initialitem
+      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
+      I_D <- initialitem_D
+      I_P <- initialitem_P
       Ak <- post_den
       cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
       flush.console()
@@ -90,13 +96,18 @@ if(nrow(data_D)!=nrow(data_P)){
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model)
-      initialitem <- M1[[1]]
+      E <- Estep_Mix(item_D=initialitem_D, item_P=initialitem_P, data_D=data_D,
+                     data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range)
+      M1_D <- M1step(E, item=initialitem_D, model=model_D)
+      M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
+      initialitem_D <- M1_D[[1]]
+      initialitem_P <- M1_P[[1]]
+
       M2 <- M2step(E)
       prob = M2[1];d = M2[3];sd_ratio = M2[4]
-      diff <- max(abs(I-initialitem), na.rm = T)
-      I <- initialitem
+      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
+      I_D <- initialitem_D
+      I_P <- initialitem_P
       cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
       flush.console()
     }
@@ -108,10 +119,13 @@ if(nrow(data_D)!=nrow(data_P)){
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1,
-                      range=range, Xk=Xk, Ak=Ak)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model)
-      initialitem <- M1[[1]]
+      E <- Estep_Mix(item_D=initialitem_D, item_P=initialitem_P, data_D=data_D,
+                     data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range,
+                     Xk = Xk, Ak=Ak)
+      M1_D <- M1step(E, item=initialitem_D, model=model_D)
+      M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
+      initialitem_D <- M1_D[[1]]
+      initialitem_P <- M1_P[[1]]
 
       post_den <- E$fk/sum(E$fk)
       Xk <- E$Xk
@@ -120,8 +134,9 @@ if(nrow(data_D)!=nrow(data_P)){
       SJPI <- density(rep(Xk[nzindex], times=round(post_den*N)[nzindex]), bw = bandwidth,n=q, from = range[1], to=range[2])
       post_den <- lin_inex(Xk, SJPI$y/sum(SJPI$y), range = range)$qh
 
-      diff <- max(abs(I-initialitem), na.rm = T)
-      I <- initialitem
+      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
+      I_D <- initialitem_D
+      I_P <- initialitem_P
       Ak <- post_den
       cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
       flush.console()
@@ -141,9 +156,13 @@ if(nrow(data_D)!=nrow(data_P)){
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
-      M1 <- Mstep_Poly(E, item=initialitem, model = model)
-      initialitem <- M1[[1]]
+      E <- Estep_Mix(item_D=initialitem_D, item_P=initialitem_P, data_D=data_D,
+                     data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range,
+                     Xk = Xk, Ak=Ak)
+      M1_D <- M1step(E, item=initialitem_D, model=model_D)
+      M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
+      initialitem_D <- M1_D[[1]]
+      initialitem_P <- M1_P[[1]]
 
       Xk <- E$Xk
       phipar <- nlminb(start = phipar,
@@ -158,8 +177,9 @@ if(nrow(data_D)!=nrow(data_P)){
       Xk <- lin$qp
       post_den <- lin$qh
 
-      diff <- max(abs(I-initialitem), na.rm = T)
-      I <- initialitem
+      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
+      I_D <- initialitem_D
+      I_P <- initialitem_P
       Ak <- post_den
       cat("\r","\r","Method = ",latent_dist,h,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
       flush.console()

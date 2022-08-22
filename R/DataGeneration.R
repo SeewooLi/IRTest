@@ -1,21 +1,21 @@
 #' Generation of artificial item response data
 #'
-#' @description This function generates artificial item response data in which users can specify the types of items and latent distribution.
+#' @description This function generates artificial item response data with users specified item types, details of item parameters, and latent distribution.
 #'
 #'
 #' @param seed A numeric value that is used on random sampling.
 #' The seed number can guarantee the replicability of the result.
-#' @param N a
-#' @param nitem_D a
-#' @param nitem_P a
-#' @param prob a
+#' @param N A numeric value. The number of examinees.
+#' @param nitem_D A numeric value. The number of dichotomous items.
+#' @param nitem_P A numeric value. The number of polytomous items.
+#' @param model_D a
+#' @param model_P a
+#' @param latent_dist a
+#' @param prob A numeric value required when \code{latent_dist = "Mixture"}. \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).
 #' @param d a
 #' @param sd_ratio a
 #' @param a_l a
 #' @param a_u a
-#' @param latent_dist a
-#' @param model_D a
-#' @param model_P a
 #' @param c_l a
 #' @param c_u a
 #' @param categ a
@@ -27,9 +27,14 @@
 #' @importFrom stats dnorm rbinom rchisq rnorm runif
 #'
 #' @examples
-DataGeneration <- function(seed=1, N=2000, nitem_D=NULL, nitem_P=NULL, prob=0.5, d=1.7,
-                           sd_ratio=1, a_l=0.8, a_u=2.5, latent_dist="normal",
-                           model_D, model_P="GPCM", c_l=0, c_u=0.2, categ){
+DataGeneration <- function(seed=1, N=2000, nitem_D=NULL, nitem_P=NULL, model_D, model_P="GPCM",
+                           latent_dist="Mixture",
+                           prob=0.5, d=1.7, sd_ratio=1, a_l=0.8, a_u=2.5,
+                           c_l=0, c_u=0.2, categ){
+  item_D=NULL; initialitem_D=NULL; data_D=NULL
+  item_P=NULL; initialitem_P=NULL; data_P=NULL
+
+
 
   # ability parameters (i.e., theta)
 
@@ -39,7 +44,7 @@ DataGeneration <- function(seed=1, N=2000, nitem_D=NULL, nitem_P=NULL, prob=0.5,
   }else if(latent_dist=="chi"){
     set.seed(seed)
     theta <- scale(rchisq(N,df=8))
-  }else if(latent_dist=="normal"){
+  }else if(latent_dist=="Mixture"){
     n1 <- round(N*prob)
     n2 <- N-n1
     m1 <- -(1-prob)*d
@@ -49,6 +54,9 @@ DataGeneration <- function(seed=1, N=2000, nitem_D=NULL, nitem_P=NULL, prob=0.5,
 
     set.seed(seed)
     theta <- c(rnorm(n=n1,mean=m1,sd=s1),rnorm(n=n2,mean=m2,sd=s2))
+  }else if(latent_dist=="normal"){
+    set.seed(seed)
+    theta <- rnorm(n=N,mean=0,sd=1)
   } else stop("Specify the type of the latent distribution.")
 
 
