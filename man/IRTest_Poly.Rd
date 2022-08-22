@@ -18,9 +18,9 @@ IRTest_Poly(
 )
 }
 \arguments{
-\item{initialitem}{A matrix of initial item parameter values for starting the estimation algorithm}
+\item{initialitem}{A matrix of initial item parameter values for starting the estimation algorithm.}
 
-\item{data}{A matrix of item responses where responses are coded as 0 or 1.
+\item{data}{A matrix of item responses where responses are coded as \code{0, 1, ..., m} for an \code{m+1} category item.
 Rows and columns indicate examinees and items, respectively.}
 
 \item{range}{Range of the latent variable to be considered in the quadrature scheme.

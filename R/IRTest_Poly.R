@@ -8,8 +8,8 @@
 #' @importFrom stats density nlminb
 #' @importFrom utils flush.console
 #'
-#' @param initialitem A matrix of initial item parameter values for starting the estimation algorithm
-#' @param data A matrix of item responses where responses are coded as 0 or 1.
+#' @param initialitem A matrix of initial item parameter values for starting the estimation algorithm.
+#' @param data A matrix of item responses where responses are coded as \code{0, 1, ..., m} for an \code{m+1} category item.
 #' Rows and columns indicate examinees and items, respectively.
 #' @param range Range of the latent variable to be considered in the quadrature scheme.
 #' The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.

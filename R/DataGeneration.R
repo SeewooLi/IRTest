@@ -2,6 +2,8 @@
 #'
 #' @description This function generates artificial item response data with users specified item types, details of item parameters, and latent distribution.
 #'
+#' @importFrom betafunctions rBeta.4P
+#' @importFrom stats dnorm rbinom rchisq rnorm runif
 #'
 #' @param seed A numeric value that is used on random sampling.
 #' The seed number can guarantee the replicability of the result.
@@ -9,12 +11,12 @@
 #' @param nitem_D A numeric value. The number of dichotomous items.
 #' @param nitem_P A numeric value. The number of polytomous items.
 #' @param model_D A vector of length \code{nitem_D}.
-#' The \emph{i}th element is the probability model of the \emph{i}th dichotomous item.
+#' The \emph{i}th element is the probability model for the \emph{i}th dichotomous item.
 #' @param model_P A vector of length \code{nitem_P}.
-#' The \emph{i}th element is the probability model of the \emph{i}th polytomous item.
+#' The \emph{i}th element is the probability model for the \emph{i}th polytomous item.
 #' @param latent_dist A character string that determines the type of latent distribution.
 #' Currently available options are \code{"beta"} (four-parameter beta distribution; \code{\link{rBeta.4P}}),
-#' \code{"chi"} (\eqn{\chi_2} distribution),
+#' \code{"chi"} (\eqn{\chi^2} distribution),
 #' \code{"normal"} (standard normal distribution),
 #' and \code{"Mixture"} (two-component Gaussian mixture distribution; see Li (2021) for details.)
 #' @param prob A numeric value required when \code{latent_dist = "Mixture"}.
@@ -45,8 +47,8 @@
 #'
 #' @export
 #'
-#' @importFrom betafunctions rBeta.4P
-#' @importFrom stats dnorm rbinom rchisq rnorm runif
+#'
+#' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @references
 #' Li, S. (2021). Using a two-component normal mixture distribution as a latent distribution in estimating parameters of item response models. \emph{Journal of Educational Evaluation, 34}(4), 759-789.
@@ -54,6 +56,8 @@
 #'
 #' @examples
 #' \donttest{
+#' # Dichotomous item responses only
+#'
 #' Alldata <- DataGeneration(seed = 1,
 #'                           model_D = rep(3, 10),
 #'                           N=500,
@@ -66,6 +70,48 @@
 #' data <- Alldata$data_D
 #' item <- Alldata$item_D
 #' initialitem <- Alldata$initialitem_D
+#' theta <- Alldata$theta
+#'
+#'
+#' # Polytomous item responses only
+#'
+#' Alldata <- DataGeneration(seed = 2,
+#'                           N=10000,
+#'                           nitem_D = 0,
+#'                           nitem_P = 10,
+#'                           categ = rep(3:7,each = 2),
+#'                           d = 1.664,
+#'                           sd_ratio = 2,
+#'                           prob = 0.3)
+#'
+#' data <- Alldata$data_P
+#' item <- Alldata$item_P
+#' initialitem <- Alldata$initialitem_P
+#' theta <- Alldata$theta
+#'
+#'
+#' # Mixed-format items
+#'
+#' Alldata <- DataGeneration(seed = 2,
+#'                           model_D = rep(1:2, each=10),# 1PL model is applied to item #1~10
+#'                                                       # and 2PL model is applied to item #11~20.
+#'                           N=10000,
+#'                           nitem_D = 20,
+#'                           nitem_P = 10,
+#'                           categ = rep(3:7,each = 2),# 3 categories for item #21-22,
+#'                                                     # 4 categories for item #23-24,
+#'                                                     # ...,
+#'                                                     # and 7 categories for item #29-30.
+#'                           d = 1.664,
+#'                           sd_ratio = 2,
+#'                           prob = 0.3)
+#'
+#' DataD <- Alldata$data_D
+#' DataP <- Alldata$data_P
+#' itemD <- Alldata$item_D
+#' itemP <- Alldata$item_P
+#' initialitemD <- Alldata$initialitem_D
+#' initialitemP <- Alldata$initialitem_P
 #' theta <- Alldata$theta
 #' }
 DataGeneration <- function(seed=1, N=2000, nitem_D=NULL, nitem_P=NULL, model_D, model_P="GPCM",
