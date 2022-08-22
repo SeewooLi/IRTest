@@ -9,14 +9,14 @@ DataGeneration(
   N = 2000,
   nitem_D = NULL,
   nitem_P = NULL,
+  model_D,
+  model_P = "GPCM",
+  latent_dist = "Mixture",
   prob = 0.5,
   d = 1.7,
   sd_ratio = 1,
   a_l = 0.8,
   a_u = 2.5,
-  latent_dist = "normal",
-  model_D,
-  model_P = "GPCM",
   c_l = 0,
   c_u = 0.2,
   categ
@@ -26,34 +26,78 @@ DataGeneration(
 \item{seed}{A numeric value that is used on random sampling.
 The seed number can guarantee the replicability of the result.}
 
-\item{N}{a}
+\item{N}{A numeric value. The number of examinees.}
 
-\item{nitem_D}{a}
+\item{nitem_D}{A numeric value. The number of dichotomous items.}
 
-\item{nitem_P}{a}
+\item{nitem_P}{A numeric value. The number of polytomous items.}
 
-\item{prob}{a}
+\item{model_D}{A vector of length \code{nitem_D}.
+The \emph{i}th element is the probability model of the \emph{i}th dichotomous item.}
 
-\item{d}{a}
+\item{model_P}{A vector of length \code{nitem_P}.
+The \emph{i}th element is the probability model of the \emph{i}th polytomous item.}
 
-\item{sd_ratio}{a}
+\item{latent_dist}{A character string that determines the type of latent distribution.
+Currently available options are \code{"beta"} (four-parameter beta distribution; \code{\link{rBeta.4P}}),
+\code{"chi"} (\eqn{\chi_2} distribution),
+\code{"normal"} (standard normal distribution),
+and \code{"Mixture"} (two-component Gaussian mixture distribution; see Li (2021) for details.)}
 
-\item{a_l}{a}
+\item{prob}{A numeric value required when \code{latent_dist = "Mixture"}.
+It is a \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).}
 
-\item{a_u}{a}
+\item{d}{A numeric value required when \code{latent_dist = "Mixture"}.
+It is a \eqn{\delta = \frac{\mu_2 - \mu_1}{\bar{\sigma}}} parameter of two-component Gaussian mixture distribution,
+where \eqn{\mu_1} is the estimated mean of the first Gaussian component,
+\eqn{\mu_2} is the estimated mean of the second Gaussian component,
+and \eqn{\bar{\sigma} = 1} is the standard deviation of the latent distribution (Li, 2021).
+Without loss of generality, \eqn{\mu_2 \ge \mu_1}, thus \eqn{\delta \ge 0}, is assumed.}
 
-\item{latent_dist}{a}
+\item{sd_ratio}{A numeric value required when \code{latent_dist = "Mixture"}.
+It is a \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} is the estimated standard deviation of the first Gaussian component, \eqn{\sigma_2} is the estimated standard deviation of the second Gaussian component (Li, 2021).}
 
-\item{model_D}{a}
+\item{a_l}{A numeric value. The lower bound of item discrimination parameters (\emph{a}).}
 
-\item{model_P}{a}
+\item{a_u}{A numeric value. The upper bound of item discrimination parameters (\emph{a}).}
 
-\item{c_l}{a}
+\item{c_l}{A numeric value. The lower bound of item guessing parameters (\emph{c}).}
 
-\item{c_u}{a}
+\item{c_u}{A numeric value. The lower bound of item guessing parameters (\emph{c}).}
 
-\item{categ}{a}
+\item{categ}{A numeric vector of length \code{nitem_P}.
+The \emph{i}th element equals the number of categories of the \emph{i}th polyotomous item.}
+}
+\value{
+This function returns a \code{list} which contains several objects:
+\item{theta}{A vector of ability parameters (\eqn{\theta}).}
+\item{item_D}{A matrix of dichotomous item parameters.}
+\item{initialitem_D}{A matrix that contains initial item parameter values for dichotomous items.}
+\item{data_D}{A matrix of dichotomous item responses where rows indicate examinees and columns indicate items.}
+\item{item_P}{A matrix of polytomous item parameters.}
+\item{initialitem_P}{A matrix that contains initial item parameter values for polytomous items.}
+\item{data_P}{A matrix of polytomous item responses where rows indicate examinees and columns indicate items.}
 }
 \description{
-This function generates artificial item response data in which users can specify the types of items and latent distribution.
+This function generates artificial item response data with users specified item types, details of item parameters, and latent distribution.
+}
+\examples{
+\donttest{
+Alldata <- DataGeneration(seed = 1,
+                          model_D = rep(3, 10),
+                          N=500,
+                          nitem_D = 10,
+                          nitem_P = 0,
+                          d = 1.664,
+                          sd_ratio = 2,
+                          prob = 0.3)
+
+data <- Alldata$data_D
+item <- Alldata$item_D
+initialitem <- Alldata$initialitem_D
+theta <- Alldata$theta
+}
+}
+\references{
+Li, S. (2021). Using a two-component normal mixture distribution as a latent distribution in estimating parameters of item response models. \emph{Journal of Educational Evaluation, 34}(4), 759-789.
 }
