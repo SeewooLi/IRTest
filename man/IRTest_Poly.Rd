@@ -18,7 +18,8 @@ IRTest_Poly(
 )
 }
 \arguments{
-\item{initialitem}{A matrix of initial item parameter values for starting the estimation algorithm.}
+\item{initialitem}{A matrix of initial item parameter values for starting the estimation algorithm.
+This matrix determines the number of categories for each item.}
 
 \item{data}{A matrix of item responses where responses are coded as \code{0, 1, ..., m} for an \code{m+1} category item.
 Rows and columns indicate examinees and items, respectively.}
@@ -81,7 +82,8 @@ Expected \emph{a posteriori} (EAP) is used for ability parameter estimation.}
 \description{
 This function estimates IRT item and ability parameters when all items are scored polytomously.
 Based on Bock & Aitkin's (1981) marginal maximum likelihood and EM algorithm (EM-MML), this function incorporates several latent distribution estimation algorithms which could free the normality assumption on the latent variable.
-Reflecting some features of the unknown true latent distribution, application of this latent distribution estimation method could provide more accurate parameter estimates when the normality assumption is violated (Li, 2021; Woods & Lin, 2009; Woods & Thissen, 2006).
+If the normality assumption is violated, application of these latent distribution estimation methods could reflect some features of the unknown true latent distribution,
+and, thus, could provide more accurate parameter estimates (Li, 2021; Woods & Lin, 2009; Woods & Thissen, 2006).
 Only generalized partial credit model (GPCM) is currently available.
 }
 \details{
@@ -111,7 +113,7 @@ where \eqn{\phi(X; \mu, \sigma)} is the value of a Gaussian component with mean 
 
 3) Davidian curve method
 \deqn{P(\theta=X)=\left\{\sum_{\lambda=0}^{h}{{m}_{\lambda}{\theta}^{\lambda}}\right\}^{2}\phi(X; 0, 1)}
-where \eqn{h} is the degree of the polynomial and corresponds to the argument \code{h}.
+where \eqn{h} corresponds to the argument \code{h} and determines the degree of the polynomial.
 
 4) Kernel density estimation method
 \deqn{P(\theta=X)=\frac{1}{Nh}\sum_{j=1}^{N}{K\left(\frac{X-\theta_j}{h}\right)}}
@@ -120,6 +122,38 @@ The Gaussian kernel is used in this function.
 
 }
 }
+}
+\examples{
+\donttest{
+\dontrun{
+# A preparation of dichotomous item response data
+
+Alldata <- DataGeneration(seed = 1,
+                          model_D = rep(3, 10),
+                          N=500,
+                          nitem_D = 10,
+                          nitem_P = 0,
+                          d = 1.664,
+                          sd_ratio = 2,
+                          prob = 0.3)
+
+data <- Alldata$data_D
+item <- Alldata$item_D
+initialitem <- Alldata$initialitem_D
+theta <- Alldata$theta
+
+# Analysis
+
+M1 <- IRTest_Poly(initialitem = initialitem,
+                  data = data,
+                  model = rep(3,10),
+                  latent_dist = "KDE",
+                  bandwidth = "SJ-ste", # an argument required only when "latent_dist = 'KDE'"
+                  max_iter = 200,
+                  threshold = .0001,
+                  h=4 # an argument required only when "latent_dist = 'DC'"
+                  )
+}}
 }
 \references{
 Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.

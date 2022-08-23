@@ -1,6 +1,12 @@
 #' Item and ability parameters estimation for a mixed-format item response data
 #'
-#' @description
+#' @description This function estimates IRT item and ability parameters when a test consists of mixed-format items (i.e., a combination of dichotomous and polytomous items).
+#' In educational context, the combination of these two item formats takes an advantage;
+#' Dichotomous item format expedites scoring and is conducive to cover broad domain,
+#' while Polytomous item format (e.g., free response item) encourages students to exert complex cognitive skills (Lee et al., 2020).
+#' Based on Bock & Aitkin's (1981) marginal maximum likelihood and EM algorithm (EM-MML), this function incorporates several latent distribution estimation algorithms which could free the normality assumption on the latent variable.
+#' If the normality assumption is violated, application of these latent distribution estimation methods could reflect some features of the unknown true latent distribution,
+#' and, thus, could provide more accurate parameter estimates (Li, 2021; Woods & Lin, 2009; Woods & Thissen, 2006).
 #'
 #' @importFrom stats density nlminb
 #' @importFrom utils flush.console
@@ -78,7 +84,7 @@
 #'
 #' 3) Davidian curve method
 #' \deqn{P(\theta=X)=\left\{\sum_{\lambda=0}^{h}{{m}_{\lambda}{\theta}^{\lambda}}\right\}^{2}\phi(X; 0, 1)}
-#' where \eqn{h} is the degree of the polynomial and corresponds to the argument \code{h}.
+#' where \eqn{h} corresponds to the argument \code{h} and determines the degree of the polynomial.
 #'
 #' 4) Kernel density estimation method
 #' \deqn{P(\theta=X)=\frac{1}{Nh}\sum_{j=1}^{N}{K\left(\frac{X-\theta_j}{h}\right)}}
@@ -119,6 +125,8 @@
 #'
 #' @references
 #' Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.
+#'
+#' Lee, W. C., Kim, S. Y., Choi, J., & Kang, Y. (2020). IRT Approaches to Modeling Scores on Mixed-Format Tests. \emph{Journal of Educational Measurement, 57}(2), 230-254.
 #'
 #' Li, S. (2021). Using a two-component normal mixture distribution as a latent distribution in estimating parameters of item response models. \emph{Journal of Educational Evaluation, 34}(4), 759-789.
 #'
@@ -343,6 +351,11 @@ if(nrow(data_D)!=nrow(data_P)){
     }
   }
 }
+  colnames(initialitem_D) <- c("a", "b", "c")
+  colnames(initialitem_P) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6", "b_7")
+  colnames(M1_D[[2]]) <- c("a", "b", "c")
+  colnames(M1_P[[2]]) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6", "b_7")
+
   # preparation for outputs
   EAP <- as.numeric(E$Pk%*%E$Xk)
   logL <- 0

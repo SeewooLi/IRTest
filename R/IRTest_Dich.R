@@ -2,7 +2,8 @@
 #'
 #' @description This function estimates IRT item and ability parameters when all items are scored dichotomously.
 #' Based on Bock & Aitkin's (1981) marginal maximum likelihood and EM algorithm (EM-MML), this function incorporates several latent distribution estimation algorithms which could free the normality assumption on the latent variable.
-#' Reflecting some features of the unknown true latent distribution, application of this latent distribution estimation method could provide more accurate parameter estimates when the normality assumption is violated (Li, 2021; Woods & Lin, 2009; Woods & Thissen, 2006).
+#' If the normality assumption is violated, application of these latent distribution estimation methods could reflect some features of the unknown true latent distribution,
+#' and, thus, could provide more accurate parameter estimates (Li, 2021; Woods & Lin, 2009; Woods & Thissen, 2006).
 #'
 #' @importFrom stats density nlminb
 #' @importFrom utils flush.console
@@ -66,11 +67,12 @@
 #'
 #' 3) Davidian curve method
 #' \deqn{P(\theta=X)=\left\{\sum_{\lambda=0}^{h}{{m}_{\lambda}{\theta}^{\lambda}}\right\}^{2}\phi(X; 0, 1)}
-#' where \eqn{h} is the degree of the polynomial and corresponds to the argument \code{h}.
+#' where \eqn{h} corresponds to the argument \code{h} and determines the degree of the polynomial.
 #'
 #' 4) Kernel density estimation method
 #' \deqn{P(\theta=X)=\frac{1}{Nh}\sum_{j=1}^{N}{K\left(\frac{X-\theta_j}{h}\right)}}
-#' where \eqn{N} is the number of examinees, \eqn{\theta_j} is \eqn{j}th examinee's ability parameter, \eqn{h} is the bandwidth which corresponds to the argument \code{bw}, and \eqn{K( \bullet )} is a kernel function.
+#' where \eqn{N} is the number of examinees, \eqn{\theta_j} is \eqn{j}th examinee's ability parameter,
+#' \eqn{h} is the bandwidth which corresponds to the argument \code{bandwidth}, and \eqn{K( \cdot )} is a kernel function.
 #' The Gaussian kernel is used in this function.
 #'
 #' }
@@ -120,7 +122,36 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
+#' \dontrun{
+#' # A preparation of dichotomous item response data
 #'
+#' Alldata <- DataGeneration(seed = 1,
+#'                           model_D = rep(3, 10),
+#'                           N=500,
+#'                           nitem_D = 10,
+#'                           nitem_P = 0,
+#'                           d = 1.664,
+#'                           sd_ratio = 2,
+#'                           prob = 0.3)
+#'
+#' data <- Alldata$data_D
+#' item <- Alldata$item_D
+#' initialitem <- Alldata$initialitem_D
+#' theta <- Alldata$theta
+#'
+#' # Analysis
+#'
+#' M1 <- IRTest_Dich(initialitem = initialitem,
+#'                   data = data,
+#'                   model = rep(3,10),
+#'                   latent_dist = "KDE",
+#'                   bandwidth = "SJ-ste", # an argument required only when "latent_dist = 'KDE'"
+#'                   max_iter = 200,
+#'                   threshold = .0001,
+#'                   h=4 # an argument required only when "latent_dist = 'DC'"
+#'                   )
+#' }}
 IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
                         latent_dist="Normal", max_iter=200, threshold=0.0001,
                         bandwidth="SJ-ste", h=NULL){
@@ -256,6 +287,8 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
       flush.console()
     }
   }
+  colnames(initialitem) <- c("a", "b", "c")
+  colnames(M1[[2]]) <- c("a", "b", "c")
 
   # preparation for outputs
   EAP <- as.numeric(E$Pk%*%E$Xk)
