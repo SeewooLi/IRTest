@@ -352,9 +352,9 @@ if(nrow(data_D)!=nrow(data_P)){
   }
 }
   colnames(initialitem_D) <- c("a", "b", "c")
-  colnames(initialitem_P) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6", "b_7")
+  colnames(initialitem_P) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6")
   colnames(M1_D[[2]]) <- c("a", "b", "c")
-  colnames(M1_P[[2]]) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6", "b_7")
+  colnames(M1_P[[2]]) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6")
 
   # preparation for outputs
   EAP <- as.numeric(E$Pk%*%E$Xk)

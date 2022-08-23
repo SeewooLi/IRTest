@@ -5,9 +5,8 @@ ps <- cbind(1,exp(t(apply(a*(theta-b),1,cumsum))))
 ps <- ps/rowSums(ps, na.rm = T)
 ps
 
-category <- rep(3:4,each = 5)#category <- c(rep(3,10),rep(5,10),rep(7,10))
 Alldata <- DataGeneration(seed = 1,
-                          model_D = rep(3, 10),
+                          model_D = rep(2:3, each=10),
                           N=5000,
                           nitem_D = 10,
                           nitem_P = 0,
@@ -24,23 +23,43 @@ theta <- Alldata$theta
 #E <- Estep_Poly(item, data)
 #M <- Mstep_Poly(E, item, data, model = "GPCM")
 
-M1 <- IRTest_Poly(initialitem = initialitem,
-            data = data,
-            model = "GPCM",
-            latent_dist = "EHM",
-            bandwidth = "SJ-ste",
-            max_iter = 200,
-            threshold = .001,
-            h=4)
+
 M1 <- IRTest_Dich(initialitem = initialitem,
                   data = data,
-                  model = rep(3,10),
-                  latent_dist = "KDE",
+                  model = rep(2:3, each=10),
+                  latent_dist = "EHM",
+                  bandwidth = "SJ-ste",
+                  max_iter = 200,
+                  threshold = .0001,
+                  h=4)
+
+plot_LD(M1, xlim = c(-6, 6))
+
+category <- rep(3:5,each = 5)#category <- c(rep(3,10),rep(5,10),rep(7,10))
+Alldata <- DataGeneration(seed = 1,
+                          #model_D = rep(3, 10),
+                          N=5000,
+                          nitem_D = 0,
+                          nitem_P = 15,
+                          categ = category,
+                          d = 1.664,
+                          sd_ratio = 2,
+                          prob = 0.3)
+
+data <- Alldata$data_P
+item <- Alldata$item_P
+initialitem <- Alldata$initialitem_P
+theta <- Alldata$theta
+
+M1 <- IRTest_Poly(initialitem = initialitem,
+                  data = data,
+                  model = "GPCM",
+                  latent_dist = "Mixture",
                   bandwidth = "SJ-ste",
                   max_iter = 200,
                   threshold = .001,
                   h=4)
-
+plot_LD(M1, xlim = c(-6, 6))
 
 plot(M1$par_est[,1], item[,1])
 abline(a=0,b=1)

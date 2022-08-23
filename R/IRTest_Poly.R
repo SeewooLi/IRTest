@@ -284,8 +284,8 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
       flush.console()
     }
   }
-  colnames(initialitem) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6", "b_7")
-  colnames(M1[[2]]) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6", "b_7")
+  colnames(initialitem) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6")
+  colnames(M1[[2]]) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6")
 
   # preparation for outputs
   EAP <- as.numeric(E$Pk%*%E$Xk)
