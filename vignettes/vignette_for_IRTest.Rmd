@@ -1,5 +1,5 @@
 ---
-title: "vignette_for_IRTest"
+title: "IRT without the normality assumption"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{IRT without the normality assumption}
@@ -16,4 +16,111 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(IRTest)
+library(ggplot2)
 ```
+
+1. Dichotomous items
+
+  + Preparing data
+
+The function `DataGeneration` can be used for the pre-analysis step.
+In the parameter estimation process, 
+the `initialitem` can be used for an input of the function `IRTest_Dich` (i.e.., `initialitem = initialitem`).
+The `data` is an artificial item response data that could be unnecessary if the user imported item response data is used.
+The `theta` and `item` is not necessary objects for the estimation process.
+They can be considered as the true parameters only if the artificial data (`data`) is used for analysis.
+
+```{r}
+Alldata <- DataGeneration(seed = 123456789,
+                          model_D = rep(1:2, each=5),
+                          N=1000,
+                          nitem_D = 10,
+                          nitem_P = 0,
+                          d = 1.664,
+                          sd_ratio = 2,
+                          prob = 0.3)
+
+data <- Alldata$data_D
+item <- Alldata$item_D
+initialitem <- Alldata$initialitem_D
+theta <- Alldata$theta
+```
+
+If the artificial data (`data`) is used, the true latent distribution looks like,
+
+```{r}
+ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
+  stat_function(fun = dist2, n = 101, args = list(prob = 0.3, d=1.664, sd_ratio = 2)) +
+  ylab("latent density") +
+  xlab(expression(theta)) +
+  scale_y_continuous(breaks = NULL) +
+  theme_bw()
+```
+
+  + Analysis (parameter estimation)
+
+```{r, results='hide'}
+######                                  ######
+###### Kernel density estimation method ######
+######                                  ######
+Mod1 <- IRTest_Dich(initialitem = initialitem,
+                  data = data,
+                  model = rep(1:2, each=5),
+                  latent_dist = "KDE",
+                  bandwidth = "SJ-ste",
+                  max_iter = 200,
+                  threshold = .0001)
+
+
+######                      ######
+###### Normality assumption ######
+######                      ######
+#  M1 <- IRTest_Dich(initialitem = initialitem,
+#                    data = data,
+#                    model = rep(1:2, each=5),
+#                    latent_dist = "Normal",
+#                    max_iter = 200,
+#                    threshold = .0001)
+
+
+######                            ######
+###### Empirical histogram method ######
+######                            ######
+#  M1 <- IRTest_Dich(initialitem = initialitem,
+#                    data = data,
+#                    model = rep(1:2, each=5),
+#                    latent_dist = "EHM",
+#                    max_iter = 200,
+#                    threshold = .0001)
+
+######                                             ######
+###### Two-component Gaussian mixture distribution ######
+######                                             ######
+#  M1 <- IRTest_Dich(initialitem = initialitem,
+#                    data = data,
+#                    model = rep(1:2, each=5),
+#                    latent_dist = "Mixture",
+#                    bandwidth = "SJ-ste",
+#                    max_iter = 200,
+#                    threshold = .0001)
+
+######                ######
+###### Davidian curve ######
+######                ######
+#  M1 <- IRTest_Dich(initialitem = initialitem,
+#                    data = data,
+#                    model = rep(1:2, each=5),
+#                    latent_dist = "DC",
+#                    max_iter = 200,
+#                    threshold = .0001,
+#                    h=4)
+```
+
+
+
+
+
+
+
+
+

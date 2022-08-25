@@ -37,16 +37,6 @@ dist <- function(x, prob = 0.5, m = c(0,0), s = c(1,1)){
   prob*dnormal(x, m[1], s[1])+(1-prob)*dnormal(x, m[2], s[2])
 }
 
-# re-parameterized 2C Normal Mixture Distribution (Li, 2021)
-dist2 <- function(x, prob = 0.5, d = 0, sd_ratio = 1, overallmean=0, overallsd=1){
-  m1 <- -(1-prob)*d+overallmean
-  m2 <- prob*d+overallmean
-  s1 <- sqrt((overallsd^2-prob*(1-prob)*d^2)/(prob+(1-prob)*sd_ratio^2))
-  s2 <- s1*sd_ratio
-  density <- prob*dnormal(x, m1, s1)+(1-prob)*dnormal(x, m2, s2)
-  return(density)
-}
-
 # recovering original parameters of 2C normal mixture distribution
 # from re-parameterized parameters
 distribution_par <- function(prob = 0.5, d = 0, sd_ratio = 1, overallmean=0, overallsd=1){
