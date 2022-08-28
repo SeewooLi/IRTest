@@ -6,6 +6,7 @@
 #'
 #' @param model An object obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.
 #' @param xlim A vector of length 2 which determines the range of the plot.
+#' The default is \code{c(-6, 6)}
 #'
 #' @return A plot of estimated latent distribution.
 #' @export
@@ -45,9 +46,9 @@
 #'
 #' # Plotting the latent distribution
 #'
-#' plot_LD(M1, xlim=c(-6, 6))
+#' plot_LD(M1, xlim = c(-6, 6))
 #' }}
-plot_LD <- function(model, xlim){
+plot_LD <- function(model, xlim = c(-6, 6)){
   if(model[["Options"]][["latent_dist"]]=="Mixture"){
     ggplot2::ggplot(data = data.frame(x = xlim), aes(x)) +
       stat_function(fun = dist2, n = 101, args = list(prob = model$prob, d=model$d, sd_ratio = model$sd_ratio)) +

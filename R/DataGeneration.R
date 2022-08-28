@@ -16,8 +16,8 @@
 #' The \emph{i}th element is the probability model for the \emph{i}th polytomous item.
 #' @param latent_dist A character string that determines the type of latent distribution.
 #' Currently available options are \code{"beta"} (four-parameter beta distribution; \code{\link{rBeta.4P}}),
-#' \code{"chi"} (\eqn{\chi^2} distribution),
-#' \code{"normal"} (standard normal distribution),
+#' \code{"chi"} (\eqn{\chi^2} distribution; \code{\link{rchisq}}),
+#' \code{"normal"} (standard normal distribution; \code{\link{rnorm}}),
 #' and \code{"Mixture"} (two-component Gaussian mixture distribution; see Li (2021) for details.)
 #' @param prob A numeric value required when \code{latent_dist = "Mixture"}.
 #' It is a \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).

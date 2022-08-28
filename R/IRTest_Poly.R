@@ -18,7 +18,6 @@
 #' @param q A numeric value that represents the number of quadrature points. The default value is 121.
 #' @param model A vector that represents types of item characteristic functions applied to each item.
 #' However, only generalized partial credit model (\code{GPCM}) is currently available.
-#' and \code{3}, \code{"3PL"} for three-parameter logistic model.
 #' @param latent_dist A character string that determines latent distribution estimation method.
 #' Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
 #' \code{"EHM"} for empirical histogram method (Mislevy, 1984; Mislevy & Bock, 1985),
@@ -141,7 +140,7 @@
 #'
 #' M1 <- IRTest_Poly(initialitem = initialitem,
 #'                   data = data,
-#'                   model = rep(3,10),
+#'                   model = "GPCM",
 #'                   latent_dist = "KDE",
 #'                   bandwidth = "SJ-ste", # an argument required only when "latent_dist = 'KDE'"
 #'                   max_iter = 200,

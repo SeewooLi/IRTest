@@ -4,12 +4,13 @@
 \alias{plot_LD}
 \title{Plotting the estimated latent distribution}
 \usage{
-plot_LD(model, xlim)
+plot_LD(model, xlim = c(-6, 6))
 }
 \arguments{
 \item{model}{An object obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.}
 
-\item{xlim}{A vector of length 2 which determines the range of the plot.}
+\item{xlim}{A vector of length 2 which determines the range of the plot.
+The default is \code{c(-6, 6)}}
 }
 \value{
 A plot of estimated latent distribution.
@@ -50,7 +51,7 @@ M1 <- IRTest_Poly(initialitem = initialitem,
 
 # Plotting the latent distribution
 
-plot_LD(M1, xlim=c(-6, 6))
+plot_LD(M1, xlim = c(-6, 6))
 }}
 }
 \author{

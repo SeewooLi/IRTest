@@ -30,8 +30,7 @@ The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
 \item{q}{A numeric value that represents the number of quadrature points. The default value is 121.}
 
 \item{model}{A vector that represents types of item characteristic functions applied to each item.
-However, only generalized partial credit model (\code{GPCM}) is currently available.
-and \code{3}, \code{"3PL"} for three-parameter logistic model.}
+However, only generalized partial credit model (\code{GPCM}) is currently available.}
 
 \item{latent_dist}{A character string that determines latent distribution estimation method.
 Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
@@ -146,7 +145,7 @@ theta <- Alldata$theta
 
 M1 <- IRTest_Poly(initialitem = initialitem,
                   data = data,
-                  model = rep(3,10),
+                  model = "GPCM",
                   latent_dist = "KDE",
                   bandwidth = "SJ-ste", # an argument required only when "latent_dist = 'KDE'"
                   max_iter = 200,

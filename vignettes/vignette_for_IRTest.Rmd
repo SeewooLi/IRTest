@@ -5,6 +5,7 @@ vignette: >
   %\VignetteIndexEntry{IRT without the normality assumption}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+fontsize: 12pt
 ---
 
 ```{r, include = FALSE}
@@ -19,15 +20,22 @@ library(IRTest)
 library(ggplot2)
 ```
 
-1. Dichotomous items
+\
+\
+\
 
-  + Preparing data
+# 1. Dichotomous items
+
++ **Preparing data**
 
 The function `DataGeneration` can be used for the pre-analysis step.
+This function returns artificial data and some useful objects for analysis (i.e., `theta`, `data_D`, `item_D`, and `initialitem_d`).
+\
+\
 In the parameter estimation process, 
-the `initialitem` can be used for an input of the function `IRTest_Dich` (i.e.., `initialitem = initialitem`).
+the `initialitem` can be used for an input of the function `IRTest_Dich` (i.e., `initialitem = initialitem`).
 The `data` is an artificial item response data that could be unnecessary if the user imported item response data is used.
-The `theta` and `item` is not necessary objects for the estimation process.
+The `theta` and `item` are not used for the estimation process.
 They can be considered as the true parameters only if the artificial data (`data`) is used for analysis.
 
 ```{r}
@@ -48,7 +56,7 @@ theta <- Alldata$theta
 
 If the artificial data (`data`) is used, the true latent distribution looks like,
 
-```{r}
+```{r, fig.align='center', fig.height=2.5, fig.width=6, echo=F}
 ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
   stat_function(fun = dist2, n = 101, args = list(prob = 0.3, d=1.664, sd_ratio = 2)) +
   ylab("latent density") +
@@ -57,166 +65,366 @@ ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
   theme_bw()
 ```
 
-  + Analysis (parameter estimation)
+\
+\
+\
+
++ **Analysis** (parameter estimation)
 
 ```{r, results='hide'}
+######                            ######
+###### Empirical histogram method ######
+######                            ######
+Mod1 <- IRTest_Dich(initialitem = initialitem,
+                    data = data,
+                    model = rep(1:2, each=5),
+                    latent_dist = "EHM",
+                    max_iter = 200,
+                    threshold = .0001)
+
 ######                                  ######
 ###### Kernel density estimation method ######
 ######                                  ######
-Mod1 <- IRTest_Dich(initialitem = initialitem,
-                  data = data,
-                  model = rep(1:2, each=5),
-                  latent_dist = "KDE",
-                  bandwidth = "SJ-ste",
-                  max_iter = 200,
-                  threshold = .0001)
-
+# Mod1 <- IRTest_Dich(initialitem = initialitem,
+#                     data = data,
+#                     model = rep(1:2, each=5),
+#                     latent_dist = "KDE",
+#                     bandwidth = "SJ-ste",
+#                     max_iter = 200,
+#                     threshold = .001)
 
 ######                      ######
 ###### Normality assumption ######
 ######                      ######
-#  M1 <- IRTest_Dich(initialitem = initialitem,
-#                    data = data,
-#                    model = rep(1:2, each=5),
-#                    latent_dist = "Normal",
-#                    max_iter = 200,
-#                    threshold = .0001)
-
-
-######                            ######
-###### Empirical histogram method ######
-######                            ######
-#  M1 <- IRTest_Dich(initialitem = initialitem,
-#                    data = data,
-#                    model = rep(1:2, each=5),
-#                    latent_dist = "EHM",
-#                    max_iter = 200,
-#                    threshold = .0001)
+#  Mod1 <- IRTest_Dich(initialitem = initialitem,
+#                      data = data,
+#                      model = rep(1:2, each=5),
+#                      latent_dist = "Normal",
+#                      max_iter = 200,
+#                      threshold = .0001)
 
 ######                                             ######
 ###### Two-component Gaussian mixture distribution ######
 ######                                             ######
-#  M1 <- IRTest_Dich(initialitem = initialitem,
-#                    data = data,
-#                    model = rep(1:2, each=5),
-#                    latent_dist = "Mixture",
-#                    bandwidth = "SJ-ste",
-#                    max_iter = 200,
-#                    threshold = .0001)
+#  Mod1 <- IRTest_Dich(initialitem = initialitem,
+#                      data = data,
+#                      model = rep(1:2, each=5),
+#                      latent_dist = "Mixture",
+#                      max_iter = 200,
+#                      threshold = .0001)
 
-######                ######
-###### Davidian curve ######
-######                ######
-#  M1 <- IRTest_Dich(initialitem = initialitem,
-#                    data = data,
-#                    model = rep(1:2, each=5),
-#                    latent_dist = "DC",
-#                    max_iter = 200,
-#                    threshold = .0001,
-#                    h=4)
+######                                                       ######
+###### Davidian curve (for an arbitrarily chosen case of h=4)######
+######                                                       ######
+#  Mod1 <- IRTest_Dich(initialitem = initialitem,
+#                      data = data,
+#                      model = rep(1:2, each=5),
+#                      latent_dist = "DC",
+#                      max_iter = 200,
+#                      threshold = .0001,
+#                      h=4)
 ```
 
-2. Polytomous items
+\
+\
+\
 
-  + Preparing data
++ **Results**
 
-The function `DataGeneration` can be used for the pre-analysis step.
+```{r, fig.align='center', fig.height=2.5, fig.width=6}
+### The estimated item parameters
+Mod1$par_est
+
+### The asymptotic standard errors of item parameters
+Mod1$se
+
+### The estimated ability parameters
+head(Mod1$theta)
+
+### The estimated latent distribution
+plot_LD(Mod1, xlim = c(-6,6))
+```
+
+\
+\
+
+----------
+
+\break
+
+# 2. Polytomous items
+
++ **Preparing data**
+
+As in the case of dichotomous items, the function `DataGeneration` can be used for the pre-analysis step.
+This function returns artificial data and some useful objects for analysis (i.e., `theta`, `data_P`, `item_P`, and `initialitem_P`).
+\
+\
 In the parameter estimation process, 
-the `initialitem` can be used for an input of the function `IRTest_Dich` (i.e.., `initialitem = initialitem`).
+the `initialitem` can be used for an input of the function `IRTest_Poly` (i.e., `initialitem = initialitem`).
 The `data` is an artificial item response data that could be unnecessary if the user imported item response data is used.
-The `theta` and `item` is not necessary objects for the estimation process.
+The `theta` and `item` are not used for the estimation process.
 They can be considered as the true parameters only if the artificial data (`data`) is used for analysis.
+
 
 ```{r}
 Alldata <- DataGeneration(seed = 123456789,
-                          model_D = rep(1:2, each=5),
+                          model_P = "GPCM",
+                          categ = rep(c(3,7), each = 5),
                           N=1000,
-                          nitem_D = 10,
-                          nitem_P = 0,
-                          d = 1.664,
+                          nitem_D = 0,
+                          nitem_P = 10,
+                          d = 1.414,
                           sd_ratio = 2,
-                          prob = 0.3)
+                          prob = 0.5)
 
-data <- Alldata$data_D
-item <- Alldata$item_D
-initialitem <- Alldata$initialitem_D
+data <- Alldata$data_P
+item <- Alldata$item_P
+initialitem <- Alldata$initialitem_P
 theta <- Alldata$theta
 ```
 
 If the artificial data (`data`) is used, the true latent distribution looks like,
 
-```{r}
+```{r, fig.align='center', fig.height=2.5, fig.width=6, echo=F}
 ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
-  stat_function(fun = dist2, n = 101, args = list(prob = 0.3, d=1.664, sd_ratio = 2)) +
+  stat_function(fun = dist2, n = 101, args = list(prob = 0.5, d=1.414, sd_ratio = 2)) +
   ylab("latent density") +
   xlab(expression(theta)) +
   scale_y_continuous(breaks = NULL) +
   theme_bw()
 ```
 
-  + Analysis (parameter estimation)
+\
+\
+\
+
++ **Analysis** (parameter estimation)
 
 ```{r, results='hide'}
 ######                                  ######
 ###### Kernel density estimation method ######
 ######                                  ######
-Mod1 <- IRTest_Dich(initialitem = initialitem,
-                  data = data,
-                  model = rep(1:2, each=5),
-                  latent_dist = "KDE",
-                  bandwidth = "SJ-ste",
-                  max_iter = 200,
-                  threshold = .0001)
-
+Mod1 <- IRTest_Poly(initialitem = initialitem,
+                    data = data,
+                    model = "GPCM",
+                    latent_dist = "KDE",
+                    bandwidth = "SJ-ste",
+                    max_iter = 200,
+                    threshold = .001)
 
 ######                      ######
 ###### Normality assumption ######
 ######                      ######
-#  M1 <- IRTest_Dich(initialitem = initialitem,
-#                    data = data,
-#                    model = rep(1:2, each=5),
-#                    latent_dist = "Normal",
-#                    max_iter = 200,
-#                    threshold = .0001)
-
+#  Mod1 <- IRTest_Poly(initialitem = initialitem,
+#                      data = data,
+#                      model = "GPCM",
+#                      latent_dist = "Normal",
+#                      max_iter = 200,
+#                      threshold = .001)
 
 ######                            ######
 ###### Empirical histogram method ######
 ######                            ######
-#  M1 <- IRTest_Dich(initialitem = initialitem,
-#                    data = data,
-#                    model = rep(1:2, each=5),
-#                    latent_dist = "EHM",
-#                    max_iter = 200,
-#                    threshold = .0001)
+#  Mod1 <- IRTest_Poly(initialitem = initialitem,
+#                      data = data,
+#                      model = "GPCM",
+#                      latent_dist = "EHM",
+#                      max_iter = 200,
+#                      threshold = .001)
 
 ######                                             ######
 ###### Two-component Gaussian mixture distribution ######
 ######                                             ######
-#  M1 <- IRTest_Dich(initialitem = initialitem,
-#                    data = data,
-#                    model = rep(1:2, each=5),
-#                    latent_dist = "Mixture",
-#                    bandwidth = "SJ-ste",
-#                    max_iter = 200,
-#                    threshold = .0001)
+#  Mod1 <- IRTest_Poly(initialitem = initialitem,
+#                      data = data,
+#                      model = "GPCM",
+#                      latent_dist = "Mixture",
+#                      max_iter = 200,
+#                      threshold = .001)
 
-######                ######
-###### Davidian curve ######
-######                ######
-#  M1 <- IRTest_Dich(initialitem = initialitem,
-#                    data = data,
-#                    model = rep(1:2, each=5),
-#                    latent_dist = "DC",
-#                    max_iter = 200,
-#                    threshold = .0001,
-#                    h=4)
+######                                                        ######
+###### Davidian curve (for an arbitrarily chosen case of h=4) ######
+######                                                        ######
+#  Mod1 <- IRTest_Poly(initialitem = initialitem,
+#                      data = data,
+#                      model = "GPCM",
+#                      latent_dist = "DC",
+#                      max_iter = 200,
+#                      threshold = .001,
+#                      h=4)
 ```
 
+\
+\
+\
+
++ **Results**
+
+```{r, fig.align='center', fig.height=2.5, fig.width=6}
+### The estimated item parameters
+Mod1$par_est
+
+### The asymptotic standard errors of item parameters
+Mod1$se
+
+### The estimated ability parameters
+head(Mod1$theta)
+
+### The estimated latent distribution
+plot_LD(Mod1, xlim = c(-6,6))
+```
+
+\
+\
+
+----------
+
+\break
+
+# 3. Mixed-format test
+
++ **Preparing data**
+
+As in the case of dichotomous and polytomous items, the function `DataGeneration` can be used for the pre-analysis step.
+This function returns artificial data and some useful objects for analysis (i.e., `theta`, `data_D`, `item_D`, `initialitem_D`, `data_P`, `item_P`, and `initialitem_P`).
+\
+\
+In the parameter estimation process, 
+the `initialitem` can be used for an input of the function `IRTest_Mix` (i.e., `initialitem = initialitem`).
+The `data` is an artificial item response data that could be unnecessary if the user imported item response data is used.
+The `theta` and `item` are not used for the estimation process.
+They can be considered as the true parameters only if the artificial data (`data`) is used for analysis.
 
 
+```{r}
+Alldata <- DataGeneration(seed = 123456789,
+                          model_D = rep(2,5),
+                          model_P = "GPCM",
+                          categ = rep(3,5),
+                          N=1000,
+                          nitem_D = 5,
+                          nitem_P = 5,
+                          d = 1.664,
+                          sd_ratio = 1,
+                          prob = 0.5)
 
+DataD <- Alldata$data_D
+DataP <- Alldata$data_P
+itemD <- Alldata$item_D
+itemP <- Alldata$item_P
+initialitemD <- Alldata$initialitem_D
+initialitemP <- Alldata$initialitem_P
+theta <- Alldata$theta
+```
 
+If the artificial data (`data`) is used, the true latent distribution looks like,
 
+```{r, fig.align='center', fig.height=2.5, fig.width=6, echo=F}
+ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
+  stat_function(fun = dist2, n = 101, args = list(prob = 0.5, d=1.664, sd_ratio = 1)) +
+  ylab("latent density") +
+  xlab(expression(theta)) +
+  scale_y_continuous(breaks = NULL) +
+  theme_bw()
+```
 
+\
+\
+\
+
++ **Analysis** (parameter estimation)
+
+```{r, results='hide'}
+######                                  ######
+###### Kernel density estimation method ######
+######                                  ######
+Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
+                   initialitem_P = initialitemP,
+                   data_D = DataD,
+                   data_P = DataP,
+                   model_D = rep(2,5),
+                   model_P = "GPCM",
+                   latent_dist = "KDE",
+                   bandwidth = "SJ-ste",
+                   max_iter = 200,
+                   threshold = .001)
+
+######                      ######
+###### Normality assumption ######
+######                      ######
+#  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
+#                     initialitem_P = initialitemP,
+#                     data_D = DataD,
+#                     data_P = DataP,
+#                     model_D = rep(2,5),
+#                     model_P = "GPCM",
+#                     latent_dist = "Normal",
+#                     max_iter = 200,
+#                     threshold = .001)
+
+######                            ######
+###### Empirical histogram method ######
+######                            ######
+#  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
+#                     initialitem_P = initialitemP,
+#                     data_D = DataD,
+#                     data_P = DataP,
+#                     model_D = rep(2,5),
+#                     model_P = "GPCM",
+#                     latent_dist = "EHM",
+#                     max_iter = 200,
+#                     threshold = .001)
+
+######                                             ######
+###### Two-component Gaussian mixture distribution ######
+######                                             ######
+#  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
+#                     initialitem_P = initialitemP,
+#                     data_D = DataD,
+#                     data_P = DataP,
+#                     model_D = rep(2,5),
+#                     model_P = "GPCM",
+#                     latent_dist = "Mixture",
+#                     max_iter = 200,
+#                     threshold = .001)
+
+######                                                        ######
+###### Davidian curve (for an arbitrarily chosen case of h=4) ######
+######                                                        ######
+#  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
+#                     initialitem_P = initialitemP,
+#                     data_D = DataD,
+#                     data_P = DataP,
+#                     model_D = rep(2,5),
+#                     model_P = "GPCM",
+#                     latent_dist = "DC",
+#                     max_iter = 200,
+#                     threshold = .001,
+#                     h = 4)
+```
+
+\
+\
+\
+
++ **Results**
+
+```{r, fig.align='center', fig.height=2.5, fig.width=6}
+### The estimated item parameters
+Mod1$par_est
+
+### The asymptotic standard errors of item parameters
+Mod1$se
+
+### The estimated ability parameters
+head(Mod1$theta)
+
+### The estimated latent distribution
+plot_LD(Mod1, xlim = c(-6,6))
+```
+
+\
+\
+----
 
