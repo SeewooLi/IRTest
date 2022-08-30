@@ -34,7 +34,7 @@ This function returns artificial data and some useful objects for analysis (i.e.
 \
 In the parameter estimation process, 
 the `initialitem` can be used for an input of the function `IRTest_Dich` (i.e., `initialitem = initialitem`).
-The `data` is an artificial item response data that could be unnecessary if the user imported item response data is used.
+The `data` is an artificial item response data that could be unnecessary if user-imported item response data is used.
 The `theta` and `item` are not used for the estimation process.
 They can be considered as the true parameters only if the artificial data (`data`) is used for analysis.
 
@@ -162,7 +162,7 @@ This function returns artificial data and some useful objects for analysis (i.e.
 \
 In the parameter estimation process, 
 the `initialitem` can be used for an input of the function `IRTest_Poly` (i.e., `initialitem = initialitem`).
-The `data` is an artificial item response data that could be unnecessary if the user imported item response data is used.
+The `data` is an artificial item response data that could be unnecessary if user-imported item response data is used.
 The `theta` and `item` are not used for the estimation process.
 They can be considered as the true parameters only if the artificial data (`data`) is used for analysis.
 
@@ -292,7 +292,7 @@ This function returns artificial data and some useful objects for analysis (i.e.
 \
 In the parameter estimation process, 
 the `initialitem` can be used for an input of the function `IRTest_Mix` (i.e., `initialitem = initialitem`).
-The `data` is an artificial item response data that could be unnecessary if the user imported item response data is used.
+The `data` is an artificial item response data that could be unnecessary if user-imported item response data is used.
 The `theta` and `item` are not used for the estimation process.
 They can be considered as the true parameters only if the artificial data (`data`) is used for analysis.
 

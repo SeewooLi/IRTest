@@ -14,14 +14,14 @@ dist2(x, prob = 0.5, d = 0, sd_ratio = 1, overallmean = 0, overallsd = 1)
 \item{d}{A numeric value of \eqn{\delta = \frac{\mu_2 - \mu_1}{\bar{\sigma}}} parameter of two-component Gaussian mixture distribution,
 where \eqn{\mu_1} is the estimated mean of the first Gaussian component,
 \eqn{\mu_2} is the estimated mean of the second Gaussian component,
-and \eqn{\bar{\sigma} = 1} is the standard deviation of the latent distribution (Li, 2021).
+and \eqn{\bar{\sigma}} is the standard deviation of the latent distribution (Li, 2021).
 Without loss of generality, \eqn{\mu_2 \ge \mu_1}, thus \eqn{\delta \ge 0}, is assumed.}
 
 \item{sd_ratio}{A numeric value of \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} is the estimated standard deviation of the first Gaussian component, \eqn{\sigma_2} is the estimated standard deviation of the second Gaussian component (Li, 2021).}
 
-\item{overallmean}{A numeric value that determines the overall mean of two-component Gaussian mixture distribution.}
+\item{overallmean}{A numeric value of \eqn{\bar{\mu}} that determines the overall mean of two-component Gaussian mixture distribution.}
 
-\item{overallsd}{A numeric value that determines the overall standard deviation of two-component Gaussian mixture distribution.}
+\item{overallsd}{A numeric value of \eqn{\bar{\sigma}} that determines the overall standard deviation of two-component Gaussian mixture distribution.}
 }
 \value{
 The evaluated probability density value(s).
@@ -35,7 +35,7 @@ Probability density for the re-parameterized two-component normal mixture distri
 1) Overall mean (\eqn{\bar{\mu}})
 \deqn{\bar{\mu}=\pi\mu_1 + (1-\pi)\mu_2}
 
-1) Overall standard deviation (\eqn{\bar{\sigma}})
+2) Overall standard deviation (\eqn{\bar{\sigma}})
 \deqn{\bar{\sigma}=\sqrt{\pi\sigma_{1}^{2}+(1-\pi)\sigma_{2}^{2}+\pi(1-\pi)(\mu_2-\mu_1)^2}}
 }
 }
