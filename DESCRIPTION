@@ -2,12 +2,13 @@ Package: IRTest
 Type: Package
 Title: Parameter Estimation of Item Response Theory with Estimation of Latent Distribution
 Version: 0.0.1
-Author: Seewoo Li <cu@yonsei.ac.kr>
-Maintainer: Seewoo Li <cu@yonsei.ac.kr>
-Description: Item response theory (IRT) parameter estimation using marginal maximum likelihood which adopts EM algorithm. 
+Authors@R: person("Seewoo", "Li", 
+    email = "cu@yonsei.ac.kr",
+    role = c("aut", "cre"))
+Description: Item response theory (IRT) parameter estimation using marginal maximum likelihood and EM algorithm. 
     Within parameter estimation algorithm, several methods for latent distribution estimation are available.
     Reflecting some features of the true latent distribution, these latent distribution estimation methods can possibly free the normality assumption on the latent distribution.
-License: GPL-3
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1
