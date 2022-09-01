@@ -16,7 +16,8 @@ URL: https://github.com/SeewooLi/IRTest
 BugReports: https://github.com/SeewooLi/IRTest/issues
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Imports:
     betafunctions,
@@ -24,3 +25,4 @@ Imports:
     ggplot2
 Depends: 
     R (>= 2.10)
+Config/testthat/edition: 3
