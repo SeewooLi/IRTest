@@ -73,12 +73,12 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
 
 * Parameter estimation results
 
-```{r results, fig.align='center', fig.height=7, fig.width=6}
+```{r results, fig.align='center', fig.height=6, fig.width=6}
 ### True item parameters 
-item
+item["b"]
 
 ### Estimated item parameters
-Mod1$par_est
+Mod1$par_est["b"]
 
 ### Plotting
 plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated")
