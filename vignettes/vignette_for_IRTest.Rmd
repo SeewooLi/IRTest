@@ -190,8 +190,7 @@ ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
   stat_function(fun = dist2, n = 101, args = list(prob = 0.5, d=1.414, sd_ratio = 2)) +
   ylab("latent density") +
   xlab(expression(theta)) +
-  scale_y_continuous(breaks = NULL) +
-  theme_bw()
+  scale_y_continuous(breaks = NULL)
 ```
 
 \
@@ -324,8 +323,7 @@ ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
   stat_function(fun = dist2, n = 101, args = list(prob = 0.5, d=1.664, sd_ratio = 1)) +
   ylab("latent density") +
   xlab(expression(theta)) +
-  scale_y_continuous(breaks = NULL) +
-  theme_bw()
+  scale_y_continuous(breaks = NULL)
 ```
 
 \

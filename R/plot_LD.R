@@ -54,24 +54,21 @@ plot_LD <- function(model, xlim = c(-6, 6)){
       stat_function(fun = dist2, n = 101, args = list(prob = model$prob, d=model$d, sd_ratio = model$sd_ratio)) +
       ylab("latent density") +
       xlab(expression(theta)) +
-      scale_y_continuous(breaks = NULL) +
-      theme_bw()
+      scale_y_continuous(breaks = NULL)
   } else {
     if(model[["Options"]][["latent_dist"]]%in% c("Normal", "normal", "N")){
       ggplot2::ggplot(mapping=aes(x=xlim)) +
         stat_function(fun = dnormal, n = 101, args = list()) +
         ylab("latent density") +
         xlab(expression(theta)) +
-        scale_y_continuous(breaks = NULL) +
-        theme_bw()
+        scale_y_continuous(breaks = NULL)
     }else{
       ggplot2::ggplot(mapping=aes(x=model$quad,y=model$Ak*(1/(model$quad[2]-model$quad[1])))) +
         geom_line() +
         ylab("latent density") +
         xlab(expression(theta)) +
         scale_y_continuous(breaks = NULL) +
-        lims(x=xlim) +
-        theme_bw()
+        lims(x=xlim)
     }
   }
 }

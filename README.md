@@ -11,7 +11,14 @@ status](https://www.r-pkg.org/badges/version/IRTest)](https://CRAN.R-project.org
 <!-- badges: end -->
 
 **IRTest** can be a useful tool for IRT (item response theory) parameter
-estimation, especially when
+estimation, especially when the violation of normality assumption on
+latent distribution is suspicious.  
+**IRTest** deals with uni-dimensional latent variable.  
+In **IRTest**, along with the conventional approach that assumes
+normality on latent distribution, several methods can be applied for
+estimation of latent distribution: empirical histogram method,
+two-component Gaussian mixture distribution, Davidian curve, kernel
+density estimation.
 
 ## Installation
 
