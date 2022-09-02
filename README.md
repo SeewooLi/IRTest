@@ -10,7 +10,8 @@
 status](https://www.r-pkg.org/badges/version/IRTest)](https://CRAN.R-project.org/package=IRTest)
 <!-- badges: end -->
 
-The goal of IRTest is to …
+**IRTest** can be a useful tool for IRT (item response theory) parameter
+estimation, especially when
 
 ## Installation
 
