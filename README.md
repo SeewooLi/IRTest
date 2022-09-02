@@ -22,12 +22,10 @@ density estimation.
 
 ## Installation
 
-You can install the development version of IRTest from
-[GitHub](https://github.com/) with:
+You can install IRTest on `R` console with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("SeewooLi/IRTest")
+install.packages("IRTest")
 ```
 
 ## Example
