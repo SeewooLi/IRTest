@@ -16,9 +16,11 @@ latent distribution is suspected.
 **IRTest** deals with uni-dimensional latent variable.  
 In **IRTest**, along with the conventional approach that assumes
 normality on latent distribution, several methods can be applied for
-estimation of latent distribution: empirical histogram method,
-two-component Gaussian mixture distribution, Davidian curve, kernel
-density estimation.
+estimation of latent distribution:  
+\> empirical histogram method,  
+\> two-component Gaussian mixture distribution,  
+\> Davidian curve,  
+\> kernel density estimation.
 
 ## Installation
 
