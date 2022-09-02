@@ -12,7 +12,7 @@ status](https://www.r-pkg.org/badges/version/IRTest)](https://CRAN.R-project.org
 
 **IRTest** can be a useful tool for IRT (item response theory) parameter
 estimation, especially when the violation of normality assumption on
-latent distribution is suspicious.  
+latent distribution is suspected.  
 **IRTest** deals with uni-dimensional latent variable.  
 In **IRTest**, along with the conventional approach that assumes
 normality on latent distribution, several methods can be applied for
@@ -27,6 +27,33 @@ You can install IRTest on R-console with:
 ``` r
 install.packages("IRTest")
 ```
+
+## Functions
+
+Followings are functions in **IRTest** available for users.
+
+-   `IRTest_Dich` is the estimation function when all items are
+    dichotomously scored.
+
+-   `IRTest_Poly` is the estimation function when all items are
+    polytomously scored.
+
+-   `IRTest_Mix` is the estimation function for a mixed-format test, a
+    combination of dichotomous item(s) and polytomous item(s).
+
+-   `DataGeneration` generates several objects that are useful for
+    computer simulation studies. Among these are starting values for an
+    algorithm and artificial item-response data that can be passed to
+    `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`
+
+-   `plot_LD` draws a plot of the estimated latent distribution.
+
+-   `dist2` is a probability density function of two-component Gaussian
+    mixture distribution.
+
+-   `original_par_2GM` converts re-parameterized parameters of
+    two-component Gaussian mixture distribution into original
+    parameters.
 
 ## Example
 
