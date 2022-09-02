@@ -101,7 +101,7 @@ Mod1$par_est
 #> [10,] 1  0.4474698 0
 
 ### Plotting
-plot(item[,2], Mod1$par_est[,2])
+plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated")
 abline(a=0,b=1)
 ```
 
