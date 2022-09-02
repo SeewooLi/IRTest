@@ -46,7 +46,7 @@ Followings are functions of **IRTest** available for users.
   
   + `IRTest_Mix` is the estimation function for a mixed-format test, a combination of dichotomous item(s) and polytomous item(s).
 
-  + `DataGeneration` generates several objects that are useful for computer simulation studies. Among these are  starting values for an algorithm and artificial item-response data that can be passed to `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`
+  + `DataGeneration` generates several objects that are useful for computer simulation studies. Among these are starting values for an algorithm and artificial item-response data that can be passed to `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`
 
   + `plot_LD` draws a plot of the estimated latent distribution.
   
@@ -90,12 +90,12 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
                     model = rep(1, 10),
                     latent_dist = "EHM",
                     max_iter = 200,
-                    threshold = .0001)
+                    threshold = .001)
 ```
 
 * Parameter estimation results
 
-```{r results, fig.align='center', fig.height=4, fig.width=6}
+```{r results, fig.align='center', fig.height=6, fig.width=10}
 ### True item parameters 
 item
 
@@ -103,7 +103,10 @@ item
 Mod1$par_est
 
 ### Plotting
-plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated")
+par(mfrow=c(1,2))
+plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated", main = "item parameters")
+abline(a=0,b=1)
+plot(theta, Mod1$theta, xlab = "true", ylab = "estimated", main = "ability parameters")
 abline(a=0,b=1)
 ```
 

@@ -94,7 +94,7 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
                     model = rep(1, 10),
                     latent_dist = "EHM",
                     max_iter = 200,
-                    threshold = .0001)
+                    threshold = .001)
 ```
 
 -   Parameter estimation results
@@ -117,19 +117,22 @@ item
 ### Estimated item parameters
 Mod1$par_est
 #>       a          b c
-#>  [1,] 1 -0.7409381 0
-#>  [2,] 1  0.5082429 0
-#>  [3,] 1  0.7999875 0
-#>  [4,] 1  0.5286133 0
-#>  [5,] 1 -0.3927616 0
-#>  [6,] 1  0.8975263 0
-#>  [7,] 1  0.4273164 0
-#>  [8,] 1  0.3073226 0
-#>  [9,] 1  1.9544029 0
-#> [10,] 1  0.4474698 0
+#>  [1,] 1 -0.7383615 0
+#>  [2,] 1  0.5071181 0
+#>  [3,] 1  0.7980726 0
+#>  [4,] 1  0.5274258 0
+#>  [5,] 1 -0.3909154 0
+#>  [6,] 1  0.8954094 0
+#>  [7,] 1  0.4264496 0
+#>  [8,] 1  0.3068586 0
+#>  [9,] 1  1.9525167 0
+#> [10,] 1  0.4465375 0
 
 ### Plotting
-plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated")
+par(mfrow=c(1,2))
+plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated", main = "item parameters")
+abline(a=0,b=1)
+plot(theta, Mod1$theta, xlab = "true", ylab = "estimated", main = "ability parameters")
 abline(a=0,b=1)
 ```
 
