@@ -24,7 +24,7 @@ estimation of latent distribution:
 
 ## Installation
 
-You can install IRTest on R-console with:
+You can install **IRTest** on R-console with:
 
 ``` r
 install.packages("IRTest")
@@ -138,7 +138,7 @@ abline(a=0,b=1)
 
 <img src="man/figures/README-results-1.png" width="100%" style="display: block; margin: auto;" />
 
--   Latent distribution estimation result
+-   Result of latent distribution estimation
 
 ``` r
 plot_LD(Mod1)

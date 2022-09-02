@@ -30,7 +30,7 @@ In **IRTest**, along with the conventional approach that assumes normality on la
 
 ## Installation
 
-You can install IRTest on R-console with:
+You can install **IRTest** on R-console with:
 
 ``` r
 install.packages("IRTest")
@@ -110,8 +110,8 @@ plot(theta, Mod1$theta, xlab = "true", ylab = "estimated", main = "ability param
 abline(a=0,b=1)
 ```
 
-* Latent distribution estimation result
+* Result of latent distribution estimation
 
-```{r plotLD, fig.align='center', fig.height=2.5, fig.width=6}
+```{r plotLD, fig.align='center', fig.height=4, fig.width=8}
 plot_LD(Mod1)
 ```
