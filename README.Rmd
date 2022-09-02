@@ -26,7 +26,7 @@ In **IRTest**, along with the conventional approach that assumes normality on la
 
 ## Installation
 
-You can install IRTest on `R` console with:
+You can install IRTest on R-console with:
 
 ``` r
 install.packages("IRTest")
@@ -36,23 +36,57 @@ install.packages("IRTest")
 
 A simulation study for a Rasch model can be done in following manners:
 
-```{r example}
+```{r library}
 library(IRTest)
-## basic example code
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+* An artificial data of 500 examinees and 10 items.
 
-```{r cars}
-summary(cars)
+```{r generation}
+Alldata <- DataGeneration(seed = 123456789,
+                          model_D = rep(1, 10),
+                          N=500,
+                          nitem_D = 10,
+                          nitem_P = 0,
+                          d = 1.664,
+                          sd_ratio = 2,
+                          prob = 0.3)
+
+data <- Alldata$data_D
+item <- Alldata$item_D
+initialitem <- Alldata$initialitem_D
+theta <- Alldata$theta
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
+* Analysis 
 
-You can also embed plots, for example:
+For an illustrative purpose, empirical histogram method is used for estimation of latent distribution.
 
-```{r pressure, echo = FALSE}
-plot(pressure)
+```{r analysis, results='hold'}
+Mod1 <- IRTest_Dich(initialitem = initialitem,
+                    data = data,
+                    model = rep(1, 10),
+                    latent_dist = "EHM",
+                    max_iter = 200,
+                    threshold = .0001)
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+* Parameter estimation results
+
+```{r results, fig.align='center', fig.height=2.5, fig.width=6}
+### True item parameters 
+item
+
+### Estimated item parameters
+Mod1$par_est
+
+### Plotting
+plot(item[,2], Mod1$par_est[,2])
+abline(a=0,b=1)
+```
+
+* Latent distribution estimation result
+
+```{r plotLD, fig.align='center', fig.height=2.5, fig.width=6}
+plot_LD(Mod1)
+```
