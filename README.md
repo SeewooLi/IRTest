@@ -17,10 +17,10 @@ latent distribution is suspected.
 In **IRTest**, along with the conventional approach that assumes
 normality on latent distribution, several methods can be applied for
 estimation of latent distribution:  
-\> empirical histogram method,  
-\> two-component Gaussian mixture distribution,  
-\> Davidian curve,  
-\> kernel density estimation.
++ empirical histogram method,  
++ two-component Gaussian mixture distribution,  
++ Davidian curve,  
++ kernel density estimation.
 
 ## Installation
 

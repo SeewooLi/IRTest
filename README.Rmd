@@ -23,10 +23,10 @@ knitr::opts_chunk$set(
 **IRTest** can be a useful tool for IRT (item response theory) parameter estimation, especially when the violation of normality assumption on latent distribution is suspected. \
 **IRTest** deals with uni-dimensional latent variable. \
 In **IRTest**, along with the conventional approach that assumes normality on latent distribution, several methods can be applied for estimation of latent distribution: \
->  empirical histogram method, \
->  two-component Gaussian mixture distribution, \
->  Davidian curve, \
->  kernel density estimation.
+    + empirical histogram method, \
+    + two-component Gaussian mixture distribution, \
+    + Davidian curve, \
+    + kernel density estimation.
 
 ## Installation
 
@@ -95,7 +95,7 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
 
 * Parameter estimation results
 
-```{r results, fig.align='center', fig.height=4, fig.width=4}
+```{r results, fig.align='center', fig.height=4, fig.width=6}
 ### True item parameters 
 item
 
