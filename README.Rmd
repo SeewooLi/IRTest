@@ -80,7 +80,7 @@ theta <- Alldata$theta
 
 For an illustrative purpose, empirical histogram method is used for estimation of latent distribution.
 
-```{r analysis, results='hold'}
+```{r analysis, results='hide'}
 Mod1 <- IRTest_Dich(initialitem = initialitem,
                     data = data,
                     model = rep(1, 10),
@@ -93,10 +93,10 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
 
 ```{r results, fig.align='center', fig.height=6, fig.width=6}
 ### True item parameters 
-item["b"]
+item
 
 ### Estimated item parameters
-Mod1$par_est["b"]
+Mod1$par_est
 
 ### Plotting
 plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated")
