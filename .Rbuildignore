@@ -6,3 +6,4 @@
 ^README\.Rmd$
 ^revdep$
 ^cran-comments.md
+^cran-comments\.md$
