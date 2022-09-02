@@ -1,4 +1,4 @@
-test_that("testing basic operations", {
+test_that("testing basic operations for IRTest_Dich", {
   Alldata <- DataGeneration(seed = 123456789,
                             model_D = rep(1, 5),
                             N=500,

@@ -176,7 +176,7 @@
 #'                  initialitem_P = initialitemP,
 #'                  data_D = DataD,
 #'                  data_P = DataP,
-#'                  model_D = rep(1:3, each=10),
+#'                  model_D = rep(1:2, each=10),
 #'                  latent_dist = "KDE",
 #'                  bandwidth = "SJ-ste",
 #'                  max_iter = 200,

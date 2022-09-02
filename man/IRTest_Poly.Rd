@@ -128,18 +128,20 @@ The Gaussian kernel is used in this function.
 # A preparation of dichotomous item response data
 
 Alldata <- DataGeneration(seed = 1,
-                          model_D = rep(3, 10),
-                          N=500,
-                          nitem_D = 10,
-                          nitem_P = 0,
-                          d = 1.664,
+                          model_P = "GPCM",
+                          categ = rep(c(3,7), each = 5),
+                          N=1000,
+                          nitem_D = 0,
+                          nitem_P = 10,
+                          d = 1.414,
                           sd_ratio = 2,
-                          prob = 0.3)
+                          prob = 0.5)
 
-data <- Alldata$data_D
-item <- Alldata$item_D
-initialitem <- Alldata$initialitem_D
+data <- Alldata$data_P
+item <- Alldata$item_P
+initialitem <- Alldata$initialitem_P
 theta <- Alldata$theta
+
 
 # Analysis
 
