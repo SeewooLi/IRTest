@@ -30,7 +30,7 @@ install.packages("IRTest")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+A simulation study for a Rasch model can be done in following manners:
 
 ``` r
 library(IRTest)

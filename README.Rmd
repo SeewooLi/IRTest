@@ -26,16 +26,15 @@ In **IRTest**, along with the conventional approach that assumes normality on la
 
 ## Installation
 
-You can install the development version of IRTest from [GitHub](https://github.com/) with:
+You can install IRTest on `R` console with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("SeewooLi/IRTest")
+install.packages("IRTest")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+A simulation study for a Rasch model can be done in following manners:
 
 ```{r example}
 library(IRTest)
