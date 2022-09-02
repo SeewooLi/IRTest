@@ -30,7 +30,7 @@ install.packages("IRTest")
 
 ## Functions
 
-Followings are functions in **IRTest** available for users.
+Followings are functions of **IRTest** available for users.
 
 -   `IRTest_Dich` is the estimation function when all items are
     dichotomously scored.
