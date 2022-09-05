@@ -123,16 +123,14 @@ The Gaussian kernel is used in this function.
 }
 }
 \examples{
-\donttest{
-\dontrun{
 # A preparation of dichotomous item response data
 
 Alldata <- DataGeneration(seed = 1,
                           model_P = "GPCM",
-                          categ = rep(c(3,7), each = 5),
+                          categ = rep(3:4, each = 4),
                           N=1000,
                           nitem_D = 0,
-                          nitem_P = 10,
+                          nitem_P = 8,
                           d = 1.414,
                           sd_ratio = 2,
                           prob = 0.5)
@@ -151,10 +149,10 @@ M1 <- IRTest_Poly(initialitem = initialitem,
                   latent_dist = "KDE",
                   bandwidth = "SJ-ste", # an argument required only when "latent_dist = 'KDE'"
                   max_iter = 200,
-                  threshold = .0001,
+                  threshold = .001,
                   h=4 # an argument required only when "latent_dist = 'DC'"
                   )
-}}
+
 }
 \references{
 Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.

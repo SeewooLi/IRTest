@@ -127,12 +127,10 @@ The Gaussian kernel is used in this function.
 }
 }
 \examples{
-\donttest{
-\dontrun{
 # A preparation of dichotomous item response data
 
 Alldata <- DataGeneration(seed = 1,
-                          model_D = rep(3, 10),
+                          model_D = rep(1, 10),
                           N=500,
                           nitem_D = 10,
                           nitem_P = 0,
@@ -149,14 +147,14 @@ theta <- Alldata$theta
 
 M1 <- IRTest_Dich(initialitem = initialitem,
                   data = data,
-                  model = rep(3,10),
+                  model = rep(1,10),
                   latent_dist = "KDE",
                   bandwidth = "SJ-ste", # an argument required only when "latent_dist = 'KDE'"
                   max_iter = 200,
-                  threshold = .0001,
+                  threshold = .001,
                   h=4 # an argument required only when "latent_dist = 'DC'"
                   )
-}}
+
 }
 \references{
 Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.

@@ -144,17 +144,15 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' \dontrun{
 #' # A preparation of mixed-format item response data
 #'
 #' Alldata <- DataGeneration(seed = 2,
-#'                           model_D = rep(1:2, each=10),# 1PL model is applied to item #1~10
+#'                           model_D = rep(1:2, each=3),# 1PL model is applied to item #1~10
 #'                                                       # and 2PL model is applied to item #11~20.
-#'                           N=10000,
-#'                           nitem_D = 20,
-#'                           nitem_P = 10,
-#'                           categ = rep(3:7,each = 2),# 3 categories for item #21-22,
+#'                           N=1000,
+#'                           nitem_D = 6,
+#'                           nitem_P = 5,
+#'                           categ = rep(3:7,each = 1),# 3 categories for item #21-22,
 #'                                                     # 4 categories for item #23-24,
 #'                                                     # ...,
 #'                                                     # and 7 categories for item #29-30.
@@ -176,13 +174,13 @@
 #'                  initialitem_P = initialitemP,
 #'                  data_D = DataD,
 #'                  data_P = DataP,
-#'                  model_D = rep(1:2, each=10),
+#'                  model_D = rep(1:2, each=3),
 #'                  latent_dist = "KDE",
 #'                  bandwidth = "SJ-ste",
 #'                  max_iter = 200,
 #'                  threshold = .001,
 #'                  h=9)
-#' }}
+#'
 
 IRTest_Mix <- function(initialitem_D, initialitem_P, data_D, data_P, range = c(-6,6),
                        q = 121, model_D, model_P="GPCM",
@@ -219,10 +217,10 @@ if(nrow(data_D)!=nrow(data_P)){
       initialitem_D <- M1_D[[1]]
       initialitem_P <- M1_P[[1]]
 
-      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
+      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = TRUE), max(abs(I_P-initialitem_P), na.rm = TRUE)))
       I_D <- initialitem_D
       I_P <- initialitem_P
-      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
     Ak <- E$Ak
@@ -247,11 +245,11 @@ if(nrow(data_D)!=nrow(data_P)){
       Xk <- lin$qp
       post_den <- lin$qh
 
-      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
+      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = TRUE), max(abs(I_P-initialitem_P), na.rm = TRUE)))
       I_D <- initialitem_D
       I_P <- initialitem_P
       Ak <- post_den
-      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
   }
@@ -270,10 +268,10 @@ if(nrow(data_D)!=nrow(data_P)){
 
       M2 <- M2step(E)
       prob = M2[1];d = M2[3];sd_ratio = M2[4]
-      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
+      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = TRUE), max(abs(I_P-initialitem_P), na.rm = TRUE)))
       I_D <- initialitem_D
       I_P <- initialitem_P
-      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
     Ak <- E$Ak
@@ -299,11 +297,11 @@ if(nrow(data_D)!=nrow(data_P)){
       SJPI <- density(rep(Xk[nzindex], times=round(post_den*N)[nzindex]), bw = bandwidth,n=q, from = range[1], to=range[2])
       post_den <- lin_inex(Xk, SJPI$y/sum(SJPI$y), range = range)$qh
 
-      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
+      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = TRUE), max(abs(I_P-initialitem_P), na.rm = TRUE)))
       I_D <- initialitem_D
       I_P <- initialitem_P
       Ak <- post_den
-      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
     bw <- c(SJPI$bw, SJPI$n)
@@ -342,11 +340,11 @@ if(nrow(data_D)!=nrow(data_P)){
       Xk <- lin$qp
       post_den <- lin$qh
 
-      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = T), max(abs(I_P-initialitem_P), na.rm = T)))
+      diff <- max(c(max(abs(I_D-initialitem_D), na.rm = TRUE), max(abs(I_P-initialitem_P), na.rm = TRUE)))
       I_D <- initialitem_D
       I_P <- initialitem_P
       Ak <- post_den
-      cat("\r","\r","Method = ",latent_dist,h,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
   }

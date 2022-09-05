@@ -19,17 +19,14 @@ A plot of estimated latent distribution.
 This function draws a plot of the estimated latent distribution (the prior distribution of the latent variable).
 }
 \examples{
-\donttest{
-\dontrun{
 # Data generation and model fitting
 
-category <- rep(3:4,each = 5)#category <- c(rep(3,10),rep(5,10),rep(7,10))
 Alldata <- DataGeneration(seed = 1,
-                          #model_D = rep(3, 10),
-                          N=5000,
+                          #model_D = rep(1, 10),
+                          N=1000,
                           nitem_D = 0,
-                          nitem_P = 10,
-                          categ = category,
+                          nitem_P = 8,
+                          categ = rep(3:4,each = 4),
                           d = 1.664,
                           sd_ratio = 2,
                           prob = 0.3)
@@ -43,16 +40,15 @@ M1 <- IRTest_Poly(initialitem = initialitem,
                   data = data,
                   model = "GPCM",
                   latent_dist = "Mixture",
-                  bandwidth = "SJ-ste",
                   max_iter = 200,
                   threshold = .001,
-                  h=4)
+                  )
 
 
 # Plotting the latent distribution
 
-plot_LD(M1, xlim = c(-6, 6))
-}}
+plot_LD(model=M1, xlim = c(-6, 6))
+
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}

@@ -154,17 +154,15 @@ The Gaussian kernel is used in this function.
 }
 }
 \examples{
-\donttest{
-\dontrun{
 # A preparation of mixed-format item response data
 
 Alldata <- DataGeneration(seed = 2,
-                          model_D = rep(1:2, each=10),# 1PL model is applied to item #1~10
+                          model_D = rep(1:2, each=3),# 1PL model is applied to item #1~10
                                                       # and 2PL model is applied to item #11~20.
-                          N=10000,
-                          nitem_D = 20,
-                          nitem_P = 10,
-                          categ = rep(3:7,each = 2),# 3 categories for item #21-22,
+                          N=1000,
+                          nitem_D = 6,
+                          nitem_P = 5,
+                          categ = rep(3:7,each = 1),# 3 categories for item #21-22,
                                                     # 4 categories for item #23-24,
                                                     # ...,
                                                     # and 7 categories for item #29-30.
@@ -186,13 +184,13 @@ M1 <- IRTest_Mix(initialitem_D = initialitemD,
                  initialitem_P = initialitemP,
                  data_D = DataD,
                  data_P = DataP,
-                 model_D = rep(1:2, each=10),
+                 model_D = rep(1:2, each=3),
                  latent_dist = "KDE",
                  bandwidth = "SJ-ste",
                  max_iter = 200,
                  threshold = .001,
                  h=9)
-}}
+
 }
 \references{
 Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.

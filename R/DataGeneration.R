@@ -55,7 +55,6 @@
 #'
 #'
 #' @examples
-#' \donttest{
 #' # Dichotomous item responses only
 #'
 #' Alldata <- DataGeneration(seed = 1,
@@ -76,7 +75,7 @@
 #' # Polytomous item responses only
 #'
 #' Alldata <- DataGeneration(seed = 2,
-#'                           N=10000,
+#'                           N=1000,
 #'                           nitem_D = 0,
 #'                           nitem_P = 10,
 #'                           categ = rep(3:7,each = 2),
@@ -95,7 +94,7 @@
 #' Alldata <- DataGeneration(seed = 2,
 #'                           model_D = rep(1:2, each=10),# 1PL model is applied to item #1~10
 #'                                                       # and 2PL model is applied to item #11~20.
-#'                           N=10000,
+#'                           N=1000,
 #'                           nitem_D = 20,
 #'                           nitem_P = 10,
 #'                           categ = rep(3:7,each = 2),# 3 categories for item #21-22,
@@ -113,7 +112,7 @@
 #' initialitemD <- Alldata$initialitem_D
 #' initialitemP <- Alldata$initialitem_P
 #' theta <- Alldata$theta
-#' }
+#'
 DataGeneration <- function(seed=1, N=2000, nitem_D=NULL, nitem_P=NULL, model_D, model_P="GPCM",
                            latent_dist="Mixture",
                            prob=0.5, d=1.7, sd_ratio=1, a_l=0.8, a_u=2.5,

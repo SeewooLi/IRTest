@@ -14,17 +14,14 @@
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @examples
-#' \donttest{
-#' \dontrun{
 #' # Data generation and model fitting
 #'
-#' category <- rep(3:4,each = 5)#category <- c(rep(3,10),rep(5,10),rep(7,10))
 #' Alldata <- DataGeneration(seed = 1,
-#'                           #model_D = rep(3, 10),
-#'                           N=5000,
+#'                           #model_D = rep(1, 10),
+#'                           N=1000,
 #'                           nitem_D = 0,
-#'                           nitem_P = 10,
-#'                           categ = category,
+#'                           nitem_P = 8,
+#'                           categ = rep(3:4,each = 4),
 #'                           d = 1.664,
 #'                           sd_ratio = 2,
 #'                           prob = 0.3)
@@ -38,27 +35,27 @@
 #'                   data = data,
 #'                   model = "GPCM",
 #'                   latent_dist = "Mixture",
-#'                   bandwidth = "SJ-ste",
 #'                   max_iter = 200,
 #'                   threshold = .001,
-#'                   h=4)
+#'                   )
 #'
 #'
 #' # Plotting the latent distribution
 #'
-#' plot_LD(M1, xlim = c(-6, 6))
-#' }}
+#' plot_LD(model=M1, xlim = c(-6, 6))
+#'
 plot_LD <- function(model, xlim = c(-6, 6)){
   if(model[["Options"]][["latent_dist"]]=="Mixture"){
-    ggplot2::ggplot(mapping=aes(x=xlim)) +
-      stat_function(fun = dist2, n = 101, args = list(prob = model$prob, d=model$d, sd_ratio = model$sd_ratio)) +
+    ggplot2::ggplot() +
+      stat_function(fun = dist2, xlim=xlim, n = 101, args = list(prob = model$prob, d=model$d, sd_ratio = model$sd_ratio)) +
       ylab("latent density") +
       xlab(expression(theta)) +
       scale_y_continuous(breaks = NULL)
   } else {
     if(model[["Options"]][["latent_dist"]]%in% c("Normal", "normal", "N")){
-      ggplot2::ggplot(mapping=aes(x=xlim)) +
-        stat_function(fun = dnormal, n = 101, args = list()) +
+      message('Latent distribution is always normal distribution if "latent_dist = "Normal""')
+      ggplot2::ggplot() +
+        stat_function(fun = dnormal, xlim=xlim, n = 101, args = list()) +
         ylab("latent density") +
         xlab(expression(theta)) +
         scale_y_continuous(breaks = NULL)

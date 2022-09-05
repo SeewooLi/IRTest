@@ -5,8 +5,10 @@ Version: 0.0.1
 Authors@R: person("Seewoo", "Li", 
     email = "cu@yonsei.ac.kr",
     role = c("aut", "cre"))
-Description: Item response theory (IRT) parameter estimation using marginal maximum likelihood and EM algorithm. 
-    Within parameter estimation algorithm, several methods for latent distribution estimation are available.
+Description: Item response theory (IRT) parameter estimation using marginal maximum likelihood and expectation-maximization algorithm 
+    (Bock & Aitkin, 1981 <doi:10.1007/BF02293801>). 
+    Within parameter estimation algorithm, several methods for latent distribution estimation are available 
+    (Li, 2022 <https://www.riss.kr/search/detail/DetailView.do?p_mat_type=be54d9b8bc7cdb09&control_no=9a95f68e2c1126c5ffe0bdc3ef48d419>).
     Reflecting some features of the true latent distribution, these latent distribution estimation methods can possibly free the normality assumption on the latent distribution.
 License: GPL (>= 3)
 Encoding: UTF-8

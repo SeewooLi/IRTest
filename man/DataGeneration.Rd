@@ -82,7 +82,6 @@ This function returns a \code{list} which contains several objects:
 This function generates artificial item response data with users specified item types, details of item parameters, and latent distribution.
 }
 \examples{
-\donttest{
 # Dichotomous item responses only
 
 Alldata <- DataGeneration(seed = 1,
@@ -103,7 +102,7 @@ theta <- Alldata$theta
 # Polytomous item responses only
 
 Alldata <- DataGeneration(seed = 2,
-                          N=10000,
+                          N=1000,
                           nitem_D = 0,
                           nitem_P = 10,
                           categ = rep(3:7,each = 2),
@@ -122,7 +121,7 @@ theta <- Alldata$theta
 Alldata <- DataGeneration(seed = 2,
                           model_D = rep(1:2, each=10),# 1PL model is applied to item #1~10
                                                       # and 2PL model is applied to item #11~20.
-                          N=10000,
+                          N=1000,
                           nitem_D = 20,
                           nitem_P = 10,
                           categ = rep(3:7,each = 2),# 3 categories for item #21-22,
@@ -140,7 +139,7 @@ itemP <- Alldata$item_P
 initialitemD <- Alldata$initialitem_D
 initialitemP <- Alldata$initialitem_P
 theta <- Alldata$theta
-}
+
 }
 \references{
 Li, S. (2021). Using a two-component normal mixture distribution as a latent distribution in estimating parameters of item response models. \emph{Journal of Educational Evaluation, 34}(4), 759-789.

@@ -118,16 +118,14 @@
 #' @export
 #'
 #' @examples
-#'\donttest{
-#' \dontrun{
 #' # A preparation of dichotomous item response data
 #'
 #' Alldata <- DataGeneration(seed = 1,
 #'                           model_P = "GPCM",
-#'                           categ = rep(c(3,7), each = 5),
+#'                           categ = rep(3:4, each = 4),
 #'                           N=1000,
 #'                           nitem_D = 0,
-#'                           nitem_P = 10,
+#'                           nitem_P = 8,
 #'                           d = 1.414,
 #'                           sd_ratio = 2,
 #'                           prob = 0.5)
@@ -146,10 +144,10 @@
 #'                   latent_dist = "KDE",
 #'                   bandwidth = "SJ-ste", # an argument required only when "latent_dist = 'KDE'"
 #'                   max_iter = 200,
-#'                   threshold = .0001,
+#'                   threshold = .001,
 #'                   h=4 # an argument required only when "latent_dist = 'DC'"
 #'                   )
-#' }}
+#'
 IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
                         latent_dist="Normal", max_iter=200, threshold=0.0001,
                         bandwidth="nrd", h=NULL){
@@ -174,9 +172,9 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
       E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range)
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
-      diff <- max(abs(I-initialitem), na.rm = T)
+      diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
-      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
     Ak <- E$Ak
@@ -197,10 +195,10 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
       Xk <- lin$qp
       post_den <- lin$qh
 
-      diff <- max(abs(I-initialitem), na.rm = T)
+      diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
       Ak <- post_den
-      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
   }
@@ -215,9 +213,9 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
       initialitem <- M1[[1]]
       M2 <- M2step(E)
       prob = M2[1];d = M2[3];sd_ratio = M2[4]
-      diff <- max(abs(I-initialitem), na.rm = T)
+      diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
-      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
     Ak <- E$Ak
@@ -240,10 +238,10 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
       SJPI <- density(rep(Xk[nzindex], times=round(post_den*N)[nzindex]), bw = bandwidth,n=q, from = range[1], to=range[2])
       post_den <- lin_inex(Xk, SJPI$y/sum(SJPI$y), range = range)$qh
 
-      diff <- max(abs(I-initialitem), na.rm = T)
+      diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
       Ak <- post_den
-      cat("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
     bw <- c(SJPI$bw, SJPI$n)
@@ -278,10 +276,10 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
       Xk <- lin$qp
       post_den <- lin$qh
 
-      diff <- max(abs(I-initialitem), na.rm = T)
+      diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
       Ak <- post_den
-      cat("\r","\r","Method = ",latent_dist,h,", EM cycle = ",iter,", Max-Change = ",diff,sep="")
+      message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
   }
