@@ -1,3 +1,15 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Explained all acronyms in the description text.
+
+* Added references in the description text which describe the methods in the package.
+
+* Unwrapped the examples from \donttest{}.
+
+* Altered functions from cat() to message() to generate suppressible messages. 
+
+  
 ## Test environments
 
 * macOS 11.5.2 (release), R 4.2.1
