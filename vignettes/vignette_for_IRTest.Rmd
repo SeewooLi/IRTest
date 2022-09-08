@@ -70,7 +70,7 @@ ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
 
 + **Analysis** (parameter estimation)
 
-```{r, results='hide'}
+```{r, results='hide', message=FALSE}
 ######                            ######
 ###### Empirical histogram method ######
 ######                            ######
@@ -199,7 +199,7 @@ ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
 
 + **Analysis** (parameter estimation)
 
-```{r, results='hide'}
+```{r, results='hide', message=FALSE}
 ######                                  ######
 ###### Kernel density estimation method ######
 ######                                  ######
@@ -332,7 +332,7 @@ ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
 
 + **Analysis** (parameter estimation)
 
-```{r, results='hide'}
+```{r, results='hide', message=FALSE}
 ######                                  ######
 ###### Kernel density estimation method ######
 ######                                  ######

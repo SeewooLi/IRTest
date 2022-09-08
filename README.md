@@ -94,7 +94,8 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
                     model = rep(1, 10),
                     latent_dist = "EHM",
                     max_iter = 200,
-                    threshold = .001)
+                    threshold = .001
+                    )
 ```
 
 -   Parameter estimation results
