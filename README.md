@@ -65,13 +65,13 @@ A simulation study for a Rasch model can be done in following manners:
 library(IRTest)
 ```
 
--   An artificial data of 500 examinees and 10 items.
+-   An artificial data of 1000 examinees and 20 items.
 
 ``` r
 Alldata <- DataGeneration(seed = 123456789,
-                          model_D = rep(1, 10),
-                          N=500,
-                          nitem_D = 10,
+                          model_D = rep(1, 20),
+                          N=1000,
+                          nitem_D = 20,
                           nitem_P = 0,
                           d = 1.664,
                           sd_ratio = 2,
@@ -91,7 +91,7 @@ estimation of latent distribution.
 ``` r
 Mod1 <- IRTest_Dich(initialitem = initialitem,
                     data = data,
-                    model = rep(1, 10),
+                    model = rep(1, 20),
                     latent_dist = "EHM",
                     max_iter = 200,
                     threshold = .001
@@ -105,29 +105,49 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
 item
 #>       [,1]  [,2] [,3]
 #>  [1,]    1 -0.96    0
-#>  [2,]    1  0.67    0
-#>  [3,]    1  0.88    0
-#>  [4,]    1  0.55    0
-#>  [5,]    1 -0.20    0
-#>  [6,]    1  0.99    0
-#>  [7,]    1  0.38    0
-#>  [8,]    1  0.30    0
-#>  [9,]    1  1.93    0
-#> [10,]    1  0.53    0
+#>  [2,]    1  1.04    0
+#>  [3,]    1  0.47    0
+#>  [4,]    1 -0.16    0
+#>  [5,]    1 -0.81    0
+#>  [6,]    1 -0.40    0
+#>  [7,]    1  0.82    0
+#>  [8,]    1 -0.37    0
+#>  [9,]    1 -1.11    0
+#> [10,]    1  0.50    0
+#> [11,]    1 -0.97    0
+#> [12,]    1 -1.05    0
+#> [13,]    1  0.02    0
+#> [14,]    1  1.32    0
+#> [15,]    1 -0.50    0
+#> [16,]    1  0.18    0
+#> [17,]    1 -1.39    0
+#> [18,]    1  0.59    0
+#> [19,]    1 -0.58    0
+#> [20,]    1 -1.59    0
 
 ### Estimated item parameters
 Mod1$par_est
-#>       a          b c
-#>  [1,] 1 -0.7383615 0
-#>  [2,] 1  0.5071181 0
-#>  [3,] 1  0.7980726 0
-#>  [4,] 1  0.5274258 0
-#>  [5,] 1 -0.3909154 0
-#>  [6,] 1  0.8954094 0
-#>  [7,] 1  0.4264496 0
-#>  [8,] 1  0.3068586 0
-#>  [9,] 1  1.9525167 0
-#> [10,] 1  0.4465375 0
+#>       a           b c
+#>  [1,] 1 -0.81778940 0
+#>  [2,] 1  0.95147161 0
+#>  [3,] 1  0.47031687 0
+#>  [4,] 1 -0.05744344 0
+#>  [5,] 1 -0.85035950 0
+#>  [6,] 1 -0.43165890 0
+#>  [7,] 1  0.88522005 0
+#>  [8,] 1 -0.31579314 0
+#>  [9,] 1 -1.16806277 0
+#> [10,] 1  0.53663630 0
+#> [11,] 1 -1.07440478 0
+#> [12,] 1 -1.16213006 0
+#> [13,] 1  0.07098615 0
+#> [14,] 1  1.25366401 0
+#> [15,] 1 -0.42659144 0
+#> [16,] 1  0.20463597 0
+#> [17,] 1 -1.37707762 0
+#> [18,] 1  0.59841164 0
+#> [19,] 1 -0.75333017 0
+#> [20,] 1 -1.69652969 0
 
 ### Plotting
 par(mfrow=c(1,2))
@@ -142,7 +162,16 @@ abline(a=0,b=1)
 -   Result of latent distribution estimation
 
 ``` r
-plot_LD(Mod1)
+plot_LD(Mod1)+geom_line(mapping = aes(colour="Estimated"))+
+  geom_line(mapping=aes(x=seq(-6,6,length=121), 
+                        y=dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 
+                        colour="True"))+
+  labs(title="The estimated latent density using 'EHM'",
+       colour= "Type")+theme_bw()
 ```
 
 <img src="man/figures/README-plotLD-1.png" width="100%" style="display: block; margin: auto;" />
+
+The discrepancy between the estimated and true densities is observed.
+Only the restricted amount of data was created for illustrative purpose,
+which is the main cause of this discrepancy.
