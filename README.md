@@ -85,16 +85,17 @@ theta <- Alldata$theta
 
 -   Analysis
 
-For an illustrative purpose, empirical histogram method is used for
-estimation of latent distribution.
+For an illustrative purpose, kernel density estimation method is used
+for the estimation of latent distribution.
 
 ``` r
 Mod1 <- IRTest_Dich(initialitem = initialitem,
                     data = data,
                     model = rep(1, 20),
-                    latent_dist = "EHM",
+                    latent_dist = "KDE",
                     max_iter = 200,
-                    threshold = .001
+                    threshold = .001,
+                    bandwidth = "SJ-ste"
                     )
 ```
 
@@ -128,26 +129,26 @@ item
 ### Estimated item parameters
 Mod1$par_est
 #>       a           b c
-#>  [1,] 1 -0.81778940 0
-#>  [2,] 1  0.95147161 0
-#>  [3,] 1  0.47031687 0
-#>  [4,] 1 -0.05744344 0
-#>  [5,] 1 -0.85035950 0
-#>  [6,] 1 -0.43165890 0
-#>  [7,] 1  0.88522005 0
-#>  [8,] 1 -0.31579314 0
-#>  [9,] 1 -1.16806277 0
-#> [10,] 1  0.53663630 0
-#> [11,] 1 -1.07440478 0
-#> [12,] 1 -1.16213006 0
-#> [13,] 1  0.07098615 0
-#> [14,] 1  1.25366401 0
-#> [15,] 1 -0.42659144 0
-#> [16,] 1  0.20463597 0
-#> [17,] 1 -1.37707762 0
-#> [18,] 1  0.59841164 0
-#> [19,] 1 -0.75333017 0
-#> [20,] 1 -1.69652969 0
+#>  [1,] 1 -0.81623195 0
+#>  [2,] 1  0.95015752 0
+#>  [3,] 1  0.46915203 0
+#>  [4,] 1 -0.05749927 0
+#>  [5,] 1 -0.84878003 0
+#>  [6,] 1 -0.43074133 0
+#>  [7,] 1  0.88386899 0
+#>  [8,] 1 -0.31516204 0
+#>  [9,] 1 -1.16661181 0
+#> [10,] 1  0.53539420 0
+#> [11,] 1 -1.07284758 0
+#> [12,] 1 -1.16067060 0
+#> [13,] 1  0.07060026 0
+#> [14,] 1  1.25273942 0
+#> [15,] 1 -0.42568580 0
+#> [16,] 1  0.20393832 0
+#> [17,] 1 -1.37608089 0
+#> [18,] 1  0.59711331 0
+#> [19,] 1 -0.75183337 0
+#> [20,] 1 -1.69678802 0
 
 ### Plotting
 par(mfrow=c(1,2))
@@ -166,12 +167,8 @@ plot_LD(Mod1)+geom_line(mapping = aes(colour="Estimated"))+
   geom_line(mapping=aes(x=seq(-6,6,length=121), 
                         y=dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 
                         colour="True"))+
-  labs(title="The estimated latent density using 'EHM'",
+  labs(title="The estimated latent density using 'KDE'",
        colour= "Type")+theme_bw()
 ```
 
 <img src="man/figures/README-plotLD-1.png" width="100%" style="display: block; margin: auto;" />
-
-The discrepancy between the estimated and true densities is observed.
-Only the restricted amount of data was created for illustrative purpose,
-which is the main cause of this discrepancy.

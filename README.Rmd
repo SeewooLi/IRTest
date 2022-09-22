@@ -83,15 +83,16 @@ theta <- Alldata$theta
 
 * Analysis 
 
-For an illustrative purpose, empirical histogram method is used for estimation of latent distribution.
+For an illustrative purpose, kernel density estimation method is used for the estimation of latent distribution.
 
 ```{r analysis, results='hide', message=FALSE}
 Mod1 <- IRTest_Dich(initialitem = initialitem,
                     data = data,
                     model = rep(1, 20),
-                    latent_dist = "EHM",
+                    latent_dist = "KDE",
                     max_iter = 200,
-                    threshold = .001
+                    threshold = .001,
+                    bandwidth = "SJ-ste"
                     )
 ```
 
@@ -119,10 +120,6 @@ plot_LD(Mod1)+geom_line(mapping = aes(colour="Estimated"))+
   geom_line(mapping=aes(x=seq(-6,6,length=121), 
                         y=dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 
                         colour="True"))+
-  labs(title="The estimated latent density using 'EHM'",
+  labs(title="The estimated latent density using 'KDE'",
        colour= "Type")+theme_bw()
 ```
-
-The discrepancy between the estimated and true densities is observed. 
-Only the restricted amount of data was created for illustrative purpose, which is the main cause of this discrepancy.
-
