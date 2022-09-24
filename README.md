@@ -91,7 +91,7 @@ estimation of latent distribution.
 ``` r
 Mod1 <- IRTest_Dich(initialitem = initialitem,
                     data = data,
-                    model = rep(1, 20),
+                    model = rep("1PL", 20),
                     latent_dist = "EHM",
                     max_iter = 200,
                     threshold = .001
@@ -162,12 +162,32 @@ abline(a=0,b=1)
 -   Result of latent distribution estimation
 
 ``` r
-plot_LD(Mod1)+geom_line(mapping = aes(colour="Estimated"))+
+plot_LD(Mod1)+
+  geom_line(mapping = aes(colour="Estimated"))+
   geom_line(mapping=aes(x=seq(-6,6,length=121), 
                         y=dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 
                         colour="True"))+
-  labs(title="The estimated latent density using 'EHM'",
-       colour= "Type")+theme_bw()
+  labs(title="The estimated latent density using 'EHM'", colour= "Type")+
+  theme_bw()
 ```
 
 <img src="man/figures/README-plotLD-1.png" width="100%" style="display: block; margin: auto;" />
+
+-   Posterior distribution for examinees
+
+``` r
+set.seed(1)
+selected_examinees <- sample(1:1000,6)
+post_sample <- data.frame(X=rep(seq(-6,6, length.out=121),6), 
+                          posterior = 10*c(t(Mod1$Pk[selected_examinees,])), 
+                          ID=rep(paste("examinee", selected_examinees), each=121))
+ggplot(data=post_sample, mapping=aes(x=X, y=posterior, group=ID))+
+  geom_line()+
+  labs(title="Posterior density for selected examinees", x=expression(theta))+
+  facet_wrap(~ID, ncol=2)+
+  annotate(geom="line", x=seq(-6,6,length=121), 
+                        y=dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), colour="grey")+
+  theme_bw()
+```
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
