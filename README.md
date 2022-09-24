@@ -175,6 +175,10 @@ plot_LD(Mod1)+
 
 -   Posterior distribution for examinees
 
+Each examinee’s posterior distribution is identified in the E-step of
+the estimation algorithm (i.e., EM algorithm). Posterior distributions
+can be found in `Mod1$Pk`.
+
 ``` r
 set.seed(1)
 selected_examinees <- sample(1:1000,6)
