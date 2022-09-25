@@ -93,7 +93,6 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
                     data = data,
                     model = rep("1PL", 20),
                     latent_dist = "EHM",
-                    max_iter = 200,
                     threshold = .001
                     )
 ```
@@ -187,7 +186,7 @@ post_sample <- data.frame(X=rep(seq(-6,6, length.out=121),6),
                           ID=rep(paste("examinee", selected_examinees), each=121))
 ggplot(data=post_sample, mapping=aes(x=X, y=posterior, group=ID))+
   geom_line()+
-  labs(title="Posterior density for selected examinees", x=expression(theta))+
+  labs(title="Posterior densities for selected examinees", x=expression(theta))+
   facet_wrap(~ID, ncol=2)+
   annotate(geom="line", x=seq(-6,6,length=121), 
                         y=dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), colour="grey")+
