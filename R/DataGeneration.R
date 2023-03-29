@@ -250,7 +250,6 @@ DataGeneration <- function(seed=1, N=2000,
           initialitem_P[i,2:(categ[i])] <- 0#(-2:1+.5)/3
         }
 
-
         # item responses for polytomous items
 
         for(j in 1:N){
