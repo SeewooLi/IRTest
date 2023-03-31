@@ -76,6 +76,9 @@
 #'
 #' Alldata <- DataGeneration(seed = 2,
 #'                           N=1000,
+#'                           item_D=NULL,
+#'                           item_P=NULL,
+#'                           theta = NULL,
 #'                           nitem_D = 0,
 #'                           nitem_P = 10,
 #'                           categ = rep(3:7,each = 2),
