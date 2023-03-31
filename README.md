@@ -34,28 +34,27 @@ install.packages("IRTest")
 
 Followings are functions of **IRTest** available for users.
 
--   `IRTest_Dich` is the estimation function when all items are
-    dichotomously scored.
+- `IRTest_Dich` is the estimation function when all items are
+  dichotomously scored.
 
--   `IRTest_Poly` is the estimation function when all items are
-    polytomously scored.
+- `IRTest_Poly` is the estimation function when all items are
+  polytomously scored.
 
--   `IRTest_Mix` is the estimation function for a mixed-format test, a
-    combination of dichotomous item(s) and polytomous item(s).
+- `IRTest_Mix` is the estimation function for a mixed-format test, a
+  combination of dichotomous item(s) and polytomous item(s).
 
--   `DataGeneration` generates several objects that are useful for
-    computer simulation studies. Among these are starting values for an
-    algorithm and artificial item-response data that can be passed to
-    `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`
+- `DataGeneration` generates several objects that are useful for
+  computer simulation studies. Among these are starting values for an
+  algorithm and artificial item-response data that can be passed to
+  `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`
 
--   `plot_LD` draws a plot of the estimated latent distribution.
+- `plot_LD` draws a plot of the estimated latent distribution.
 
--   `dist2` is a probability density function of two-component Gaussian
-    mixture distribution.
+- `dist2` is a probability density function of two-component Gaussian
+  mixture distribution.
 
--   `original_par_2GM` converts re-parameterized parameters of
-    two-component Gaussian mixture distribution into original
-    parameters.
+- `original_par_2GM` converts re-parameterized parameters of
+  two-component Gaussian mixture distribution into original parameters.
 
 ## Example
 
@@ -65,7 +64,7 @@ A simulation study for a Rasch model can be done in following manners:
 library(IRTest)
 ```
 
--   An artificial data of 1000 examinees and 20 items.
+- An artificial data of 1000 examinees and 20 items.
 
 ``` r
 Alldata <- DataGeneration(seed = 123456789,
@@ -83,7 +82,7 @@ initialitem <- Alldata$initialitem_D
 theta <- Alldata$theta
 ```
 
--   Analysis
+- Analysis
 
 For an illustrative purpose, empirical histogram method is used for the
 estimation of latent distribution.
@@ -97,7 +96,7 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
                     )
 ```
 
--   Parameter estimation results
+- Parameter estimation results
 
 ``` r
 ### True item parameters 
@@ -158,7 +157,7 @@ abline(a=0,b=1)
 
 <img src="man/figures/README-results-1.png" width="100%" style="display: block; margin: auto;" />
 
--   Result of latent distribution estimation
+- Result of latent distribution estimation
 
 ``` r
 plot_LD(Mod1)+
@@ -172,7 +171,7 @@ plot_LD(Mod1)+
 
 <img src="man/figures/README-plotLD-1.png" width="100%" style="display: block; margin: auto;" />
 
--   Posterior distribution for examinees
+- Posterior distribution for examinees
 
 Each examinee’s posterior distribution is identified in the E-step of
 the estimation algorithm (i.e., EM algorithm). Posterior distributions
