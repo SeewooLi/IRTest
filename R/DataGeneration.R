@@ -192,16 +192,16 @@ DataGeneration <- function(seed=1, N=2000,
   } else {
     if((nitem_D!=0)&(!is.null(nitem_D))){
       data_D <- matrix(nrow = N, ncol = nitem_D)
-      initialitem_D <- matrix(nrow = nitem_D, ncol = 3)
-      set.seed(seed)
+      # initialitem_D <- matrix(nrow = nitem_D, ncol = 3)
+      #
       for(i in 1:nitem_D){
-        if(model_D[i]==1){
-          initialitem_D[i,] <- c(1,0,0)
-        }else if(model_D[i]==2){
-          initialitem_D[i,] <- c((a_l+a_u)/2,0,0)
-        } else if(model_D[i]==3){
-          initialitem_D[i,] <- c((a_l+a_u)/2,0,0)
-        }
+      #   if(model_D[i]==1){
+      #     initialitem_D[i,] <- c(1,0,0)
+      #   }else if(model_D[i]==2){
+      #     initialitem_D[i,] <- c((a_l+a_u)/2,0,0)
+      #   } else if(model_D[i]==3){
+      #     initialitem_D[i,] <- c((a_l+a_u)/2,0,0)
+      #   }
 
 
         # item responses for dichotomous items
