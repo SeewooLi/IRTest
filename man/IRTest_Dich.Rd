@@ -10,6 +10,7 @@ IRTest_Dich(
   range = c(-6, 6),
   q = 121,
   model,
+  ability_method = "EAP",
   latent_dist = "Normal",
   max_iter = 200,
   threshold = 1e-04,
@@ -32,6 +33,10 @@ The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
 Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
 \code{2}, \code{"2PL"} for two-parameter logistic model,
 and \code{3}, \code{"3PL"} for three-parameter logistic model.}
+
+\item{ability_method}{The ability parameter estimation method.
+The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
+The default is \code{EAP}.}
 
 \item{latent_dist}{A character string that determines latent distribution estimation method.
 Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
@@ -58,7 +63,7 @@ This argument determines the complexity of Davidian curve.}
 \value{
 This function returns a \code{list} which contains several objects:
 \item{par_est}{The item parameter estimates.}
-\item{se}{The standard errors for item parameter estimates.}
+\item{se}{The asymptotic standard errors for item parameter estimates.}
 \item{fk}{The estimated frequencies of examinees at each quadrature points.}
 \item{iter}{The number of EM-MML iterations required for the convergence.}
 \item{prob}{The estimated \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).}
@@ -73,8 +78,8 @@ Without loss of generality, \eqn{\mu_2 \ge \mu_1}, thus \eqn{\delta \ge 0}, is a
 \item{Ak}{The estimated discrete latent distribution.
 It is discrete (i.e., probability mass function) since quadrature scheme of EM-MML is used.}
 \item{Pk}{The posterior probabilities for each examinees at each quadrature points.}
-\item{theta}{The estimated ability parameter values.
-Expected \emph{a posteriori} (EAP) is used for ability parameter estimation.}
+\item{theta}{The estimated ability parameter values.}
+\item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}}
 \item{logL}{The deviance (i.e., -2\emph{log}L).}
 \item{bw}{The bandwidth used.}
 \item{Options}{A replication of input arguments.}
