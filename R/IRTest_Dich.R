@@ -151,8 +151,8 @@
 #'                   )
 #'
 IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
-                        latent_dist="Normal", max_iter=200, threshold=0.0001,
-                        bandwidth="SJ-ste", h=NULL){
+                        ability_method = 'EAP', latent_dist="Normal", max_iter=200,
+                        threshold=0.0001, bandwidth="SJ-ste", h=NULL){
   Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,
                  latent_dist=latent_dist, max_iter=max_iter, threshold=threshold)
   I <- initialitem
@@ -285,11 +285,21 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
       flush.console()
     }
   }
+  # ability parameter estimation
+  if(ability_method == 'EAP'){
+    theta <- as.numeric(E$Pk%*%E$Xk)
+    theta_se <- NULL
+  } else if(ability_method == 'MLE'){
+    mle_result <- MLE_theta(item = initialitem, data = data)
+    theta <- mle_result[[1]]
+    theta_se <- mle_result[[2]]
+  }
+
   colnames(initialitem) <- c("a", "b", "c")
   colnames(M1[[2]]) <- c("a", "b", "c")
 
   # preparation for outputs
-  EAP <- as.numeric(E$Pk%*%E$Xk)
+
   logL <- 0
   for(i in 1:q){
     logL <- logL+sum(logLikeli(initialitem, data, theta = Xk[i])*E$Pk[,i])
@@ -308,7 +318,8 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
               diff=diff,
               Ak=Ak,
               Pk=E$Pk,
-              theta = EAP,
+              theta = theta,
+              theta_se = theta_se,
               logL=-2*logL, # deviance
               bw=bw,
               Options = Options # specified argument values

@@ -410,7 +410,32 @@ M2step <- function(E, max_iter=200){
 #################################################################################################################
 # Ability parameter MLE
 #################################################################################################################
+MLE_theta <- function(item, data){
+  mle <- NULL
+  se <- NULL
+  for(i in 1:1000){
+    th <- 0
 
+    thres <- 1
+    while(thres > 0.0001){
+      p_ <- P(theta = th, a = item[,1], b = item[,2], c = 0)
+      p <- p_*(1-item[,3])+item[,3]
+      L1 <- sum(
+        item[,1]*p_/p*(data[i,]-p)
+      )
+      L2 <- -sum(
+        item[,1]^2*p_^2+(1-p)/p
+      )
+      diff <- L1/L2
+      th <- th - diff
+      thres <- abs(diff)
+    }
+    mle <- append(mle, th)
+    se <- append(se, sqrt(-1/L2))
+  }
+  return(list(mle=mle,
+              se=se))
+}
 
 #################################################################################################################
 # Linear interpolation / extrapolation
