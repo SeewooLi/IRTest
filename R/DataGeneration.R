@@ -120,12 +120,11 @@
 #' theta <- Alldata$theta
 #'
 DataGeneration <- function(seed=1, N=2000,
-                           item_D=NULL,
-                           item_P=NULL,
-                           theta = NULL,
                            nitem_D=NULL, nitem_P=NULL,
                            model_D, model_P="GPCM",
                            latent_dist="Mixture",
+                           item_D=NULL, item_P=NULL,
+                           theta = NULL,
                            prob=0.5, d=1.7, sd_ratio=1, a_l=0.8, a_u=2.5,
                            c_l=0, c_u=0.2, categ){
   initialitem_D=NULL; data_D=NULL
