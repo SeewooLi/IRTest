@@ -12,6 +12,9 @@ DataGeneration(
   model_D,
   model_P = "GPCM",
   latent_dist = "Mixture",
+  item_D = NULL,
+  item_P = NULL,
+  theta = NULL,
   prob = 0.5,
   d = 1.7,
   sd_ratio = 1,
@@ -43,6 +46,12 @@ Currently available options are \code{"beta"} (four-parameter beta distribution;
 \code{"chi"} (\eqn{\chi^2} distribution; \code{\link{rchisq}}),
 \code{"normal"} (standard normal distribution; \code{\link{rnorm}}),
 and \code{"Mixture"} (two-component Gaussian mixture distribution; see Li (2021) for details.)}
+
+\item{item_D}{Default is \code{NULL}. An item parameter matrix can be specified. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{c} parameter for the third column.}
+
+\item{item_P}{Default is \code{NULL}. An item parameter matrix can be specified. The number of columns should be 7: \code{a} parameter for the first, and \code{b} parameters for the rest of the columns.}
+
+\item{theta}{Default is NULL. An ability parameter vector can be specified.}
 
 \item{prob}{A numeric value required when \code{latent_dist = "Mixture"}.
 It is a \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).}
@@ -103,6 +112,9 @@ theta <- Alldata$theta
 
 Alldata <- DataGeneration(seed = 2,
                           N=1000,
+                          item_D=NULL,
+                          item_P=NULL,
+                          theta = NULL,
                           nitem_D = 0,
                           nitem_P = 10,
                           categ = rep(3:7,each = 2),
