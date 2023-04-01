@@ -98,10 +98,11 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
 
 ```{r results, fig.align='center', fig.height=6, fig.width=10}
 ### True item parameters 
-knitr::kable(item, caption = "True item parameters")
+colnames(item) <- c("a", "b", "c")
+knitr::kable(item, format='simple', caption = "True item parameters")
 
 ### Estimated item parameters
-knitr::kable(Mod1$par_est, caption = "Estimated item parameters")
+knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters")
 
 
 ### Plotting

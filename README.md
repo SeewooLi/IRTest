@@ -100,10 +100,11 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
 
 ``` r
 ### True item parameters 
-knitr::kable(item, caption = "True item parameters")
+colnames(item) <- c("a", "b", "c")
+knitr::kable(item, format='simple', caption = "True item parameters")
 ```
 
-|     |       |     |
+|   a |     b |   c |
 |----:|------:|----:|
 |   1 | -0.96 |   0 |
 |   1 |  1.04 |   0 |
@@ -131,7 +132,7 @@ True item parameters
 ``` r
 
 ### Estimated item parameters
-knitr::kable(Mod1$par_est, caption = "Estimated item parameters")
+knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters")
 ```
 
 |   a |          b |   c |
