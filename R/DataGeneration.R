@@ -19,6 +19,9 @@
 #' \code{"chi"} (\eqn{\chi^2} distribution; \code{\link{rchisq}}),
 #' \code{"normal"} (standard normal distribution; \code{\link{rnorm}}),
 #' and \code{"Mixture"} (two-component Gaussian mixture distribution; see Li (2021) for details.)
+#' @param item_D Default is \code{NULL}. An item parameter matrix can be specified. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{c} parameter for the third column.
+#' @param item_P Default is \code{NULL}. An item parameter matrix can be specified. The number of columns should be 7: \code{a} parameter for the first, and \code{b} parameters for the rest of the columns.
+#' @param theta Default is NULL. An ability parameter vector can be specified.
 #' @param prob A numeric value required when \code{latent_dist = "Mixture"}.
 #' It is a \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).
 #' @param d A numeric value required when \code{latent_dist = "Mixture"}.
@@ -192,17 +195,14 @@ DataGeneration <- function(seed=1, N=2000,
   } else {
     if((nitem_D!=0)&(!is.null(nitem_D))){
       data_D <- matrix(nrow = N, ncol = nitem_D)
-      # initialitem_D <- matrix(nrow = nitem_D, ncol = 3)
-      #
-      for(i in 1:nitem_D){
-      #   if(model_D[i]==1){
-      #     initialitem_D[i,] <- c(1,0,0)
-      #   }else if(model_D[i]==2){
-      #     initialitem_D[i,] <- c((a_l+a_u)/2,0,0)
-      #   } else if(model_D[i]==3){
-      #     initialitem_D[i,] <- c((a_l+a_u)/2,0,0)
-      #   }
+      initialitem_D <- matrix(nrow = nitem_D, ncol = 3)
 
+      for(i in 1:nitem_D){
+        if(model_D[i]==1){
+          initialitem_D[i,] <- c(1,0,0)
+        } else {
+          initialitem_D[i,] <- c((a_l+a_u)/2,0,0)
+        }
 
         # item responses for dichotomous items
 
