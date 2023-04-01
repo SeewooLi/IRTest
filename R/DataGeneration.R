@@ -202,13 +202,14 @@ DataGeneration <- function(seed=1, N=2000,
         } else if(model_D[i]==3){
           initialitem_D[i,] <- c((a_l+a_u)/2,0,0)
         }
-      }
 
-      # item responses for dichotomous items
 
-      for(j in 1:N){
-        p <- P(theta = theta[j], a = item_D[i,1], b = item_D[i,2], c= item_D[i,3])
-        data_D[j,i] <- rbinom(1,1,prob = p)
+        # item responses for dichotomous items
+
+        for(j in 1:N){
+          p <- P(theta = theta[j], a = item_D[i,1], b = item_D[i,2], c= item_D[i,3])
+          data_D[j,i] <- rbinom(1,1,prob = p)
+        }
       }
     }
   }
