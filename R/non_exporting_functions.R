@@ -413,7 +413,7 @@ M2step <- function(E, max_iter=200){
 MLE_theta <- function(item, data){
   mle <- NULL
   se <- NULL
-  for(i in 1:1000){
+  for(i in 1:nrow(data)){
     th <- 0
 
     thres <- 1
