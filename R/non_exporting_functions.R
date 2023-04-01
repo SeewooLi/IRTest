@@ -424,7 +424,7 @@ MLE_theta <- function(item, data){
         item[,1]*p_/p*(data[i,]-p)
       )
       L2 <- -sum(
-        item[,1]^2*p_^2+(1-p)/p
+        item[,1]^2*p_^2*(1-p)/p
       )
       diff <- L1/L2
       th <- th - diff
