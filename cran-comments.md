@@ -1,13 +1,9 @@
 ## Resubmission
-This is a resubmission. In this version I have:
+In this version I have:
 
-* Explained all acronyms in the description text.
+* Added option for ability parameter ML estimation of dichotomous data.
 
-* Added references in the description text which describe the methods in the package.
-
-* Unwrapped the examples from \donttest{}.
-
-* Altered functions from cat() to message() to generate suppressible messages. 
+* Made fixed-parameter data Generation available.
 
   
 ## Test environments
@@ -23,8 +19,6 @@ This is a resubmission. In this version I have:
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs.
+There were no ERRORs, WARNINGs, or NOTEs.
 
-0 ERRORs | 0 WARNINGs | 1 NOTEs
-
-* This is a new release.
+0 ERRORs | 0 WARNINGs | 0 NOTEs

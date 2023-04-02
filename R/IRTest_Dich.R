@@ -98,8 +98,9 @@
 #' \item{Ak}{The estimated discrete latent distribution.
 #' It is discrete (i.e., probability mass function) since quadrature scheme of EM-MML is used.}
 #' \item{Pk}{The posterior probabilities for each examinees at each quadrature points.}
-#' \item{theta}{The estimated ability parameter values.}
-#' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}}
+#' \item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}, and if an examinee answers all or none of the items correctly, the function returns \eqn{\pm}\code{Inf}.}
+#' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
+#' If an examinee answers all or none of the items correctly, the function returns \code{NA}.}
 #' \item{logL}{The deviance (i.e., -2\emph{log}L).}
 #' \item{bw}{The bandwidth used.}
 #' \item{Options}{A replication of input arguments.}

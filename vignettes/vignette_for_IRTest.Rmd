@@ -41,7 +41,7 @@ They can be considered as the true parameters only if the artificial data (`data
 ```{r}
 Alldata <- DataGeneration(seed = 123456789,
                           model_D = rep(1:2, each=5),
-                          N=1000,
+                          N=500,
                           nitem_D = 10,
                           nitem_P = 0,
                           d = 1.664,
