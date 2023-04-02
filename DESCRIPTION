@@ -4,7 +4,7 @@ Title: Parameter Estimation of Item Response Theory with Estimation of Latent Di
 Version: 0.1.0
 Authors@R: person("Seewoo", "Li", 
     email = "cu@yonsei.ac.kr",
-    role = c("aut", "cre"))
+    role = c("aut", "cre", "cph"))
 Description: Item response theory (IRT) parameter estimation using marginal maximum likelihood and expectation-maximization algorithm 
     (Bock & Aitkin, 1981 <doi:10.1007/BF02293801>). 
     Within parameter estimation algorithm, several methods for latent distribution estimation are available 
