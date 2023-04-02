@@ -1,9 +1,9 @@
 ## Resubmission
 In this version I have:
 
-* Added option for ability parameter ML estimation of dichotomous data.
+* Added the MLE option for ability parameter estimation of dichotomous data.
 
-* Made fixed-parameter data Generation available.
+* Made the fixed-parameter data Generation available.
 
   
 ## Test environments
