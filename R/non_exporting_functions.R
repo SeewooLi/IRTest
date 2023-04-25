@@ -468,6 +468,7 @@ latent_dist_est <- function(method, Xk, posterior, range, bandwidth = NULL, phip
     lin <- lin_inex(Xk, post_den, range = range)
   }
   if(method=='KDE'){
+    N <- sum(posterior)
     post_den <- posterior/sum(posterior)
     post_den <- lin_inex(Xk, post_den, range = range)$qh
     nzindex <- round(post_den*N)!=0

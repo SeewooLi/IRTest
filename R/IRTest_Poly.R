@@ -189,15 +189,13 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
-      post_den <- E$fk/sum(E$fk)
-      Xk <- E$Xk
-      lin <- lin_inex(Xk, post_den, range = range)
-      Xk <- lin$qp
-      post_den <- lin$qh
+      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
+      Xk <- ld_est$Xk
+      Ak <- ld_est$posterior_density
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
-      Ak <- post_den
+
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
@@ -231,16 +229,13 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
-      post_den <- E$fk/sum(E$fk)
-      Xk <- E$Xk
-      post_den <- lin_inex(Xk, post_den, range = range)$qh
-      nzindex <- round(post_den*N)!=0
-      SJPI <- density(rep(Xk[nzindex], times=round(post_den*N)[nzindex]), bw = bandwidth,n=q, from = range[1], to=range[2])
-      post_den <- lin_inex(Xk, SJPI$y/sum(SJPI$y), range = range)$qh
+      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth)
+      Xk <- ld_est$Xk
+      Ak <- ld_est$posterior_density
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
-      Ak <- post_den
+
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
@@ -263,22 +258,13 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
       M1 <- Mstep_Poly(E, item=initialitem, model = model)
       initialitem <- M1[[1]]
 
-      Xk <- E$Xk
-      phipar <- nlminb(start = phipar,
-                       objective = DC.LL,
-                       gradient = DC.grad,
-                       theta=E$Xk,
-                       freq = E$fk)$par
-
-      post_den <- dcurver::ddc(x = Xk, phi = phipar)
-      post_den <- post_den/sum(post_den)
-      lin <- lin_inex(Xk, post_den, range = range, rule = 2)
-      Xk <- lin$qp
-      post_den <- lin$qh
+      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, phipar=phipar)
+      Xk <- ld_est$Xk
+      Ak <- ld_est$posterior_density
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
-      Ak <- post_den
+
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
