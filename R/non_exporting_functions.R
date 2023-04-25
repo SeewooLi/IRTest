@@ -459,6 +459,45 @@ lin_inex <- function(qp, qh, range, rule=2){
   return(list(qp=ap$x, qh=ap$y/sum(ap$y)))
 }
 
+#################################################################################################################
+# Latent distribution estimation
+#################################################################################################################
+latent_dist_est <- function(method, Xk, posterior, range, bandwidth = NULL, phipar=NULL){
+  if(method=='EHM'){
+    post_den <- posterior/sum(posterior)
+    lin <- lin_inex(Xk, post_den, range = range)
+  }
+  if(method=='KDE'){
+    post_den <- posterior/sum(posterior)
+    post_den <- lin_inex(Xk, post_den, range = range)$qh
+    nzindex <- round(post_den*N)!=0
+    SJPI <- density(rep(Xk[nzindex], times=round(post_den*N)[nzindex]),
+                    bw = bandwidth,
+                    n=q,
+                    from = range[1],
+                    to=range[2])
+    lin <- lin_inex(Xk, SJPI$y/sum(SJPI$y), range = range)
+  }
+  if(method=='DC'){
+    phipar <- nlminb(start = phipar,
+                     objective = DC.LL,
+                     gradient = DC.grad,
+                     theta= Xk,
+                     freq = posterior)$par
+
+    post_den <- dcurver::ddc(x = Xk, phi = phipar)
+    post_den <- post_den/sum(post_den)
+    lin <- lin_inex(Xk, post_den, range = range, rule = 2)
+  }
+
+  return(
+    list(
+      posterior_density = lin$qh,
+      Xk = lin$qp
+    )
+  )
+}
+
 
 #################################################################################################################
 # B matrix

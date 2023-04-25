@@ -195,15 +195,18 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
       M1 <- M1step(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
-      post_den <- E$fk/sum(E$fk)
-      Xk <- E$Xk
-      lin <- lin_inex(Xk, post_den, range = range)
-      Xk <- lin$qp
-      post_den <- lin$qh
+      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
+      Xk <- ld_est$Xk
+      Ak <- ld_est$posterior_density
+      # post_den <- E$fk/sum(E$fk)
+      # Xk <- E$Xk
+      # lin <- lin_inex(Xk, post_den, range = range)
+      # Xk <- lin$qp
+      # post_den <- lin$qh
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
-      Ak <- post_den
+      # Ak <- post_den
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
