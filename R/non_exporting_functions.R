@@ -462,13 +462,13 @@ lin_inex <- function(qp, qh, range, rule=2){
 #################################################################################################################
 # Latent distribution estimation
 #################################################################################################################
-latent_dist_est <- function(method, Xk, posterior, range, bandwidth = NULL, phipar=NULL){
+latent_dist_est <- function(method, Xk, posterior, range,
+                            bandwidth = NULL, phipar=NULL, N=NULL, q=NULL){
   if(method=='EHM'){
     post_den <- posterior/sum(posterior)
     lin <- lin_inex(Xk, post_den, range = range)
   }
   if(method=='KDE'){
-    N <- sum(posterior)
     post_den <- posterior/sum(posterior)
     post_den <- lin_inex(Xk, post_den, range = range)$qh
     nzindex <- round(post_den*N)!=0
@@ -494,7 +494,10 @@ latent_dist_est <- function(method, Xk, posterior, range, bandwidth = NULL, phip
   return(
     list(
       posterior_density = lin$qh,
-      Xk = lin$qp
+      Xk = lin$qp,
+      if(method=='KDE'){
+        bw <- c(SJPI$bw, SJPI$n)
+      } else NULL
     )
   )
 }

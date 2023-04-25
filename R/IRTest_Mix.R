@@ -288,7 +288,7 @@ if(nrow(data_D)!=nrow(data_P)){
       initialitem_D <- M1_D[[1]]
       initialitem_P <- M1_P[[1]]
 
-      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth)
+      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth, N=N, q=q)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
 
@@ -299,7 +299,7 @@ if(nrow(data_D)!=nrow(data_P)){
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
-    bw <- c(SJPI$bw, SJPI$n)
+    bw <- ld_est$bw
   }
 
   # Davidian curve method
