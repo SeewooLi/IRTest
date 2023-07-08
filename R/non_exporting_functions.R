@@ -3,8 +3,8 @@
 #################################################################################################################
 .onAttach <- function(libname, pkgname) {
   package_citation <- "Li, S. (2022). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 0.1.0). R package. URL: https://CRAN.R-project.org/package=IRTest"
-  message("Thank you for using MyPackage!")
-  message("To acknowledge our work, please cite the package:")
+  message("Thank you for using IRTest!")
+  message("To acknowledge my work, please cite the package:")
   message(package_citation)
 }
 
