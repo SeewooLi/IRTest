@@ -12,6 +12,7 @@ potential improvements.*
 [![R-CMD-check](https://github.com/SeewooLi/IRTest/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/SeewooLi/IRTest/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/IRTest)](https://CRAN.R-project.org/package=IRTest)
+[![downloads](https://cranlogs.r-pkg.org/badges/grand-total/IRTest)]()
 <!-- badges: end -->
 
 **IRTest** is a useful tool for $\mathcal{\color{red}{IRT}}$ (item
@@ -19,9 +20,9 @@ response theory) parameter $\mathcal{\color{red}{est}}\text{imation}$,
 especially when the violation of normality assumption on latent
 distribution is suspected.  
 **IRTest** deals with uni-dimensional latent variable.  
-In **IRTest**, including the conventional assumption of normality on
-latent distribution, several methods can be applied for estimation of
-latent distribution:  
+In **IRTest**, including the conventional usage of Gaussian
+distribution, several methods can be applied for estimation of latent
+distribution:  
 + empirical histogram method,  
 + two-component Gaussian mixture distribution,  
 + Davidian curve,  
@@ -68,9 +69,6 @@ manners:
 
 ``` r
 library(IRTest)
-#> Thank you for using IRTest!
-#> To acknowledge my work, please cite the package:
-#> Li, S. (2022). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 0.1.0). R package. URL: https://CRAN.R-project.org/package=IRTest
 ```
 
 - Data generation
