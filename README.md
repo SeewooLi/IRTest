@@ -202,6 +202,7 @@ plot_LD(Mod1)+
                         y=dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 
                         colour="True"),
                         size = 1)+
+  ylim(c(0,0.75))+
   labs(title="The estimated latent density using 'EHM'", colour= "Type")+
   theme_bw()
 #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
@@ -209,6 +210,8 @@ plot_LD(Mod1)+
 #> This warning is displayed once every 8 hours.
 #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 #> generated.
+#> Scale for y is already present.
+#> Adding another scale for y, which will replace the existing scale.
 ```
 
 <img src="man/figures/README-plotLD-1.png" width="100%" style="display: block; margin: auto;" />

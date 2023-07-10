@@ -129,6 +129,7 @@ plot_LD(Mod1)+
                         y=dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 
                         colour="True"),
                         size = 1)+
+  ylim(c(0,0.75))+
   labs(title="The estimated latent density using 'EHM'", colour= "Type")+
   theme_bw()
 ```
