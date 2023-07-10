@@ -14,7 +14,9 @@ knitr::opts_chunk$set(
 library(ggplot2)
 ```
 
-# IRTest
+# Welcome to **IRTest**!
+
+## *** Please feel free to create issues for bug reports or potential improvements.***
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/SeewooLi/IRTest/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/SeewooLi/IRTest/actions/workflows/R-CMD-check.yaml)
@@ -97,12 +99,17 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
 * Parameter estimation results
 
 ```{r results, fig.align='center', fig.height=6, fig.width=10}
-### True item parameters 
 colnames(item) <- c("a", "b", "c")
-knitr::kable(item, format='simple', caption = "True item parameters")
 
-### Estimated item parameters
-knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters")
+knitr::kables(
+  list(
+    ### True item parameters 
+    knitr::kable(item, format='simple', caption = "True item parameters", digits = 2),
+
+    ### Estimated item parameters
+    knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters", digits = 2)
+  )
+)
 
 
 ### Plotting

@@ -1,7 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# IRTest
+# Welcome to **IRTest**!
+
+## \*\*\* Please feel free to create issues for bug reports or potential improvements.\*\*\*
 
 <!-- badges: start -->
 
@@ -62,6 +64,9 @@ A simulation study for a Rasch model can be done in following manners:
 
 ``` r
 library(IRTest)
+#> Thank you for using IRTest!
+#> To acknowledge my work, please cite the package:
+#> Li, S. (2022). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 0.1.0). R package. URL: https://CRAN.R-project.org/package=IRTest
 ```
 
 - An artificial data of 1000 examinees and 20 items.
@@ -99,10 +104,23 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
 - Parameter estimation results
 
 ``` r
-### True item parameters 
 colnames(item) <- c("a", "b", "c")
-knitr::kable(item, format='simple', caption = "True item parameters")
+
+knitr::kables(
+  list(
+    ### True item parameters 
+    knitr::kable(item, format='simple', caption = "True item parameters", digits = 2),
+
+    ### Estimated item parameters
+    knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters", digits = 2)
+  )
+)
 ```
+
+<table class="kable_wrapper">
+<tbody>
+<tr>
+<td>
 
 |   a |     b |   c |
 |----:|------:|----:|
@@ -129,36 +147,38 @@ knitr::kable(item, format='simple', caption = "True item parameters")
 
 True item parameters
 
-``` r
+</td>
+<td>
 
-### Estimated item parameters
-knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters")
-```
-
-|   a |          b |   c |
-|----:|-----------:|----:|
-|   1 | -0.8177894 |   0 |
-|   1 |  0.9514716 |   0 |
-|   1 |  0.4703169 |   0 |
-|   1 | -0.0574434 |   0 |
-|   1 | -0.8503595 |   0 |
-|   1 | -0.4316589 |   0 |
-|   1 |  0.8852200 |   0 |
-|   1 | -0.3157931 |   0 |
-|   1 | -1.1680628 |   0 |
-|   1 |  0.5366363 |   0 |
-|   1 | -1.0744048 |   0 |
-|   1 | -1.1621301 |   0 |
-|   1 |  0.0709861 |   0 |
-|   1 |  1.2536640 |   0 |
-|   1 | -0.4265914 |   0 |
-|   1 |  0.2046360 |   0 |
-|   1 | -1.3770776 |   0 |
-|   1 |  0.5984116 |   0 |
-|   1 | -0.7533302 |   0 |
-|   1 | -1.6965297 |   0 |
+|   a |     b |   c |
+|----:|------:|----:|
+|   1 | -0.82 |   0 |
+|   1 |  0.95 |   0 |
+|   1 |  0.47 |   0 |
+|   1 | -0.06 |   0 |
+|   1 | -0.85 |   0 |
+|   1 | -0.43 |   0 |
+|   1 |  0.89 |   0 |
+|   1 | -0.32 |   0 |
+|   1 | -1.17 |   0 |
+|   1 |  0.54 |   0 |
+|   1 | -1.07 |   0 |
+|   1 | -1.16 |   0 |
+|   1 |  0.07 |   0 |
+|   1 |  1.25 |   0 |
+|   1 | -0.43 |   0 |
+|   1 |  0.20 |   0 |
+|   1 | -1.38 |   0 |
+|   1 |  0.60 |   0 |
+|   1 | -0.75 |   0 |
+|   1 | -1.70 |   0 |
 
 Estimated item parameters
+
+</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 
