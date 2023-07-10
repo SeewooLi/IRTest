@@ -14,13 +14,13 @@ potential improvements.*
 status](https://www.r-pkg.org/badges/version/IRTest)](https://CRAN.R-project.org/package=IRTest)
 <!-- badges: end -->
 
-**IRTest** can be a useful tool for IRT (item response theory) parameter
+**IRTest** is a useful tool for IRT (item response theory) parameter
 estimation, especially when the violation of normality assumption on
 latent distribution is suspected.  
 **IRTest** deals with uni-dimensional latent variable.  
-In **IRTest**, along with the conventional approach that assumes
-normality on latent distribution, several methods can be applied for
-estimation of latent distribution:  
+In **IRTest**, including the conventional assumption of normality on
+latent distribution, several methods can be applied for estimation of
+latent distribution:  
 + empirical histogram method,  
 + two-component Gaussian mixture distribution,  
 + Davidian curve,  
@@ -28,7 +28,7 @@ estimation of latent distribution:
 
 ## Installation
 
-You can install **IRTest** on R-console with:
+**IRTest** can be installed on R-console with:
 
 ``` r
 install.packages("IRTest")
@@ -36,21 +36,21 @@ install.packages("IRTest")
 
 ## Functions
 
-Followings are functions of **IRTest** available for users.
+Followings are functions of **IRTest**.
 
 - `IRTest_Dich` is the estimation function when all items are
-  dichotomously scored.
+  *dichotomously* scored.
 
 - `IRTest_Poly` is the estimation function when all items are
-  polytomously scored.
+  *polytomously* scored.
 
-- `IRTest_Mix` is the estimation function for a mixed-format test, a
-  combination of dichotomous item(s) and polytomous item(s).
+- `IRTest_Mix` is the estimation function for *a mixed-format test*, a
+  test comprising both dichotomous item(s) and polytomous item(s).
 
-- `DataGeneration` generates several objects that are useful for
-  computer simulation studies. Among these are starting values for an
-  algorithm and artificial item-response data that can be passed to
-  `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`
+- `DataGeneration` generates several objects that can be useful for
+  computer simulation studies. Among these are starting values for the
+  estimation algorithm and artificial item-response data that can be
+  passed into `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`.
 
 - `plot_LD` draws a plot of the estimated latent distribution.
 
@@ -62,7 +62,8 @@ Followings are functions of **IRTest** available for users.
 
 ## Example
 
-A simulation study for a Rasch model can be done in following manners:
+A simple simulation study for a Rasch model can be done in following
+manners:
 
 ``` r
 library(IRTest)
@@ -71,7 +72,9 @@ library(IRTest)
 #> Li, S. (2022). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 0.1.0). R package. URL: https://CRAN.R-project.org/package=IRTest
 ```
 
-- An artificial data of 1000 examinees and 20 items.
+- Data generation
+
+An artificial data of 1000 examinees and 20 items.
 
 ``` r
 Alldata <- DataGeneration(seed = 123456789,
@@ -195,7 +198,7 @@ abline(a=0,b=1)
 
 <img src="man/figures/README-results-1.png" width="100%" style="display: block; margin: auto;" />
 
-- Result of latent distribution estimation
+- The result of latent distribution estimation
 
 ``` r
 plot_LD(Mod1)+
@@ -218,7 +221,7 @@ plot_LD(Mod1)+
 
 <img src="man/figures/README-plotLD-1.png" width="100%" style="display: block; margin: auto;" />
 
-- Posterior distribution for examinees
+- Posterior distributions for the examinees
 
 Each examinee’s posterior distribution is identified in the E-step of
 the estimation algorithm (i.e., EM algorithm). Posterior distributions
