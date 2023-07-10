@@ -14,8 +14,8 @@ potential improvements.*
 status](https://www.r-pkg.org/badges/version/IRTest)](https://CRAN.R-project.org/package=IRTest)
 <!-- badges: end -->
 
-**IRTest** is a useful tool for IRT (item response theory) parameter
-estimation, especially when the violation of normality assumption on
+**IRTest** is a useful tool for *IRT* (item response theory) parameter
+\_est_imation, especially when the violation of normality assumption on
 latent distribution is suspected.  
 **IRTest** deals with uni-dimensional latent variable.  
 In **IRTest**, including the conventional assumption of normality on
