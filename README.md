@@ -3,7 +3,7 @@
 
 # Welcome to **IRTest**!
 
-## \*\*\* Please feel free to create issues for bug reports or potential improvements.\*\*\*
+## \*\* Please feel free to create an issue for bug reports or potential improvements.\*\*
 
 <!-- badges: start -->
 
