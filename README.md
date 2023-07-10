@@ -197,12 +197,18 @@ abline(a=0,b=1)
 
 ``` r
 plot_LD(Mod1)+
-  geom_line(mapping = aes(colour="Estimated"))+
+  geom_line(mapping = aes(colour="Estimated"), size = 1)+
   geom_line(mapping=aes(x=seq(-6,6,length=121), 
                         y=dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 
-                        colour="True"))+
+                        colour="True"),
+                        size = 1)+
   labs(title="The estimated latent density using 'EHM'", colour= "Type")+
   theme_bw()
+#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` instead.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
 ```
 
 <img src="man/figures/README-plotLD-1.png" width="100%" style="display: block; margin: auto;" />
@@ -217,14 +223,14 @@ can be found in `Mod1$Pk`.
 set.seed(1)
 selected_examinees <- sample(1:1000,6)
 post_sample <- data.frame(X=rep(seq(-6,6, length.out=121),6), 
+                          prior = rep(dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 6),
                           posterior = 10*c(t(Mod1$Pk[selected_examinees,])), 
                           ID=rep(paste("examinee", selected_examinees), each=121))
-ggplot(data=post_sample, mapping=aes(x=X, y=posterior, group=ID))+
-  geom_line()+
-  labs(title="Posterior densities for selected examinees", x=expression(theta))+
+ggplot(data=post_sample, mapping=aes(x=X))+
+  geom_line(mapping=aes(y=posterior, group=ID, color='Posterior'))+
+  geom_line(mapping=aes(y=prior, group=ID, color='Prior'))+
+  labs(title="Posterior densities for selected examinees", x=expression(theta), y='density')+
   facet_wrap(~ID, ncol=2)+
-  annotate(geom="line", x=seq(-6,6,length=121), 
-                        y=dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), colour="grey")+
   theme_bw()
 ```
 
