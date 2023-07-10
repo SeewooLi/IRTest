@@ -16,7 +16,7 @@ library(ggplot2)
 
 # Welcome to **IRTest**!
 
-__Please feel free to create an issue for bug reports or potential improvements.__
+_Please feel free to_ [create an issue](https://github.com/SeewooLi/IRTest/issues) _for bug reports or potential improvements._
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/SeewooLi/IRTest/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/SeewooLi/IRTest/actions/workflows/R-CMD-check.yaml)
