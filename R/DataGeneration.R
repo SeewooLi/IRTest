@@ -17,8 +17,8 @@
 #' @param latent_dist A character string that determines the type of latent distribution.
 #' Currently available options are \code{"beta"} (four-parameter beta distribution; \code{\link{rBeta.4P}}),
 #' \code{"chi"} (\eqn{\chi^2} distribution; \code{\link{rchisq}}),
-#' \code{"normal"} (standard normal distribution; \code{\link{rnorm}}),
-#' and \code{"Mixture"} (two-component Gaussian mixture distribution; see Li (2021) for details.)
+#' \code{"normal"}, \code{"Normal"}, or \code{"N"} (standard normal distribution; \code{\link{rnorm}}),
+#' and \code{"Mixture"} or \code{"2NM"} (two-component Gaussian mixture distribution; see Li (2021) for details.)
 #' @param item_D Default is \code{NULL}. An item parameter matrix can be specified. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{c} parameter for the third column.
 #' @param item_P Default is \code{NULL}. An item parameter matrix can be specified. The number of columns should be 7: \code{a} parameter for the first, and \code{b} parameters for the rest of the columns.
 #' @param theta Default is NULL. An ability parameter vector can be specified.
@@ -65,6 +65,7 @@
 #'                           N=500,
 #'                           nitem_D = 10,
 #'                           nitem_P = 0,
+#'                           latent_dist = "2NM",
 #'                           d = 1.664,
 #'                           sd_ratio = 2,
 #'                           prob = 0.3)
@@ -85,6 +86,7 @@
 #'                           nitem_D = 0,
 #'                           nitem_P = 10,
 #'                           categ = rep(3:7,each = 2),
+#'                           latent_dist = "2NM",
 #'                           d = 1.664,
 #'                           sd_ratio = 2,
 #'                           prob = 0.3)
@@ -107,6 +109,7 @@
 #'                                                     # 4 categories for item #23-24,
 #'                                                     # ...,
 #'                                                     # and 7 categories for item #29-30.
+#'                           latent_dist = "2NM",
 #'                           d = 1.664,
 #'                           sd_ratio = 2,
 #'                           prob = 0.3)
@@ -122,7 +125,7 @@
 DataGeneration <- function(seed=1, N=2000,
                            nitem_D=NULL, nitem_P=NULL,
                            model_D, model_P="GPCM",
-                           latent_dist="Mixture",
+                           latent_dist=NULL,
                            item_D=NULL, item_P=NULL,
                            theta = NULL,
                            prob=0.5, d=1.7, sd_ratio=1, a_l=0.8, a_u=2.5,
@@ -134,13 +137,15 @@ DataGeneration <- function(seed=1, N=2000,
 
   # ability parameters (i.e., theta)
   if(is.null(theta)){
-    if(latent_dist=="beta"){
+    if(is.null(latent_dist)){
+      stop("Specify the type of the latent distribution.")
+    }else if(latent_dist=="beta"){
       set.seed(seed)
       theta <- rBeta.4P(n=N, alpha = 3.79, beta= 10.21, l=-2.36, u=6.36)
     }else if(latent_dist=="chi"){
       set.seed(seed)
       theta <- scale(rchisq(N,df=8))
-    }else if(latent_dist=="Mixture"){
+    }else if(latent_dist%in%c("Mixture", "2NM")){
       n1 <- round(N*prob)
       n2 <- N-n1
       m1 <- -(1-prob)*d
@@ -150,7 +155,7 @@ DataGeneration <- function(seed=1, N=2000,
 
       set.seed(seed)
       theta <- c(rnorm(n=n1,mean=m1,sd=s1),rnorm(n=n2,mean=m2,sd=s2))
-    }else if(latent_dist=="normal"){
+    }else if(latent_dist %in% c("normal", "Normal", "N")){
       set.seed(seed)
       theta <- rnorm(n=N,mean=0,sd=1)
     } else stop("Specify the type of the latent distribution.")

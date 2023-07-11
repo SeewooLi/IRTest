@@ -24,10 +24,10 @@
 #' @param latent_dist A character string that determines latent distribution estimation method.
 #' Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
 #' \code{"EHM"} for empirical histogram method (Mislevy, 1984; Mislevy & Bock, 1985),
-#' \code{"Mixture"} for the method that uses two-component Gaussian mixture distribution (Li, 2021; Mislevy, 1984),
-#' \code{"DC"} for Davidian-curve method (Woods & Lin, 2009),
+#' \code{"Mixture"} or \code{"2NM"} for the method of two-component Gaussian mixture distribution (Li, 2021; Mislevy, 1984),
+#' \code{"DC"} or \code{"Davidian"} for Davidian-curve method (Woods & Lin, 2009),
 #' and \code{"KDE"} for kernel density estimation method (Li, 2022).
-#' The default value is set to \code{"Normal"} to follow the conventional assumption on latent distribution.
+#' The default value is set to \code{"Normal"} for the conventional normality assumption on latent distribution.
 #'
 #' @param max_iter A numeric value that determines the maximum number of iterations in the EM-MML.
 #' The default value is 200.
@@ -133,6 +133,7 @@
 #'                           N=500,
 #'                           nitem_D = 10,
 #'                           nitem_P = 0,
+#'                           latent_dist = "2NM",
 #'                           d = 1.664,
 #'                           sd_ratio = 2,
 #'                           prob = 0.3)

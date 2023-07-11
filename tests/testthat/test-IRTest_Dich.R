@@ -6,6 +6,7 @@ test_that(
                             N=500,
                             nitem_D = 10,
                             nitem_P = 0,
+                            latent_dist = "2NM",
                             d = 1.664,
                             sd_ratio = 2,
                             prob = 0.3)
@@ -15,7 +16,7 @@ test_that(
   theta <- Alldata$theta
 
   # Normal distribution
-    # EAP
+  # EAP
   Mod1 <- IRTest_Dich(initialitem = initialitem,
                       data = data,
                       model = rep(1, 10),
@@ -25,7 +26,7 @@ test_that(
   expect_equal(dim(Mod1$par_est), dim(item))
   expect_equal(length(Mod1$theta), length(theta))
 
-    # MLE
+  # MLE
   Mod1 <- IRTest_Dich(initialitem = initialitem,
                       data = data,
                       model = rep(1, 10),
@@ -33,7 +34,7 @@ test_that(
                       max_iter = 2,
                       threshold = .0001,
                       ability_method = "MLE"
-                      )
+  )
   expect_equal(dim(Mod1$par_est), dim(item))
   expect_equal(length(Mod1$theta), length(theta))
 
@@ -106,5 +107,5 @@ test_that(
                 max_iter = 2,
                 threshold = .0001)
   )
-  }
+          }
 )

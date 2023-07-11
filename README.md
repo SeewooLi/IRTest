@@ -83,6 +83,7 @@ Alldata <- DataGeneration(seed = 123456789,
                           N=1000,
                           nitem_D = 20,
                           nitem_P = 0,
+                          latent_dist = "2NM",
                           d = 1.664,
                           sd_ratio = 2,
                           prob = 0.3)
@@ -202,20 +203,24 @@ abline(a=0,b=1)
 - The result of latent distribution estimation
 
 ``` r
-plot_LD(Mod1)+
-  geom_line(mapping = aes(colour="Estimated"), size = 1)+
-  geom_line(mapping=aes(x=seq(-6,6,length=121), 
-                        y=dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 
-                        colour="True"),
-                        size = 1)+
+plot_LD(Mod1, xlim = c(-6,6))+
+  geom_line(mapping = aes(colour="Estimated"), linewidth = 1)+
+  geom_line(
+    mapping=aes(
+      x=seq(-6,6,length=121), 
+      y=dist2(
+        seq(-6,6,length=121),
+        prob = .3, 
+        d=1.664, 
+        sd_ratio = 2
+        ), 
+      colour="True"),
+    linewidth = 1)+
   ylim(c(0,0.75))+
-  labs(title="The estimated latent density using 'EHM'", colour= "Type")+
+  labs(
+    title="The estimated latent density using 'EHM'", colour= "Type"
+    )+
   theme_bw()
-#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-#> ℹ Please use `linewidth` instead.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
 ```
@@ -231,10 +236,14 @@ can be found in `Mod1$Pk`.
 ``` r
 set.seed(1)
 selected_examinees <- sample(1:1000,6)
-post_sample <- data.frame(X=rep(seq(-6,6, length.out=121),6), 
-                          prior = rep(dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 6),
-                          posterior = 10*c(t(Mod1$Pk[selected_examinees,])), 
-                          ID=rep(paste("examinee", selected_examinees), each=121))
+post_sample <- 
+  data.frame(
+    X = rep(seq(-6,6, length.out=121),6), 
+    prior = rep(dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 6),
+    posterior = 10*c(t(Mod1$Pk[selected_examinees,])), 
+    ID = rep(paste("examinee", selected_examinees), each=121)
+    )
+
 ggplot(data=post_sample, mapping=aes(x=X))+
   geom_line(mapping=aes(y=posterior, group=ID, color='Posterior'))+
   geom_line(mapping=aes(y=prior, group=ID, color='Prior'))+

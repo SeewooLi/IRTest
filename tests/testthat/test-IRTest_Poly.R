@@ -5,6 +5,7 @@ test_that("testing basic operations for IRTest_Poly", {
                             N=500,
                             nitem_D = 0,
                             nitem_P = 10,
+                            latent_dist = "2NM",
                             d = 1.414,
                             sd_ratio = 2,
                             prob = 0.5)

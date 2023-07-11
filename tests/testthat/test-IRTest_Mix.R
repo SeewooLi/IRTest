@@ -6,6 +6,7 @@ test_that("testing basic operations for IRTest_Mix", {
                             N=1000,
                             nitem_D = 5,
                             nitem_P = 5,
+                            latent_dist = "2NM",
                             d = 1.664,
                             sd_ratio = 1,
                             prob = 0.5)
