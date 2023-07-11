@@ -4,10 +4,10 @@
 .onAttach <- function(libname, pkgname) {
   package_citation <- "Li, S. (2022). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 0.1.0). R package."
   package_URL <- "\n URL: https://CRAN.R-project.org/package=IRTest"
-  message("Thank you for using IRTest!")
-  message("To acknowledge my work, please cite the package: \n")
-  message(package_citation)
-  message(package_URL)
+  packageStartupMessage("Thank you for using IRTest!")
+  packageStartupMessage("To acknowledge my work, please cite the package: \n")
+  packageStartupMessage(package_citation)
+  packageStartupMessage(package_URL)
 }
 
 

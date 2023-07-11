@@ -4,19 +4,24 @@
 \alias{plot_LD}
 \title{Plotting the estimated latent distribution}
 \usage{
-plot_LD(model, xlim = c(-6, 6))
+plot_LD(model, xlim = c(-6, 6), ...)
 }
 \arguments{
 \item{model}{An object obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.}
 
 \item{xlim}{A vector of length 2 which determines the range of the plot.
-The default is \code{c(-6, 6)}}
+The default is \code{c(-6, 6)}.}
+
+\item{...}{Other argument(s) passed on to draw a plot of an estimated latent distribution.
+If the distribution estimation method is the one using two-component normal mixture distribution (i.e., \code{latent_dist == "Mixture"} or \code{"2NM"}),
+or the normal distribution is assumed (i.e., \code{latent_dist == "N"},  \code{"normal"}, or \code{"Normal"}), arguments are passed on to \code{\link{stat_function}}.
+Otherwise, they are passed on to \code{\link{geom_line}}.}
 }
 \value{
 A plot of estimated latent distribution.
 }
 \description{
-This function draws a plot of the estimated latent distribution (the prior distribution of the latent variable).
+This function draws a plot of the estimated latent distribution (the distribution of the latent variable).
 }
 \examples{
 # Data generation and model fitting
@@ -27,6 +32,7 @@ Alldata <- DataGeneration(seed = 1,
                           nitem_D = 0,
                           nitem_P = 8,
                           categ = rep(3:4,each = 4),
+                          latent_dist = "2NM",
                           d = 1.664,
                           sd_ratio = 2,
                           prob = 0.3)
@@ -47,7 +53,8 @@ M1 <- IRTest_Poly(initialitem = initialitem,
 
 # Plotting the latent distribution
 
-plot_LD(model=M1, xlim = c(-6, 6))
+plot_LD(model=M1, xlim = c(-6, 6), linewidth = 1, color = 'red') +
+  ggplot2::lims(y = c(0, .5))
 
 }
 \author{

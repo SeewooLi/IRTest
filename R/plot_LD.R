@@ -3,6 +3,7 @@
 #' @description This function draws a plot of the estimated latent distribution (the distribution of the latent variable).
 #'
 #' @import ggplot2
+#' @importFrom ggplot2 lims
 #'
 #' @param model An object obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.
 #' @param xlim A vector of length 2 which determines the range of the plot.
@@ -26,6 +27,7 @@
 #'                           nitem_D = 0,
 #'                           nitem_P = 8,
 #'                           categ = rep(3:4,each = 4),
+#'                           latent_dist = "2NM",
 #'                           d = 1.664,
 #'                           sd_ratio = 2,
 #'                           prob = 0.3)
@@ -46,7 +48,8 @@
 #'
 #' # Plotting the latent distribution
 #'
-#' plot_LD(model=M1, xlim = c(-6, 6))
+#' plot_LD(model=M1, xlim = c(-6, 6), linewidth = 1, color = 'red') +
+#'   ggplot2::lims(y = c(0, .5))
 #'
 plot_LD <- function(model, xlim = c(-6, 6), ...){
   if(model[["Options"]][["latent_dist"]] %in% c("Mixture", "2NM")){

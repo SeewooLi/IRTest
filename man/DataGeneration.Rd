@@ -11,7 +11,7 @@ DataGeneration(
   nitem_P = NULL,
   model_D,
   model_P = "GPCM",
-  latent_dist = "Mixture",
+  latent_dist = NULL,
   item_D = NULL,
   item_P = NULL,
   theta = NULL,
@@ -44,8 +44,8 @@ The \emph{i}th element is the probability model for the \emph{i}th polytomous it
 \item{latent_dist}{A character string that determines the type of latent distribution.
 Currently available options are \code{"beta"} (four-parameter beta distribution; \code{\link{rBeta.4P}}),
 \code{"chi"} (\eqn{\chi^2} distribution; \code{\link{rchisq}}),
-\code{"normal"} (standard normal distribution; \code{\link{rnorm}}),
-and \code{"Mixture"} (two-component Gaussian mixture distribution; see Li (2021) for details.)}
+\code{"normal"}, \code{"Normal"}, or \code{"N"} (standard normal distribution; \code{\link{rnorm}}),
+and \code{"Mixture"} or \code{"2NM"} (two-component Gaussian mixture distribution; see Li (2021) for details.)}
 
 \item{item_D}{Default is \code{NULL}. An item parameter matrix can be specified. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{c} parameter for the third column.}
 
@@ -98,6 +98,7 @@ Alldata <- DataGeneration(seed = 1,
                           N=500,
                           nitem_D = 10,
                           nitem_P = 0,
+                          latent_dist = "2NM",
                           d = 1.664,
                           sd_ratio = 2,
                           prob = 0.3)
@@ -118,6 +119,7 @@ Alldata <- DataGeneration(seed = 2,
                           nitem_D = 0,
                           nitem_P = 10,
                           categ = rep(3:7,each = 2),
+                          latent_dist = "2NM",
                           d = 1.664,
                           sd_ratio = 2,
                           prob = 0.3)
@@ -140,6 +142,7 @@ Alldata <- DataGeneration(seed = 2,
                                                     # 4 categories for item #23-24,
                                                     # ...,
                                                     # and 7 categories for item #29-30.
+                          latent_dist = "2NM",
                           d = 1.664,
                           sd_ratio = 2,
                           prob = 0.3)
