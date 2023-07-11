@@ -202,7 +202,7 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
   }
 
   # Two-component normal mixture distribution
-  if(latent_dist=="Mixture"){
+  if(latent_dist %in% c("Mixture", "2NM")){
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
@@ -243,7 +243,7 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
   }
 
   # Davidian curve method
-  if(latent_dist=="DC"){
+  if(latent_dist %in% c("DC", "Davidian")){
     phipar <- nlminb(start = rep(1,h),
                      objective = optim_phi,
                      gradient = optim_phi_grad,

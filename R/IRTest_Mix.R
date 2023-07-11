@@ -191,7 +191,7 @@ IRTest_Mix <- function(initialitem_D, initialitem_P, data_D, data_P, range = c(-
                  model_D=model_D, model_P=model_P,
                  latent_dist=latent_dist, max_iter=max_iter, threshold=threshold)
 if(nrow(data_D)!=nrow(data_P)){
-  warning("data_D and data_P have different number of rows.")
+  stop("data_D and data_P have different number of rows.")
 }else{
   I_D <- initialitem_D
   I_P <- initialitem_P
@@ -253,7 +253,7 @@ if(nrow(data_D)!=nrow(data_P)){
   }
 
   # Two-component normal mixture distribution
-  if(latent_dist=="Mixture"){
+  if(latent_dist %in% c("Mixture", "2NM")){
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
@@ -303,7 +303,7 @@ if(nrow(data_D)!=nrow(data_P)){
   }
 
   # Davidian curve method
-  if(latent_dist=="DC"){
+  if(latent_dist %in% c("DC", "Davidian")){
     phipar <- nlminb(start = rep(1,h),
                      objective = optim_phi,
                      gradient = optim_phi_grad,

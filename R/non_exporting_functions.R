@@ -366,7 +366,7 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=3, threshold=1e-7, EMiter
     } else warning("model is incorrect or unspecified.")
 
   }
-  return(list(item_estimated, se, Grad, IM))
+  return(list(item_estimated, se))
 }
 
 PDs <- function(probab, param, pmat, pcummat, a_supp, par, tcum){
@@ -490,7 +490,7 @@ latent_dist_est <- function(method, Xk, posterior, range,
                     to=range[2])
     lin <- lin_inex(Xk, SJPI$y/sum(SJPI$y), range = range)
   }
-  if(method=='DC'){
+  if(method %in% c('DC', 'Davidian')){
     phipar <- nlminb(start = phipar,
                      objective = DC.LL,
                      gradient = DC.grad,
