@@ -3,7 +3,6 @@
 #' @description This function draws a plot of the estimated latent distribution (the distribution of the latent variable).
 #'
 #' @import ggplot2
-#' @importFrom ggplot2 lims
 #'
 #' @param model An object obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.
 #' @param xlim A vector of length 2 which determines the range of the plot.

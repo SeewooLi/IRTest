@@ -26,7 +26,7 @@ _Please feel free to_ [create an issue](https://github.com/SeewooLi/IRTest/issue
 [![R-CMD-check](https://github.com/SeewooLi/IRTest/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/SeewooLi/IRTest/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version-last-release/IRTest)](https://CRAN.R-project.org/package=IRTest)
 [![downloads](https://cranlogs.r-pkg.org/badges/grand-total/IRTest)]()
-[![Codecov test coverage](https://codecov.io/gh/SeewooLi/IRTest/tree/master/graph/badge.svg)](https://app.codecov.io/gh/SeewooLi/IRTest)
+[![codecov](https://codecov.io/gh/SeewooLi/IRTest/branch/master/graph/badge.svg?token=N5RY2MYSM5)](https://codecov.io/gh/SeewooLi/IRTest)
 <!-- badges: end -->
 
 **IRTest** is a useful tool for $\mathcal{\color{red}{IRT}}$ (item response theory) parameter $\mathcal{\color{red}{est}}\text{imation}$, especially when the violation of normality assumption on latent distribution is suspected. \

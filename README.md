@@ -13,8 +13,7 @@ potential improvements.*
 [![CRAN
 status](https://www.r-pkg.org/badges/version-last-release/IRTest)](https://CRAN.R-project.org/package=IRTest)
 [![downloads](https://cranlogs.r-pkg.org/badges/grand-total/IRTest)]()
-[![Codecov test
-coverage](https://codecov.io/gh/SeewooLi/IRTest/tree/master/graph/badge.svg)](https://app.codecov.io/gh/SeewooLi/IRTest)
+[![codecov](https://codecov.io/gh/SeewooLi/IRTest/branch/master/graph/badge.svg?token=N5RY2MYSM5)](https://codecov.io/gh/SeewooLi/IRTest)
 <!-- badges: end -->
 
 **IRTest** is a useful tool for $\mathcal{\color{red}{IRT}}$ (item
