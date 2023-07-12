@@ -1,5 +1,5 @@
 bibentry(bibtype = "Manual",
-         title = "Parameter Estimation of Item Response Theory with Estimation of Latent Distribution",
+         title = "IRTest: Parameter Estimation of Item Response Theory with Estimation of Latent Distribution",
          author = "Seewoo Li",
          year = "2022",
          note = "R package version 0.1.0",

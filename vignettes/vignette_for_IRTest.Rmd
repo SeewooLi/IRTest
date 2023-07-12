@@ -142,7 +142,11 @@ Mod1$se
 head(Mod1$theta)
 
 ### The estimated latent distribution
-plot_LD(Mod1, xlim = c(-6,6))
+plot(Mod1) +
+  lims(
+    x = c(-6,6),
+    y = c(0, .5)
+  )
 ```
 
 \
@@ -272,7 +276,11 @@ Mod1$se
 head(Mod1$theta)
 
 ### The estimated latent distribution
-plot_LD(Mod1, xlim = c(-6,6))
+plot(Mod1) +
+  lims(
+    x = c(-6,6),
+    y = c(0, .5)
+  )
 ```
 
 \
@@ -322,8 +330,12 @@ theta <- Alldata$theta
 If the artificial data (`data`) is used, the true latent distribution looks like,
 
 ```{r, fig.align='center', fig.height=2.5, fig.width=6, echo=F}
-ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
+ggplot() +
   stat_function(fun = dist2, n = 101, args = list(prob = 0.5, d=1.664, sd_ratio = 1)) +
+  lims(
+    x = c(-6,6),
+    y = c(0, .5)
+  ) +
   ylab("latent density") +
   xlab(expression(theta)) +
   scale_y_continuous(breaks = NULL)
@@ -421,7 +433,11 @@ Mod1$se
 head(Mod1$theta)
 
 ### The estimated latent distribution
-plot_LD(Mod1, xlim = c(-6,6))
+plot(Mod1) +
+  lims(
+    x = c(-6,6),
+    y = c(0, .5)
+  )
 ```
 
 \

@@ -19,7 +19,7 @@ test_that("testing basic operations for plot_LD", {
                       latent_dist = "EHM",
                       max_iter = 2,
                       threshold = .0001)
-  expect_visible(plot_LD(Mod1))
+  expect_visible(plot(Mod1))
 
   Mod1 <- IRTest_Dich(initialitem = initialitem,
                       data = data,
@@ -27,7 +27,7 @@ test_that("testing basic operations for plot_LD", {
                       latent_dist = "2NM",
                       max_iter = 2,
                       threshold = .0001)
-  expect_visible(plot_LD(Mod1))
+  expect_visible(plot(Mod1))
 
   Mod1 <- IRTest_Dich(initialitem = initialitem,
                       data = data,
@@ -35,6 +35,6 @@ test_that("testing basic operations for plot_LD", {
                       latent_dist = "N",
                       max_iter = 2,
                       threshold = .0001)
-  expect_visible(plot_LD(Mod1))
+  expect_visible(plot(Mod1))
 }
 )

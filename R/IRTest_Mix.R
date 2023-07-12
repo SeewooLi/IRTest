@@ -352,22 +352,26 @@ if(nrow(data_D)!=nrow(data_P)){
   E$Pk[E$Pk==0]<- .Machine$double.xmin
   Ak[Ak==0] <- .Machine$double.xmin
   logL <- logL + as.numeric(E$fk%*%log(Ak)) - sum(E$Pk*log(E$Pk))
-  return(list(par_est=list(Dichotomous=initialitem_D,
-                           Polytomous=initialitem_P),
-              se=list(Dichotomous=M1_D[[2]],
-                      Polytomous=M1_P[[2]]),
-              fk=E$fk,
-              iter=iter,
-              prob=prob,
-              d=d,
-              sd_ratio=sd_ratio,
-              quad=Xk,
-              diff=diff,
-              Ak=Ak,
-              Pk=E$Pk,
-              theta = EAP,
-              logL=-2*logL, # deviance
-              bw=bw,
-              Options = Options # specified argument values
-  ))
+  return(structure(
+    list(par_est=list(Dichotomous=initialitem_D,
+                      Polytomous=initialitem_P),
+         se=list(Dichotomous=M1_D[[2]],
+                 Polytomous=M1_P[[2]]),
+         fk=E$fk,
+         iter=iter,
+         prob=prob,
+         d=d,
+         sd_ratio=sd_ratio,
+         quad=Xk,
+         diff=diff,
+         Ak=Ak,
+         Pk=E$Pk,
+         theta = EAP,
+         logL=-2*logL, # deviance
+         bw=bw,
+         Options = Options # specified argument values
+         ),
+    class = c("irtest", "list")
+    )
+  )
 }

@@ -202,8 +202,11 @@ abline(a=0,b=1)
 - The result of latent distribution estimation
 
 ``` r
-plot_LD(Mod1, xlim = c(-6,6))+
-  geom_line(mapping = aes(colour="Estimated"), linewidth = 1)+
+plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
+  lims(
+    x = c(-6,6),
+    y = c(0, .5)
+  )+
   geom_line(
     mapping=aes(
       x=seq(-6,6,length=121), 
