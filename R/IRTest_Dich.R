@@ -313,7 +313,7 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
          bw=bw,
          Options = Options # specified argument values
          ),
-    class = c("irtest", "list")
+    class = c("dich", "irtest", "list")
     )
   )
 }

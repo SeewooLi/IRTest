@@ -371,7 +371,7 @@ if(nrow(data_D)!=nrow(data_P)){
          bw=bw,
          Options = Options # specified argument values
          ),
-    class = c("irtest", "list")
+    class = c("mix", "irtest", "list")
     )
   )
 }

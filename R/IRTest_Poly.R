@@ -299,7 +299,7 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
          bw=bw,
          Options = Options # specified argument values
          ),
-    class = c("irtest", "list")
+    class = c("poly", "irtest", "list")
     )
   )
 }
