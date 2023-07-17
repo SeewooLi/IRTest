@@ -205,7 +205,7 @@ abline(a=0,b=1)
 plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
   lims(
     x = c(-6,6),
-    y = c(0, .5)
+    y = c(0, .75)
   )+
   geom_line(
     mapping=aes(
@@ -218,13 +218,12 @@ plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
         ), 
       colour="True"),
     linewidth = 1)+
-  ylim(c(0,0.75))+
   labs(
     title="The estimated latent density using 'EHM'", colour= "Type"
     )+
   theme_bw()
-#> Scale for y is already present.
-#> Adding another scale for y, which will replace the existing scale.
+#> Scale for x is already present.
+#> Adding another scale for x, which will replace the existing scale.
 ```
 
 <img src="man/figures/README-plotLD-1.png" width="100%" style="display: block; margin: auto;" />

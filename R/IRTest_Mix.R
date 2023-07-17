@@ -187,11 +187,12 @@
 IRTest_Mix <- function(initialitem_D, initialitem_P, data_D, data_P, range = c(-6,6),
                        q = 121, model_D, model_P="GPCM",
                        latent_dist="Normal", max_iter=200, threshold=0.0001,
-                       bandwidth="nrd", h=NULL){
+                       bandwidth="SJ-ste", h=NULL){
   Options = list(initialitem_D=initialitem_D, initialitem_P=initialitem_P,
                  data_D=data_D, data_P=data_P, range=range, q=q,
                  model_D=model_D, model_P=model_P,
-                 latent_dist=latent_dist, max_iter=max_iter, threshold=threshold)
+                 latent_dist=latent_dist, max_iter=max_iter, threshold=threshold,
+                 bandwidth=bandwidth,h=h)
 if(nrow(data_D)!=nrow(data_P)){
   stop("data_D and data_P have different number of rows.")
 }else{

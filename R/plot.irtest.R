@@ -81,6 +81,7 @@ plot.irtest <- function(x, ...){
   return(
     plt +
       ylab("latent density") +
-      xlab(expression(theta))
+      xlab(expression(theta)) +
+      lims(x=c(-6,6))
     )
 }

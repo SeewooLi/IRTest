@@ -16,7 +16,7 @@ IRTest_Mix(
   latent_dist = "Normal",
   max_iter = 200,
   threshold = 1e-04,
-  bandwidth = "nrd",
+  bandwidth = "SJ-ste",
   h = NULL
 )
 }

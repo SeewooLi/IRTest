@@ -20,6 +20,8 @@ These functions summarize the outputs (e.g., convergence of the estimation algor
 \examples{
 # Summary
 
+
+
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}
