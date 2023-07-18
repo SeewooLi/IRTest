@@ -1,4 +1,5 @@
-## Resubmission
+## Submission for package enhancement
+
 In this version I have:
 
 * Made generic functions (i.e., `plot`, `print`, and `summary`) available.
