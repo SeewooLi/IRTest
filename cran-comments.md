@@ -1,9 +1,9 @@
 ## Resubmission
 In this version I have:
 
-* Added the MLE option for ability parameter estimation of dichotomous data.
+* Made generic functions (i.e., `plot`, `print`, and `summary`) available.
 
-* Made the fixed-parameter data Generation available.
+* Conducted more thorough unit tests to enhance the stability of the functions.
 
   
 ## Test environments

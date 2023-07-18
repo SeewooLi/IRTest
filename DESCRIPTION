@@ -9,7 +9,7 @@ Description: Item response theory (IRT) parameter estimation using marginal maxi
     (Bock & Aitkin, 1981 <doi:10.1007/BF02293801>). 
     Within parameter estimation algorithm, several methods for latent distribution estimation are available 
     (Li, 2022 <http://www.riss.kr/link?id=T16374105>).
-    Reflecting some features of the true latent distribution, these latent distribution estimation methods can possibly free the normality assumption on the latent distribution.
+    Reflecting some features of the true latent distribution, these latent distribution estimation methods can possibly enhance the estimation accuracy and free the normality assumption on the latent distribution.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

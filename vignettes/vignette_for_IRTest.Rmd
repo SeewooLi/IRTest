@@ -29,14 +29,13 @@ library(ggplot2)
 + **Preparing data**
 
 The function `DataGeneration` can be used for the pre-analysis step.
-This function returns artificial data and some useful objects for analysis (i.e., `theta`, `data_D`, `item_D`, and `initialitem_d`).
+This function returns a set of artificial data and some useful objects for analysis (e.g., `theta`, `data_D`, `item_D`, & `initialitem_D`).
 \
 \
 In the parameter estimation process, 
-the `initialitem` can be used for an input of the function `IRTest_Dich` (i.e., `initialitem = initialitem`).
-The `data` is an artificial item response data that could be unnecessary if user-imported item response data is used.
-The `theta` and `item` are not used for the estimation process.
-They can be considered as the true parameters only if the artificial data (`data`) is used for analysis.
+the `initialitem_D` can be used for an input of the function `IRTest_Dich` (i.e., `initialitem = initialitem_D`).
+The `data_D` is an artificial item response data that could be used for some analyses such as computer simulation techniques, but would be unnecessary if user-imported item response data is used.
+The `theta` and `item_D` are not used for the estimation process, but could play a role as true parameters if the artificial data (`data_D`) is used for an analysis.
 
 ```{r}
 Alldata <- DataGeneration(seed = 123456789,
@@ -55,7 +54,7 @@ initialitem <- Alldata$initialitem_D
 theta <- Alldata$theta
 ```
 
-If the artificial data (`data`) is used, the true latent distribution looks like,
+If the artificial data (`data_D`) is used, the true latent distribution looks like;
 
 ```{r, fig.align='center', fig.height=2.5, fig.width=6, echo=F}
 ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
@@ -132,6 +131,9 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
 + **Results**
 
 ```{r, fig.align='center', fig.height=2.5, fig.width=6}
+### Summary
+summary(Mod1)
+
 ### The estimated item parameters
 Mod1$par_est
 
@@ -143,10 +145,7 @@ head(Mod1$theta)
 
 ### The estimated latent distribution
 plot(Mod1) +
-  lims(
-    x = c(-6,6),
-    y = c(0, .5)
-  )
+  lims(y = c(0, .5))
 ```
 
 \
@@ -161,14 +160,13 @@ plot(Mod1) +
 + **Preparing data**
 
 As in the case of dichotomous items, the function `DataGeneration` can be used for the pre-analysis step.
-This function returns artificial data and some useful objects for analysis (i.e., `theta`, `data_P`, `item_P`, and `initialitem_P`).
+This function returns a set of artificial data and some useful objects for analysis (e.g., `theta`, `data_P`, `item_P`, & `initialitem_P`).
 \
 \
 In the parameter estimation process, 
-the `initialitem` can be used for an input of the function `IRTest_Poly` (i.e., `initialitem = initialitem`).
-The `data` is an artificial item response data that could be unnecessary if user-imported item response data is used.
-The `theta` and `item` are not used for the estimation process.
-They can be considered as the true parameters only if the artificial data (`data`) is used for analysis.
+the `initialitem_P` can be used for an input of the function `IRTest_Poly` (i.e., `initialitem = initialitem_P`).
+The `data_P` is an artificial item response data that could be used for some analyses such as computer simulation techniques, but would be unnecessary if user-imported item response data is used.
+The `theta` and `item_P` are not used for the estimation process, but could play a role as true parameters if the artificial data (`data_P`) is used for an analysis.
 
 
 ```{r}
@@ -189,7 +187,7 @@ initialitem <- Alldata$initialitem_P
 theta <- Alldata$theta
 ```
 
-If the artificial data (`data`) is used, the true latent distribution looks like,
+If the artificial data (`data_P`) is used, the true latent distribution looks like;
 
 ```{r, fig.align='center', fig.height=2.5, fig.width=6, echo=F}
 ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
@@ -266,6 +264,9 @@ Mod1 <- IRTest_Poly(initialitem = initialitem,
 + **Results**
 
 ```{r, fig.align='center', fig.height=2.5, fig.width=6}
+### Summary
+summary(Mod1)
+
 ### The estimated item parameters
 Mod1$par_est
 
@@ -277,10 +278,7 @@ head(Mod1$theta)
 
 ### The estimated latent distribution
 plot(Mod1) +
-  lims(
-    x = c(-6,6),
-    y = c(0, .5)
-  )
+  lims(y = c(0, .5))
 ```
 
 \
@@ -295,14 +293,13 @@ plot(Mod1) +
 + **Preparing data**
 
 As in the case of dichotomous and polytomous items, the function `DataGeneration` can be used for the pre-analysis step.
-This function returns artificial data and some useful objects for analysis (i.e., `theta`, `data_D`, `item_D`, `initialitem_D`, `data_P`, `item_P`, and `initialitem_P`).
+This function returns artificial data and some useful objects for analysis (i.e., `theta`, `data_D`, `item_D`, `initialitem_D`, `data_P`, `item_P`, & `initialitem_P`).
 \
 \
 In the parameter estimation process, 
-the `initialitem` can be used for an input of the function `IRTest_Mix` (i.e., `initialitem = initialitem`).
-The `data` is an artificial item response data that could be unnecessary if user-imported item response data is used.
-The `theta` and `item` are not used for the estimation process.
-They can be considered as the true parameters only if the artificial data (`data`) is used for analysis.
+the `initialitem_D` and `initialitem_P` can be used for an input of the function `IRTest_Mix` (i.e., `initialitem_D = initialitem_D`, & `initialitem_P = initialitem_P`).
+The `data_D` and `data_P` are artificial item response data sets that could be used for some analyses such as computer simulation techniques, but would be unnecessary if user-imported item response data is used.
+The `theta` and `item_D` and `item_P` are not used for the estimation process, but could play a role as true parameters if the artificial data (`data_D` & `data_P`) is used for an analysis.
 
 
 ```{r}
@@ -332,10 +329,7 @@ If the artificial data (`data`) is used, the true latent distribution looks like
 ```{r, fig.align='center', fig.height=2.5, fig.width=6, echo=F}
 ggplot() +
   stat_function(fun = dist2, n = 101, args = list(prob = 0.5, d=1.664, sd_ratio = 1)) +
-  lims(
-    x = c(-6,6),
-    y = c(0, .5)
-  ) +
+  lims(y = c(0, .5)) +
   ylab("latent density") +
   xlab(expression(theta)) +
   scale_y_continuous(breaks = NULL)
@@ -423,6 +417,9 @@ Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
 + **Results**
 
 ```{r, fig.align='center', fig.height=2.5, fig.width=6}
+### Summary
+summary(Mod1)
+
 ### The estimated item parameters
 Mod1$par_est
 
@@ -434,10 +431,7 @@ head(Mod1$theta)
 
 ### The estimated latent distribution
 plot(Mod1) +
-  lims(
-    x = c(-6,6),
-    y = c(0, .5)
-  )
+  lims(y = c(0, .5))
 ```
 
 \
