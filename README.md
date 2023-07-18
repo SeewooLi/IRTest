@@ -55,8 +55,6 @@ Followings are functions of **IRTest**.
   estimation algorithm and artificial item-response data that can be
   passed into `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`.
 
-- `plot_LD` draws a plot of the estimated latent distribution.
-
 - `dist2` is a probability density function of two-component Gaussian
   mixture distribution.
 
@@ -107,6 +105,44 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
                     )
 ```
 
+- Summary of the result
+
+``` r
+summary(Mod1)
+#> Convergence:  
+#> Successfully converged below the threshold of 0.001 on 15th iterations. 
+#> 
+#> Model Fit:  
+#>    deviance   23315.8 
+#>         AIC   23593.8 
+#>         BIC   24275.98 
+#> 
+#> The Number of Parameters:  
+#>        item   20 
+#>        dist   119 
+#>       total   139 
+#> 
+#> The Number of Items:  
+#> dichotomous   20 
+#> polyotomous   0 
+#> 
+#> The Estimated Latent Distribution:  
+#> method - EHM 
+#> ----------------------------------------
+#>                                           
+#>                                           
+#>                         .                 
+#>         . .           @ @ @               
+#>         @ @         . @ @ @ @             
+#>       . @ @ @       @ @ @ @ @ .           
+#>       @ @ @ @ . . @ @ @ @ @ @ @ @         
+#>     . @ @ @ @ @ @ @ @ @ @ @ @ @ @ @       
+#>     @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @     
+#>   @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ . 
+#> +---------+---------+---------+---------+
+#> -2        -1        0         1         2
+```
+
 - Parameter estimation results
 
 ``` r
@@ -115,12 +151,21 @@ colnames(item) <- c("a", "b", "c")
 knitr::kables(
   list(
     ### True item parameters 
-    knitr::kable(item, format='simple', caption = "True item parameters", digits = 2),
+    knitr::kable(item, format='simple', caption = "True item parameters", digits = 2)%>%
+  kable_styling(font_size = 7),
 
     ### Estimated item parameters
-    knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters", digits = 2)
+    knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters", digits = 2)%>%
+  kable_styling(font_size = 7)
   )
 )
+#> Warning in kable_styling(., font_size = 7): Please specify format in kable.
+#> kableExtra can customize either HTML or LaTeX outputs. See
+#> https://haozhu233.github.io/kableExtra/ for details.
+
+#> Warning in kable_styling(., font_size = 7): Please specify format in kable.
+#> kableExtra can customize either HTML or LaTeX outputs. See
+#> https://haozhu233.github.io/kableExtra/ for details.
 ```
 
 <table class="kable_wrapper">
@@ -204,7 +249,6 @@ abline(a=0,b=1)
 ``` r
 plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
   lims(
-    x = c(-6,6),
     y = c(0, .75)
   )+
   geom_line(
@@ -222,8 +266,6 @@ plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
     title="The estimated latent density using 'EHM'", colour= "Type"
     )+
   theme_bw()
-#> Scale for x is already present.
-#> Adding another scale for x, which will replace the existing scale.
 ```
 
 <img src="man/figures/README-plotLD-1.png" width="100%" style="display: block; margin: auto;" />

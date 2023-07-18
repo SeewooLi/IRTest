@@ -12,10 +12,7 @@ knitr::opts_chunk$set(
   out.width = "100%" 
 )
 library(ggplot2)
-
-colorize <- function(x, color) {
-  sprintf("\\textcolor{%s}{%s}", color, x)
-}
+library(kableExtra)
 ```
 
 # Welcome to **IRTest**!
@@ -56,8 +53,6 @@ Followings are functions of **IRTest**.
   + `IRTest_Mix` is the estimation function for *a mixed-format test*, a test comprising both dichotomous item(s) and polytomous item(s).
 
   + `DataGeneration` generates several objects that can be useful for computer simulation studies. Among these are starting values for the estimation algorithm and artificial item-response data that can be passed into `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`.
-
-  + `plot_LD` draws a plot of the estimated latent distribution.
   
   + `dist2` is a probability density function of two-component Gaussian mixture distribution.
   
@@ -105,6 +100,12 @@ Mod1 <- IRTest_Dich(initialitem = initialitem,
                     )
 ```
 
+* Summary of the result
+
+```{r summary}
+summary(Mod1)
+```
+
 * Parameter estimation results
 
 ```{r results, fig.align='center', fig.height=6, fig.width=10}
@@ -113,10 +114,12 @@ colnames(item) <- c("a", "b", "c")
 knitr::kables(
   list(
     ### True item parameters 
-    knitr::kable(item, format='simple', caption = "True item parameters", digits = 2),
+    knitr::kable(item, format='simple', caption = "True item parameters", digits = 2)%>%
+  kable_styling(font_size = 7),
 
     ### Estimated item parameters
-    knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters", digits = 2)
+    knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters", digits = 2)%>%
+  kable_styling(font_size = 7)
   )
 )
 
@@ -134,7 +137,6 @@ abline(a=0,b=1)
 ```{r plotLD, fig.align='center', fig.height=4, fig.width=8}
 plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
   lims(
-    x = c(-6,6),
     y = c(0, .75)
   )+
   geom_line(
