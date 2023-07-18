@@ -152,11 +152,11 @@ knitr::kables(
   list(
     ### True item parameters 
     knitr::kable(item, format='simple', caption = "True item parameters", digits = 2)%>%
-  kable_styling(font_size = 7),
+  kable_styling(font_size = 4),
 
     ### Estimated item parameters
     knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters", digits = 2)%>%
-  kable_styling(font_size = 7)
+  kable_styling(font_size = 4)
   )
 )
 ```
