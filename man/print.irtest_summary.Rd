@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{An object returned from \code{\link{summary.irtest}}.}
+
+\item{...}{Additional arguments (currently nonfunctioning).}
 }
 \value{
 Printed summarized texts on the console.

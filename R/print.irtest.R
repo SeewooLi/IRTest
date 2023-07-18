@@ -3,6 +3,7 @@
 #' @description This function prints the summarized information.
 #'
 #' @param x An object returned from \code{\link{summary.irtest}}.
+#' @param ... Additional arguments (currently nonfunctioning).
 #'
 #' @return Printed texts on the console recommending the usage of \code{summary} function and the direct access to the details using "$" sign.
 #' @export
@@ -50,7 +51,10 @@ print.irtest <- function(x, ...){
   cat('\n')
   cat('<NOTE> \n')
   cat('For more information; \n')
-  cat('Use 1) "$" sign to directly access to the elements and/or 2) "summary" function for briefly summarized results.')
+  cat('Use \n')
+  cat('1) "$" sign to directly access to the elements \n')
+  cat('and/or \n')
+  cat('2) "summary" function for briefly summarized results. \n')
   invisible(x)
 }
 
@@ -59,7 +63,7 @@ print.irtest <- function(x, ...){
 #' @description This function prints the summarized information.
 #'
 #' @param x An object returned from \code{\link{summary.irtest}}.
-#'
+#' @param ... Additional arguments (currently nonfunctioning).
 #' @return Printed summarized texts on the console.
 #' @export
 #'

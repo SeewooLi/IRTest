@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{An object returned from \code{\link{summary.irtest}}.}
+
+\item{...}{Additional arguments (currently nonfunctioning).}
 }
 \value{
 Printed texts on the console recommending the usage of \code{summary} function and the direct access to the details using "$" sign.
