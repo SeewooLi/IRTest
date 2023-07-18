@@ -159,13 +159,6 @@ knitr::kables(
   kable_styling(font_size = 7)
   )
 )
-#> Warning in kable_styling(., font_size = 7): Please specify format in kable.
-#> kableExtra can customize either HTML or LaTeX outputs. See
-#> https://haozhu233.github.io/kableExtra/ for details.
-
-#> Warning in kable_styling(., font_size = 7): Please specify format in kable.
-#> kableExtra can customize either HTML or LaTeX outputs. See
-#> https://haozhu233.github.io/kableExtra/ for details.
 ```
 
 <table class="kable_wrapper">
