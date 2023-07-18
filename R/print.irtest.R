@@ -35,7 +35,7 @@
 #' M1
 #'
 #'
-print.irtest <- function(x){
+print.irtest <- function(x, ...){
   cat('Convergence: ', '\n')
   if(x$diff<=x$Options$threshold){
     cat("Successfully converged.",'\n')
@@ -91,7 +91,7 @@ print.irtest <- function(x){
 #' summary(M1)
 #'
 #'
-print.irtest_summary <- function(x){
+print.irtest_summary <- function(x, ...){
   .prt.irtest.convergence(x)
   .prt.irtest.model_fit(x)
   .prt.irtest.n_par(x)

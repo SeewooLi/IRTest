@@ -4,7 +4,7 @@
 \alias{print.irtest}
 \title{Print of the result}
 \usage{
-\method{print}{irtest}(x)
+\method{print}{irtest}(x, ...)
 }
 \arguments{
 \item{x}{An object returned from \code{\link{summary.irtest}}.}
