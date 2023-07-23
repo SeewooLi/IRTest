@@ -302,7 +302,75 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=3, threshold=1e-7, EMiter
   q <- length(X)
   ####item parameter estimation####
   for(i in 1:nitem){
-    if(model %in% c("GPCM")){
+    if(model %in% c("PCM")){
+
+      iter <- 0
+      div <- 3
+      par <- item[i,]
+      par <- par[!is.na(par)]
+      npar <- length(par)
+      ####Newton-Raphson####
+      repeat{
+        iter <- iter+1
+        par[1] <- 1
+        pmat <- P_P(theta = X, a=par[1], b=par[-1])
+        pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
+        tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
+        if(npar>3){
+          for(j in 3:(npar-1)){
+            pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
+            tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
+          }
+        }
+        a_supp <- NULL # diag(tcum[,-1]%*%t(pmat[,-1]))
+
+        # Gradients
+        Grad <- numeric(npar-1)
+
+        # Information Matrix
+        IM <- matrix(ncol = npar-1, nrow = npar-1)
+
+        for(r in 2:npar){
+          for(co in 1:npar){
+            Grad[r-1] <- Grad[r-1]+
+              sum(rik[i,,co]*PDs(probab = co, param = r, pmat,
+                                 pcummat, a_supp, par, tcum)/pmat[,co])
+          }
+        }
+        for(r in 2:npar){
+          for(co in 2:npar){
+            if(r >= co){
+              ssd <- 0
+              for(k in 1:npar){
+                ssd <- ssd+(PDs(probab = k, param = r, pmat,
+                                pcummat, a_supp, par, tcum)*
+                              PDs(probab = k, param = co, pmat,
+                                  pcummat, a_supp, par, tcum)/pmat[,k])
+              }
+              IM[r-1,co-1] <- f%*%ssd
+              IM[co-1,r-1] <- IM[r-1,co-1]
+            }
+          }
+        }
+
+        diff <- -solve(IM)%*%Grad
+
+        if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
+          par <- par
+        } else{
+          if( sum(abs(diff)) > div){
+            par <- par-c(0, div/sum(abs(diff))*diff/10)
+          } else {
+            par <- par-c(0, diff)
+            div <- sum(abs(diff))
+          }
+        }
+        if( div <= threshold | iter > max_iter) break
+      }
+      item_estimated[i,1:npar] <- par
+      se[i,1:npar] <- c(NA, sqrt(diag(solve(IM)))) # asymptotic S.E.
+
+    } else if(model %in% c("GPCM")){
 
       iter <- 0
       div <- 3
@@ -371,6 +439,7 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=3, threshold=1e-7, EMiter
   return(list(item_estimated, se))
 }
 
+# An auxiliary function in calculating gradients and Hessian matrices of polytomous items
 PDs <- function(probab, param, pmat, pcummat, a_supp, par, tcum){
   if(param==1){
     pmat[,probab]*(tcum[,probab]-a_supp)

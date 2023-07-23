@@ -1,3 +1,7 @@
+# IRTest 1.1.0
+
+* The `PCM` model for polytomous data is available.
+
 # IRTest 1.0.0
 
 * Unit tests are more thoroughly conducted to enhance 'test coverage.'

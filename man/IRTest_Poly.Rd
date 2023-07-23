@@ -29,8 +29,8 @@ The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
 
 \item{q}{A numeric value that represents the number of quadrature points. The default value is 121.}
 
-\item{model}{A vector that represents types of item characteristic functions applied to each item.
-However, only generalized partial credit model (\code{GPCM}) is currently available.}
+\item{model}{A character value that represents the type of a item characteristic function applied to the items.
+Currently, \code{PCM} \code{GPCM} are available.}
 
 \item{latent_dist}{A character string that determines latent distribution estimation method.
 Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
@@ -88,9 +88,15 @@ Only generalized partial credit model (GPCM) is currently available.
 \details{
 \describe{
 \item{
-The probability for scoring \eqn{k} (i.e., \eqn{u=k; k=0, 1, ..., m; m \ge 2}) in generalized partial credit model (GPCM) can be expressed as follows;
+The probability for scoring \eqn{k} (i.e., \eqn{u=k; k=0, 1, ..., m; m \ge 2})can be expressed as follows;
 }{
-1) generalized partial credit model (GPCM)
+1) partial credit model (PCM)
+\deqn{P(u=0|\theta, b_1, ..., b_{m})=\frac{1}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{a(\theta-b_v)}\right]}}}}
+\deqn{P(u=1|\theta, b_1, ..., b_{m})=\frac{\exp{(\theta-b_1)}}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{\theta-b_v}\right]}}}}
+\deqn{\vdots}
+\deqn{P(u=m|\theta, b_1, ..., b_{m})=\frac{\exp{\left[\sum_{v=1}^{m}{\theta-b_v}\right]}}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{\theta-b_v}\right]}}}}
+
+2) generalized partial credit model (GPCM)
 \deqn{P(u=0|\theta, a, b_1, ..., b_{m})=\frac{1}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{a(\theta-b_v)}\right]}}}}
 \deqn{P(u=1|\theta, a, b_1, ..., b_{m})=\frac{\exp{(a(\theta-b_1))}}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{a(\theta-b_v)}\right]}}}}
 \deqn{\vdots}

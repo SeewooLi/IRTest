@@ -38,8 +38,7 @@ The seed number can guarantee the replicability of the result.}
 \item{model_D}{A vector of length \code{nitem_D}.
 The \emph{i}th element is the probability model for the \emph{i}th dichotomous item.}
 
-\item{model_P}{A vector of length \code{nitem_P}.
-The \emph{i}th element is the probability model for the \emph{i}th polytomous item.}
+\item{model_P}{A character string that represents the probability model for the polytomous items.}
 
 \item{latent_dist}{A character string that determines the type of latent distribution.
 Currently available options are \code{"beta"} (four-parameter beta distribution; \code{\link{rBeta.4P}}),

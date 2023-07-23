@@ -12,8 +12,7 @@
 #' @param nitem_P A numeric value. The number of polytomous items.
 #' @param model_D A vector of length \code{nitem_D}.
 #' The \emph{i}th element is the probability model for the \emph{i}th dichotomous item.
-#' @param model_P A vector of length \code{nitem_P}.
-#' The \emph{i}th element is the probability model for the \emph{i}th polytomous item.
+#' @param model_P A character string that represents the probability model for the polytomous items.
 #' @param latent_dist A character string that determines the type of latent distribution.
 #' Currently available options are \code{"beta"} (four-parameter beta distribution; \code{\link{rBeta.4P}}),
 #' \code{"chi"} (\eqn{\chi^2} distribution; \code{\link{rchisq}}),
@@ -229,15 +228,17 @@ DataGeneration <- function(seed=1, N=2000,
       initialitem_P <- matrix(nrow = nitem_P, ncol = 7)
       set.seed(seed)
       for(i in 1:nitem_P){
-        if(model_P=="GPCM"){
+        if(model_P=="PCM"){
+          item_P[i,1] <- 1
+          center <- rnorm(1,0,.5)
+          item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,.2))
+        } else if(model_P=="GPCM"){
           item_P[i,1] <- round(runif(1,a_l,a_u), digits = 2)
           center <- rnorm(1,0,.5)
           item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,.2))
-
-          initialitem_P[i,1] <- 1
-          initialitem_P[i,2:(categ[i])] <- 0#(-2:1+.5)/3
-          }
-
+        }
+        initialitem_P[i,1] <- 1
+        initialitem_P[i,2:(categ[i])] <- 0#(-2:1+.5)/3
 
         # item responses for polytomous items
 
@@ -254,7 +255,7 @@ DataGeneration <- function(seed=1, N=2000,
       initialitem_P <- matrix(nrow = nitem_P, ncol = 7)
       set.seed(seed)
       for(i in 1:nitem_P){
-        if(model_P=="GPCM"){
+        if(model_P %in% c("PCM", "GPCM")){
           initialitem_P[i,1] <- 1
           initialitem_P[i,2:(categ[i])] <- 0#(-2:1+.5)/3
         }
