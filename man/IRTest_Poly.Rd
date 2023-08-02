@@ -10,6 +10,7 @@ IRTest_Poly(
   range = c(-6, 6),
   q = 121,
   model,
+  ability_method = "EAP",
   latent_dist = "Normal",
   max_iter = 200,
   threshold = 1e-04,
@@ -31,6 +32,10 @@ The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
 
 \item{model}{A character value that represents the type of a item characteristic function applied to the items.
 Currently, \code{PCM} \code{GPCM} are available.}
+
+\item{ability_method}{The ability parameter estimation method.
+The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
+The default is \code{EAP}.}
 
 \item{latent_dist}{A character string that determines latent distribution estimation method.
 Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
@@ -74,6 +79,8 @@ It is discrete (i.e., probability mass function) since quadrature scheme of EM-M
 \item{Pk}{The posterior probabilities for each examinees at each quadrature points.}
 \item{theta}{The estimated ability parameter values.
 Expected \emph{a posteriori} (EAP) is used for ability parameter estimation.}
+\item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
+If an examinee answers all or none of the items correctly, the function returns \code{NA}.}
 \item{logL}{The deviance (i.e., -2\emph{log}L).}
 \item{bw}{The bandwidth used.}
 \item{Options}{A replication of input arguments.}

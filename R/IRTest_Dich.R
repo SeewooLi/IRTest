@@ -279,7 +279,7 @@ IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
     theta <- as.numeric(E$Pk%*%E$Xk)
     theta_se <- NULL
   } else if(ability_method == 'MLE'){
-    mle_result <- MLE_theta(item = initialitem, data = data)
+    mle_result <- MLE_theta(item = initialitem, data = data, type = "dich")
     theta <- mle_result[[1]]
     theta_se <- mle_result[[2]]
   }

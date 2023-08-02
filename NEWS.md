@@ -1,3 +1,7 @@
+# IRTest 1.2.0
+
+* The `MLE` option for ability parameter estimation is added for polytomous data.
+
 # IRTest 1.1.0
 
 * The `PCM` model for polytomous data is available.
@@ -13,7 +17,7 @@
 
 # IRTest 0.1.0
 
-* Ability parameter MLE is available for `IRTest_Dich`.
+* Ability parameter `MLE` is available for `IRTest_Dich`.
 * Data Generation with fixed item and/or ability parameters is available.
 
 # IRTest 0.0.2

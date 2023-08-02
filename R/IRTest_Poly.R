@@ -18,6 +18,9 @@
 #' @param q A numeric value that represents the number of quadrature points. The default value is 121.
 #' @param model A character value that represents the type of a item characteristic function applied to the items.
 #' Currently, \code{PCM} \code{GPCM} are available.
+#' @param ability_method The ability parameter estimation method.
+#' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
+#' The default is \code{EAP}.
 #' @param latent_dist A character string that determines latent distribution estimation method.
 #' Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
 #' \code{"EHM"} for empirical histogram method (Mislevy, 1984; Mislevy & Bock, 1985),
@@ -99,6 +102,8 @@
 #' \item{Pk}{The posterior probabilities for each examinees at each quadrature points.}
 #' \item{theta}{The estimated ability parameter values.
 #' Expected \emph{a posteriori} (EAP) is used for ability parameter estimation.}
+#' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
+#' If an examinee answers all or none of the items correctly, the function returns \code{NA}.}
 #' \item{logL}{The deviance (i.e., -2\emph{log}L).}
 #' \item{bw}{The bandwidth used.}
 #' \item{Options}{A replication of input arguments.}
@@ -156,11 +161,11 @@
 #'                   )
 #'
 IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
-                        latent_dist="Normal", max_iter=200, threshold=0.0001,
-                        bandwidth="SJ-ste", h=NULL){
+                        ability_method = 'EAP', latent_dist="Normal",
+                        max_iter=200, threshold=0.0001,bandwidth="SJ-ste",h=NULL){
   Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,
-                 latent_dist=latent_dist, max_iter=max_iter, threshold=threshold,
-                 bandwidth=bandwidth,h=h)
+                 ability_method=ability_method,latent_dist=latent_dist,
+                 max_iter=max_iter, threshold=threshold,bandwidth=bandwidth,h=h)
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)
   Ak <- dist2(Xk, 0.5, 0, 1)/sum(dist2(Xk, 0.5, 0, 1))
@@ -277,11 +282,20 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
       flush.console()
     }
   }
+  # ability parameter estimation
+  if(ability_method == 'EAP'){
+    theta <- as.numeric(E$Pk%*%E$Xk)
+    theta_se <- NULL
+  } else if(ability_method == 'MLE'){
+    mle_result <- MLE_theta(item = initialitem, data = data, type = "poly")
+    theta <- mle_result[[1]]
+    theta_se <- mle_result[[2]]
+  }
+
   colnames(initialitem) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6")
   colnames(M1[[2]]) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6")
 
   # preparation for outputs
-  EAP <- as.numeric(E$Pk%*%E$Xk)
   logL <- 0
   for(i in 1:q){
     logL <- logL+sum(logLikeli_Poly(initialitem, data, theta = Xk[i])*E$Pk[,i])
@@ -301,7 +315,8 @@ IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
          diff=diff,
          Ak=Ak,
          Pk=E$Pk,
-         theta = EAP,
+         theta = theta,
+         theta_se = theta_se,
          logL=-2*logL, # deviance
          bw=bw,
          Options = Options # specified argument values
