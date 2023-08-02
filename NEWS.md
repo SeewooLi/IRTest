@@ -1,9 +1,5 @@
 # IRTest 1.2.0
 
-# IRTest 1.1.0
-
-# IRTest 1.2.0
-
 * The `MLE` option for ability parameter estimation is added for polytomous data.
 
 # IRTest 1.1.0
