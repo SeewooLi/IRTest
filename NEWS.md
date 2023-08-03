@@ -1,3 +1,7 @@
+# IRTest 1.3.1
+
+* Starting values (`initialitem`) can be automatically generated.
+
 # IRTest 1.3.0
 
 * `NA` values are permitted for estimation functions.
