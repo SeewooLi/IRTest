@@ -2,8 +2,8 @@
 # citation
 #################################################################################################################
 .onAttach <- function(libname, pkgname) {
-  package_citation <- "Li, S. (2022). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 1.2.0). R package."
-  package_URL <- "\n URL: https://CRAN.R-project.org/package=IRTest"
+  package_citation <- "Li, S. (2022). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 1.2.0). R package. \n"
+  package_URL <- "URL: https://CRAN.R-project.org/package=IRTest"
   packageStartupMessage("Thank you for using IRTest!")
   packageStartupMessage("Please cite the package as: \n")
   packageStartupMessage(package_citation)

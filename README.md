@@ -31,10 +31,16 @@ distribution:
 
 ## Installation
 
-**IRTest** can be installed on R-console with:
+The CRAN version of **IRTest** can be installed on R-console with:
 
 ``` r
 install.packages("IRTest")
+```
+
+For the development version, it can be installed on R-console with:
+
+``` r
+devtools::install_github("SeewooLi/IRTest")
 ```
 
 ## Functions
