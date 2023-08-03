@@ -82,7 +82,10 @@ logLikeli <- function(item, data, theta){
     lp1[lp1==-Inf] <- -.Machine$double.xmax # to avoid NaN
     lp2[lp2==-Inf] <- -.Machine$double.xmax # to avoid NaN
 
-    L <- tcrossprod(data, lp1)+tcrossprod((1-data), lp2)
+    data2 <- 1-data
+    data[is.na(data)] <- 0
+    data2[is.na(data)] <- 0
+    L <- tcrossprod(data, lp1)+tcrossprod(data2, lp2)
     # L is an N times 1 vector, each element of which refers to an individual's log-likelihood
   }
   return(L)
@@ -130,7 +133,12 @@ Estep <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
     Pk[,i] <- exp(logLikeli(item = item, data = data, theta = Xk[i]))*Ak[i]
   }
   Pk <- Pk/rowSums(Pk) # posterior weights
-  rik <- crossprod(data,Pk) # observed conditional frequency of correct responses
+  rik <- array(dim = c(nrow(item), q, 2)) # observed conditional frequency of correct responses
+  for(i in 1:2){
+    d_ <- data==(i-1)
+    d_[is.na(d_)] <- 0
+    rik[,,i] <- crossprod(d_,Pk)
+  }
   fk <- colSums(Pk) # expected frequency of examinees
   return(list(Xk=Xk, Ak=Ak, fk=fk, rik_D=rik,Pk=Pk))
 }
@@ -181,12 +189,19 @@ Estep_Mix <- function(item_D, item_P, data_D, data_P, range = c(-4,4), q = 100, 
     Pk[,i] <- exp(logLikeli(item = item_D, data = data_D, theta = Xk[i])+
                     logLikeli_Poly(item = item_P, data = data_P, theta = Xk[i]))*Ak[i]
   }
-  categ <- max(data_P)+1
+  categ <- max(data_P, na.rm = TRUE)+1
   Pk <- Pk/rowSums(Pk) # posterior weights
-  rik_D <- crossprod(data_D,Pk)
+  rik_D <- array(dim = c(nrow(item_D), q, 2)) # observed conditional frequency of correct responses
+  for(i in 1:2){
+    d_ <- data_D==(i-1)
+    d_[is.na(d_)] <- 0
+    rik_D[,,i] <- crossprod(d_,Pk)
+  }
   rik_P <- array(dim = c(nrow(item_P), q, categ))
   for(i in 1:categ){
-    rik_P[,,i] <- crossprod(data_P==i-1,Pk)
+    d_ <- data_P==(i-1)
+    d_[is.na(d_)] <- 0
+    rik_P[,,i] <- crossprod(d_,Pk)
   }
   fk <- colSums(Pk) # expected frequency of examinees
   return(list(Xk=Xk, Ak=Ak, fk=fk, rik_D=rik_D, rik_P=rik_P, Pk=Pk))
@@ -203,9 +218,9 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
   se <- matrix(nrow = nrow(item), ncol = 3)
   X <- E$Xk
   r <- E$rik_D
-  f <- E$fk
   ####item parameter estimation####
   for(i in 1:nitem){
+    f <- rowSums(r[i,,])
     if(model[i] %in% c(1, "1PL", "Rasch", "RASCH")){
 
       iter <- 0
@@ -216,7 +231,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
         iter <- iter+1
         p <- P(theta = X, b=par)
         fW <- f*p*(1-p)
-        diff <- as.vector(sum(r[i,]-f*p)/sum(fW))
+        diff <- as.vector(sum(r[i,,2]-f*p)/sum(fW))
 
         if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
           par <- par
@@ -246,7 +261,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
         fW <- fp*(1-p)
         par[1] <- max(0.1,par[1])
         X_ <- X-par[2]
-        L1 <- c(sum(X_*(r[i,]-fp)),-par[1]*sum(r[i,]-fp)) #1st derivative of marginal likelihood
+        L1 <- c(sum(X_*(r[i,,2]-fp)),-par[1]*sum(r[i,,2]-fp)) #1st derivative of marginal likelihood
         d <- sum(-par[1]^2*fW)
         b <- par[1]*sum(X_*fW)
         a <- sum(-X_^2*fW)
@@ -284,9 +299,9 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
         par[3] <- max(0,par[3])
         X_ <- X-par[2]
 
-        L1 <- c((1-par[3])*sum(X_*(r[i,]-fp)*W_),
-                -par[1]*(1-par[3])*sum((r[i,]-fp)*W_),
-                sum(r[i,]/p-f))/(1-par[3]) #1st derivative of marginal likelihood
+        L1 <- c((1-par[3])*sum(X_*(r[i,,2]-fp)*W_),
+                -par[1]*(1-par[3])*sum((r[i,,2]-fp)*W_),
+                sum(r[i,,2]/p-f))/(1-par[3]) #1st derivative of marginal likelihood
 
         L2 <- diag(c(sum(-X_^2*fW*(p_/p)^2), #2nd derivative of marginal likelihood
                      -par[1]^2*sum(fW*(p_/p)^2),
@@ -528,20 +543,21 @@ MLE_theta <- function(item, data, type){
   nitem <- nrow(item)
   if(type=="dich"){
     for(i in 1:nrow(data)){
-      if(sum(data[i,])==nitem){
+      if(sum(data[i,],na.rm = TRUE)==nitem){
         mle <- append(mle, Inf)
         se <- append(se, NA)
-      } else if(sum(data[i,])==0){
+      } else if(sum(data[i,],na.rm = TRUE)==0){
         mle <- append(mle, -Inf)
         se <- append(se, NA)
       } else {
         th <- 0
         thres <- 1
         while(thres > 0.0001){
-          p_ <- P(theta = th, a = item[,1], b = item[,2], c = 0)
+          p_ <- P(theta = th, a = item[,1], b = item[,2], c = item[,3])
           p <- p_*(1-item[,3])+item[,3]
           L1 <- sum(
-            item[,1]*p_/p*(data[i,]-p)
+            item[,1]*p_/p*(data[i,]-p),
+            na.rm = TRUE
           )
           L2 <- -sum(
             item[,1]^2*p_^2*(1-p)/p
@@ -557,10 +573,10 @@ MLE_theta <- function(item, data, type){
   } else if(type=='poly'){
     for(i in 1:nrow(data)){
       ncat <- rowSums(!is.na(item))-1
-      if(sum(data[i,])==sum(ncat)){
+      if(sum(data[i,],na.rm = TRUE)==sum(ncat)){
         mle <- append(mle, Inf)
         se <- append(se, NA)
-      } else if(sum(data[i,])==0){
+      } else if(sum(data[i,],na.rm = TRUE)==0){
         mle <- append(mle, -Inf)
         se <- append(se, NA)
       } else {
@@ -571,7 +587,8 @@ MLE_theta <- function(item, data, type){
           p[is.na(p)] <- 0
           S <- p[,-1]%*%1:6
           L1 <- sum(
-            item[,1]*(data[i,]-S)
+            item[,1]*(data[i,]-S),
+            na.rm = TRUE
           )
           L2 <- -sum(
             item[,1]^2*(p[,-1]%*%(1:6)^2 - S^2)

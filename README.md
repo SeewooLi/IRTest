@@ -93,7 +93,6 @@ Alldata <- DataGeneration(seed = 123456789,
 
 data <- Alldata$data_D
 item <- Alldata$item_D
-initialitem <- Alldata$initialitem_D
 theta <- Alldata$theta
 ```
 
@@ -103,8 +102,7 @@ For an illustrative purpose, empirical histogram method is used for the
 estimation of latent distribution.
 
 ``` r
-Mod1 <- IRTest_Dich(initialitem = initialitem,
-                    data = data,
+Mod1 <- IRTest_Dich(data = data,
                     model = rep("1PL", 20),
                     latent_dist = "EHM",
                     threshold = .001

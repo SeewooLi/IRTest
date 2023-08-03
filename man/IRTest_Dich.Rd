@@ -5,11 +5,11 @@
 \title{Item and ability parameters estimation for dichotomous items}
 \usage{
 IRTest_Dich(
-  initialitem,
   data,
   range = c(-6, 6),
   q = 121,
   model,
+  initialitem = NULL,
   ability_method = "EAP",
   latent_dist = "Normal",
   max_iter = 200,
@@ -19,8 +19,6 @@ IRTest_Dich(
 )
 }
 \arguments{
-\item{initialitem}{A matrix of initial item parameter values for starting the estimation algorithm}
-
 \item{data}{A matrix of item responses where responses are coded as 0 or 1.
 Rows and columns indicate examinees and items, respectively.}
 
@@ -33,6 +31,8 @@ The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
 Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
 \code{2}, \code{"2PL"} for two-parameter logistic model,
 and \code{3}, \code{"3PL"} for three-parameter logistic model.}
+
+\item{initialitem}{A matrix of initial item parameter values for starting the estimation algorithm}
 
 \item{ability_method}{The ability parameter estimation method.
 The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).

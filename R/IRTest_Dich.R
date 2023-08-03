@@ -8,7 +8,6 @@
 #' @importFrom stats density nlminb
 #' @importFrom utils flush.console
 #'
-#' @param initialitem A matrix of initial item parameter values for starting the estimation algorithm
 #' @param data A matrix of item responses where responses are coded as 0 or 1.
 #' Rows and columns indicate examinees and items, respectively.
 #' @param range Range of the latent variable to be considered in the quadrature scheme.
@@ -18,6 +17,7 @@
 #' Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
 #' \code{2}, \code{"2PL"} for two-parameter logistic model,
 #' and \code{3}, \code{"3PL"} for three-parameter logistic model.
+#' @param initialitem A matrix of initial item parameter values for starting the estimation algorithm
 #' @param ability_method The ability parameter estimation method.
 #' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
 #' The default is \code{EAP}.
@@ -155,12 +155,15 @@
 #'                   h=4 # an argument required only when "latent_dist = 'DC'"
 #'                   )
 #'
-IRTest_Dich <- function(initialitem, data, range = c(-6,6), q = 121, model,
+IRTest_Dich <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal", max_iter=200,
                         threshold=0.0001, bandwidth="SJ-ste", h=NULL){
   Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,
                  ability_method=ability_method,latent_dist=latent_dist,
                  max_iter=max_iter, threshold=threshold,bandwidth=bandwidth, h=h)
+  if(is.null(initialitem)){
+    initialitem <- matrix(rep(c(1,0,0), each = ncol(data)), ncol = 3)
+  }
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)
   Ak <- dist2(Xk, 0.5, 0, 1)/sum(dist2(Xk, 0.5, 0, 1))
