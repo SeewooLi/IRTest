@@ -5,11 +5,11 @@
 \title{Item and ability parameters estimation for polytomous items}
 \usage{
 IRTest_Poly(
-  initialitem,
   data,
   range = c(-6, 6),
   q = 121,
   model,
+  initialitem = NULL,
   ability_method = "EAP",
   latent_dist = "Normal",
   max_iter = 200,
@@ -19,9 +19,6 @@ IRTest_Poly(
 )
 }
 \arguments{
-\item{initialitem}{A matrix of initial item parameter values for starting the estimation algorithm.
-This matrix determines the number of categories for each item.}
-
 \item{data}{A matrix of item responses where responses are coded as \code{0, 1, ..., m} for an \code{m+1} category item.
 Rows and columns indicate examinees and items, respectively.}
 
@@ -32,6 +29,9 @@ The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
 
 \item{model}{A character value that represents the type of a item characteristic function applied to the items.
 Currently, \code{PCM} and \code{GPCM} are available.}
+
+\item{initialitem}{A matrix of initial item parameter values for starting the estimation algorithm.
+This matrix determines the number of categories for each item.}
 
 \item{ability_method}{The ability parameter estimation method.
 The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).

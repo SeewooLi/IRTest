@@ -50,6 +50,16 @@ dnormal <- function(x, mean=0, sd=1){
 #   prob*dnormal(x, m[1], s[1])+(1-prob)*dnormal(x, m[2], s[2])
 # }
 
+#################################################################################################################
+# Reordering Scores for polytomous data
+#################################################################################################################
+reorder_vec <- function(x){
+  match(x, table = sort(unique(x)))-1
+}
+
+reorder_mat <- function(x){
+  apply(x, MARGIN = 2, FUN = reorder_vec)
+}
 
 #################################################################################################################
 # Likelihood
@@ -80,7 +90,21 @@ logLikeli <- function(item, data, theta){
 
 logLikeli_Poly <- function(item, data, theta){
   pmat <- P_P(theta = theta, a = item[,1], b = item[,-1])
-  L <- rowSums(log(matrix(pmat[cbind(rep(1:ncol(data), each = nrow(data)),as.vector(data)+1)], nrow = nrow(data), ncol = ncol(data))))
+  L <- NULL
+  for(i in 1:nrow(item)){
+    L <- cbind(L, pmat[i,][data[,i]+1])
+  }
+  L <- rowSums(log(L),na.rm = TRUE)
+  # L <- rowSums(
+  #   log(
+  #     matrix(
+  #       pmat[cbind(rep(1:ncol(data), each = nrow(data)),as.vector(data)+1)],
+  #       nrow = nrow(data),
+  #       ncol = ncol(data)
+  #       )
+  #     ),
+  #   na.rm = TRUE
+  #   )
   L[L==-Inf] <- -.Machine$double.xmax
   return(L)
 }
@@ -91,6 +115,7 @@ logLikeli_Poly <- function(item, data, theta){
 #################################################################################################################
 Estep <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
                   sd_ratio = 1,Xk=NULL, Ak=NULL){
+  data[is.na(data)] <- 0
   if(is.null(Xk)) {
     # quadrature points
     Xk <- seq(range[1],range[2],length=q)
@@ -125,12 +150,14 @@ Estep_Poly <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
     # weighted likelihood where the weight is the latent distribution
     Pk[,i] <- exp(logLikeli_Poly(item = item, data = data, theta = Xk[i]))*Ak[i]
   }
-  categ <- max(data)+1
+  categ <- max(data, na.rm = TRUE)+1
   nitem <- nrow(item)
   Pk <- Pk/rowSums(Pk) # posterior weights
   rik <- array(dim = c(nitem, q, categ))
   for(i in 1:categ){
-    rik[,,i] <- crossprod(data==i-1,Pk)
+    d_ <- data==(i-1)
+    d_[is.na(d_)] <- 0
+    rik[,,i] <- crossprod(d_,Pk)
   }
   fk <- colSums(Pk) # expected frequency of examinees
   return(list(Xk=Xk, Ak=Ak, fk=fk, rik_P=rik, Pk=Pk))
@@ -138,6 +165,8 @@ Estep_Poly <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
 
 Estep_Mix <- function(item_D, item_P, data_D, data_P, range = c(-4,4), q = 100, prob = 0.5, d = 0,
                        sd_ratio = 1,Xk=NULL, Ak=NULL){
+  data_D[is.na(data_D)] <- 0
+  data_P[is.na(data_P)] <- 0
   if(is.null(Xk)) {
     # quadrature points
     Xk <- seq(range[1],range[2],length=q)
@@ -290,7 +319,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
 }
 
 
-Mstep_Poly <- function(E, item, model="GPCM", max_iter=3, threshold=1e-7, EMiter){
+Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-5, EMiter){
   nitem <- nrow(item)
   item_estimated <- matrix(nrow = nrow(item), ncol = 7)
   se <- matrix(nrow = nrow(item), ncol = 7)
@@ -347,7 +376,7 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=3, threshold=1e-7, EMiter
                               PDs(probab = k, param = co, pmat,
                                   pcummat, a_supp, par, tcum)/pmat[,k])
               }
-              IM[r-1,co-1] <- f%*%ssd
+              IM[r-1,co-1] <- rowSums(rik[i,,])%*%ssd
               IM[co-1,r-1] <- IM[r-1,co-1]
             }
           }
@@ -377,10 +406,11 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=3, threshold=1e-7, EMiter
       par <- item[i,]
       par <- par[!is.na(par)]
       npar <- length(par)
+      f <- rowSums(rik[i,,])
       ####Newton-Raphson####
       repeat{
         iter <- iter+1
-        par[1] <- max(0.1,par[1])
+        # par[1] <- max(0.1,par[1])
         pmat <- P_P(theta = X, a=par[1], b=par[-1])
         pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
         tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])

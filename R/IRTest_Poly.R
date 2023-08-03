@@ -9,8 +9,6 @@
 #' @importFrom stats density nlminb
 #' @importFrom utils flush.console
 #'
-#' @param initialitem A matrix of initial item parameter values for starting the estimation algorithm.
-#' This matrix determines the number of categories for each item.
 #' @param data A matrix of item responses where responses are coded as \code{0, 1, ..., m} for an \code{m+1} category item.
 #' Rows and columns indicate examinees and items, respectively.
 #' @param range Range of the latent variable to be considered in the quadrature scheme.
@@ -18,6 +16,8 @@
 #' @param q A numeric value that represents the number of quadrature points. The default value is 121.
 #' @param model A character value that represents the type of a item characteristic function applied to the items.
 #' Currently, \code{PCM} and \code{GPCM} are available.
+#' @param initialitem A matrix of initial item parameter values for starting the estimation algorithm.
+#' This matrix determines the number of categories for each item.
 #' @param ability_method The ability parameter estimation method.
 #' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
 #' The default is \code{EAP}.
@@ -160,12 +160,22 @@
 #'                   h=4 # an argument required only when "latent_dist = 'DC'"
 #'                   )
 #'
-IRTest_Poly <- function(initialitem, data, range = c(-6,6), q = 121, model,
+IRTest_Poly <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal",
                         max_iter=200, threshold=0.0001,bandwidth="SJ-ste",h=NULL){
   Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,
                  ability_method=ability_method,latent_dist=latent_dist,
                  max_iter=max_iter, threshold=threshold,bandwidth=bandwidth,h=h)
+  data <- reorder_mat(as.matrix(data))
+  if(is.null(initialitem)){
+    category <- apply(data, 2, max, na.rm = TRUE)
+    initialitem <- matrix(nrow = ncol(data), ncol = 7)
+    initialitem[,1] <- 1
+    initialitem[,2] <- 0
+    for(i in 3:7){
+      initialitem[category>(i-2),i] <- 0
+    }
+  }
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)
   Ak <- dist2(Xk, 0.5, 0, 1)/sum(dist2(Xk, 0.5, 0, 1))
