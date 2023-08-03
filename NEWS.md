@@ -1,3 +1,7 @@
+# IRTest 1.3.0
+
+* `NA` values are permitted for estimation functions.
+
 # IRTest 1.2.0
 
 * The `MLE` option for ability parameter estimation is added for polytomous data.
