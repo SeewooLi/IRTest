@@ -5,14 +5,14 @@
 \title{Item and ability parameters estimation for a mixed-format item response data}
 \usage{
 IRTest_Mix(
-  initialitem_D,
-  initialitem_P,
   data_D,
   data_P,
   range = c(-6, 6),
   q = 121,
   model_D,
   model_P = "GPCM",
+  initialitem_D = NULL,
+  initialitem_P = NULL,
   latent_dist = "Normal",
   max_iter = 200,
   threshold = 1e-04,
@@ -21,10 +21,6 @@ IRTest_Mix(
 )
 }
 \arguments{
-\item{initialitem_D}{A matrix of initial dichotomous item parameter values for starting the estimation algorithm.}
-
-\item{initialitem_P}{A matrix of initial polytomous item parameter values for starting the estimation algorithm.}
-
 \item{data_D}{A matrix of item responses where responses are coded as 0 or 1.
 Rows and columns indicate examinees and items, respectively.}
 
@@ -42,6 +38,10 @@ Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-paramet
 and \code{3}, \code{"3PL"} for three-parameter logistic model.}
 
 \item{model_P}{Currently, only the default (\code{"GPCM"}) is available.}
+
+\item{initialitem_D}{A matrix of initial dichotomous item parameter values for starting the estimation algorithm.}
+
+\item{initialitem_P}{A matrix of initial polytomous item parameter values for starting the estimation algorithm.}
 
 \item{latent_dist}{A character string that determines latent distribution estimation method.
 Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,

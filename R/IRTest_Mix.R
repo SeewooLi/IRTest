@@ -11,8 +11,6 @@
 #' @importFrom stats density nlminb
 #' @importFrom utils flush.console
 #'
-#' @param initialitem_D A matrix of initial dichotomous item parameter values for starting the estimation algorithm.
-#' @param initialitem_P A matrix of initial polytomous item parameter values for starting the estimation algorithm.
 #' @param data_D A matrix of item responses where responses are coded as 0 or 1.
 #' Rows and columns indicate examinees and items, respectively.
 #' @param data_P A matrix of polytomous item responses where responses are coded as \code{0, 1, ...}, or \code{m} for an \code{m+1} category item.
@@ -25,6 +23,8 @@
 #' \code{2}, \code{"2PL"} for two-parameter logistic model,
 #' and \code{3}, \code{"3PL"} for three-parameter logistic model.
 #' @param model_P Currently, only the default (\code{"GPCM"}) is available.
+#' @param initialitem_D A matrix of initial dichotomous item parameter values for starting the estimation algorithm.
+#' @param initialitem_P A matrix of initial polytomous item parameter values for starting the estimation algorithm.
 #' @param latent_dist A character string that determines latent distribution estimation method.
 #' Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
 #' \code{"EHM"} for empirical histogram method (Mislevy, 1984; Mislevy & Bock, 1985),
@@ -184,10 +184,26 @@
 #'                  h=9)
 #'
 
-IRTest_Mix <- function(initialitem_D, initialitem_P, data_D, data_P, range = c(-6,6),
-                       q = 121, model_D, model_P="GPCM",
+IRTest_Mix <- function(data_D, data_P, range = c(-6,6),q = 121,model_D,
+                       model_P="GPCM",initialitem_D=NULL, initialitem_P=NULL,
                        latent_dist="Normal", max_iter=200, threshold=0.0001,
                        bandwidth="SJ-ste", h=NULL){
+
+  if(is.null(initialitem_D)){
+    initialitem_D <- matrix(rep(c(1,0,0), each = ncol(data_D)), ncol = 3)
+  }
+
+  data_P <- reorder_mat(as.matrix(data_P))
+  if(is.null(initialitem_P)){
+    category <- apply(data_P, 2, max, na.rm = TRUE)
+    initialitem_P <- matrix(nrow = ncol(data_P), ncol = 7)
+    initialitem_P[,1] <- 1
+    initialitem_P[,2] <- 0
+    for(i in 3:7){
+      initialitem_P[category>(i-2),i] <- 0
+    }
+  }
+
   Options = list(initialitem_D=initialitem_D, initialitem_P=initialitem_P,
                  data_D=data_D, data_P=data_P, range=range, q=q,
                  model_D=model_D, model_P=model_P,

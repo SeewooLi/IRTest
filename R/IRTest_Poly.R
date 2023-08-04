@@ -163,9 +163,7 @@
 IRTest_Poly <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal",
                         max_iter=200, threshold=0.0001,bandwidth="SJ-ste",h=NULL){
-  Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,
-                 ability_method=ability_method,latent_dist=latent_dist,
-                 max_iter=max_iter, threshold=threshold,bandwidth=bandwidth,h=h)
+
   data <- reorder_mat(as.matrix(data))
   if(is.null(initialitem)){
     category <- apply(data, 2, max, na.rm = TRUE)
@@ -176,6 +174,11 @@ IRTest_Poly <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
       initialitem[category>(i-2),i] <- 0
     }
   }
+
+  Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,
+                 ability_method=ability_method,latent_dist=latent_dist,
+                 max_iter=max_iter, threshold=threshold,bandwidth=bandwidth,h=h)
+
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)
   Ak <- dist2(Xk, 0.5, 0, 1)/sum(dist2(Xk, 0.5, 0, 1))

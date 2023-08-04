@@ -158,9 +158,8 @@ Estep_Poly <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
     Pk[,i] <- exp(logLikeli_Poly(item = item, data = data, theta = Xk[i]))*Ak[i]
   }
   categ <- max(data, na.rm = TRUE)+1
-  nitem <- nrow(item)
   Pk <- Pk/rowSums(Pk) # posterior weights
-  rik <- array(dim = c(nitem, q, categ))
+  rik <- array(dim = c(nrow(item), q, categ))
   for(i in 1:categ){
     d_ <- data==(i-1)
     d_[is.na(d_)] <- 0
@@ -336,7 +335,6 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-5, EMiter
   item_estimated <- matrix(nrow = nrow(item), ncol = 7)
   se <- matrix(nrow = nrow(item), ncol = 7)
   X <- E$Xk
-  f <- E$fk
   Pk <- E$Pk
   rik <- E$rik_P
   N <- nrow(Pk)
