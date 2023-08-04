@@ -65,12 +65,15 @@ reorder_mat <- function(x){
 # Likelihood
 #################################################################################################################
 logLikeli <- function(item, data, theta){
+  data2 <- 1-data
+  data[is.na(data)] <- 0
+  data2[is.na(data2)] <- 0
   if(length(theta)!=1){
     # if all of the examinees' ability values are specified
     L <- matrix(nrow = nrow(data), ncol = ncol(data))
     for(i in 1:ncol(data)){
       for(j in 1:nrow(data)){
-        L[j,i] <- data[j,i]*log(P(theta = theta[j],a=item[i,1],b=item[i,2]))+(1-data[j,i])*log(1-P(theta = theta[j],a=item[i,1],b=item[i,2]))
+        L[j,i] <- data[j,i]*log(P(theta = theta[j],a=item[i,1],b=item[i,2]))+(data2[j,i])*log(1-P(theta = theta[j],a=item[i,1],b=item[i,2]))
       }
     }
   }else{
@@ -82,9 +85,6 @@ logLikeli <- function(item, data, theta){
     lp1[lp1==-Inf] <- -.Machine$double.xmax # to avoid NaN
     lp2[lp2==-Inf] <- -.Machine$double.xmax # to avoid NaN
 
-    data2 <- 1-data
-    data[is.na(data)] <- 0
-    data2[is.na(data)] <- 0
     L <- tcrossprod(data, lp1)+tcrossprod(data2, lp2)
     # L is an N times 1 vector, each element of which refers to an individual's log-likelihood
   }
@@ -118,7 +118,6 @@ logLikeli_Poly <- function(item, data, theta){
 #################################################################################################################
 Estep <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
                   sd_ratio = 1,Xk=NULL, Ak=NULL){
-  data[is.na(data)] <- 0
   if(is.null(Xk)) {
     # quadrature points
     Xk <- seq(range[1],range[2],length=q)
@@ -173,8 +172,6 @@ Estep_Poly <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
 
 Estep_Mix <- function(item_D, item_P, data_D, data_P, range = c(-4,4), q = 100, prob = 0.5, d = 0,
                        sd_ratio = 1,Xk=NULL, Ak=NULL){
-  data_D[is.na(data_D)] <- 0
-  data_P[is.na(data_P)] <- 0
   if(is.null(Xk)) {
     # quadrature points
     Xk <- seq(range[1],range[2],length=q)

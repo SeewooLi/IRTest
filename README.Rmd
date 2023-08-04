@@ -170,7 +170,7 @@ selected_examinees <- sample(1:1000,6)
 post_sample <- 
   data.frame(
     X = rep(seq(-6,6, length.out=121),6), 
-    prior = rep(dist2(seq(-6,6,length=121),prob = .3, d=1.664, sd_ratio = 2), 6),
+    prior = rep(Mod1$Ak/(Mod1$quad[2]-Mod1$quad[1]), 6),
     posterior = 10*c(t(Mod1$Pk[selected_examinees,])), 
     ID = rep(paste("examinee", selected_examinees), each=121)
     )
