@@ -258,7 +258,6 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
           p <- P(theta = X, a=par[1], b=par[2])
           fp <- f*p
           fW <- fp*(1-p)
-          par[1] <- max(0.1,par[1])
           X_ <- X-par[2]
           L1 <- c(sum(X_*(r[i,,2]-fp)),-par[1]*sum(r[i,,2]-fp)) #1st derivative of marginal likelihood
           d <- sum(-par[1]^2*fW)
@@ -294,7 +293,6 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
           fp <- f*p
           fW <- fp*(1-p)
           W_ <- (p_*(1-p_))/(p*(1-p))
-          par[1] <- max(0.1,par[1])
           par[3] <- max(0,par[3])
           X_ <- X-par[2]
 
