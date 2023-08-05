@@ -1,3 +1,7 @@
+# IRTest 1.4.0
+
+* `item_fit` evaluates item fit.
+
 # IRTest 1.3.1
 
 * Starting values (`initialitem`) can be automatically generated.
