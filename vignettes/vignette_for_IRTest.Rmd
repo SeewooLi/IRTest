@@ -146,6 +146,10 @@ plot(Mod1) +
   lims(y = c(0, .5))
 ```
 
++ **Item fit**
+```{r}
+item_fit(Mod1)
+```
 \
 \
 
@@ -275,6 +279,11 @@ abline(b=1, a=0)
 ### The estimated latent distribution
 plot(Mod1) +
   lims(y = c(0, .5))
+```
+
++ **Item fit**
+```{r}
+item_fit(Mod1)
 ```
 
 \
@@ -423,6 +432,11 @@ abline(b=1, a=0)
 ### The estimated latent distribution
 plot(Mod1) +
   lims(y = c(0, .5))
+```
+
++ **Item fit**
+```{r}
+item_fit(Mod1)
 ```
 
 \

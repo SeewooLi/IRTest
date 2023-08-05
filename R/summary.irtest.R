@@ -17,10 +17,22 @@
 #'
 summary.irtest <- function(object, ...){
   sum_result <- list()
+
   sum_result$convergence <- if(object$diff<=object$Options$threshold){
-    sprintf("Successfully converged below the threshold of %s on %sth iterations.",
+    stndrdth <- if(object$iter%%10==1){
+      "st"
+    } else if(object$iter%%10==2){
+      "nd"
+    } else if(object$iter%%10==3){
+      "rd"
+    } else {
+      "th"
+    }
+    sprintf("Successfully converged below the threshold of %s on %s%s iterations.",
             as.character(object$Options$threshold),
-            as.character(object$iter))
+            as.character(object$iter),
+            stndrdth
+            )
   } else {
     sprintf("Convergence failed to meet the threshold of %s within %s iterations.",
             as.character(object$Options$threshold),

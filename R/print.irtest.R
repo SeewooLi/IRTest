@@ -52,9 +52,9 @@ print.irtest <- function(x, ...){
   cat('<NOTE> \n')
   cat('For more information; \n')
   cat('Use \n')
-  cat('1) "$" sign to directly access to the elements \n')
+  cat('1) `$` sign for the direct access to the elements \n')
   cat('and/or \n')
-  cat('2) "summary" function for briefly summarized results. \n')
+  cat('2) `summary` function for the briefly summarized output. \n')
   invisible(x)
 }
 
