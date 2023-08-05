@@ -217,114 +217,117 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
   ####item parameter estimation####
   for(i in 1:nitem){
     f <- rowSums(r[i,,])
-    if(model[i] %in% c(1, "1PL", "Rasch", "RASCH")){
+    if(sum(f)==0){
+      item_estimated[i,2] <- NA
+    } else {
+      if(model[i] %in% c(1, "1PL", "Rasch", "RASCH")){
 
-      iter <- 0
-      div <- 3
-      par <- item[i,2]
-      ####Newton-Raphson####
-      repeat{
-        iter <- iter+1
-        p <- P(theta = X, b=par)
-        fW <- f*p*(1-p)
-        diff <- as.vector(sum(r[i,,2]-f*p)/sum(fW))
+        iter <- 0
+        div <- 3
+        par <- item[i,2]
+        ####Newton-Raphson####
+        repeat{
+          iter <- iter+1
+          p <- P(theta = X, b=par)
+          fW <- f*p*(1-p)
+          diff <- as.vector(sum(r[i,,2]-f*p)/sum(fW))
 
-        if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
-          par <- par
-        } else{
-          if( sum(abs(diff)) > div){
-            par <- par-div/sum(abs(diff))*diff/10
-          } else {
-            par <- par-diff
-            div <- sum(abs(diff))
+          if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
+            par <- par
+          } else{
+            if( sum(abs(diff)) > div){
+              par <- par-div/sum(abs(diff))*diff/10
+            } else {
+              par <- par-diff
+              div <- sum(abs(diff))
+            }
           }
+          if( div <= threshold | iter > max_iter) break
         }
-        if( div <= threshold | iter > max_iter) break
-      }
-      item_estimated[i,2] <- par
-      se[i,2] <- sqrt(1/sum(fW)) # asymptotic S.E.
+        item_estimated[i,2] <- par
+        se[i,2] <- sqrt(1/sum(fW)) # asymptotic S.E.
 
-    } else if(model[i] %in% c(2, "2PL")){
+      } else if(model[i] %in% c(2, "2PL")){
 
-      iter <- 0
-      div <- 3
-      par <- item[i,c(1,2)]
-      ####Newton-Raphson####
-      repeat{
-        iter <- iter+1
-        p <- P(theta = X, a=par[1], b=par[2])
-        fp <- f*p
-        fW <- fp*(1-p)
-        par[1] <- max(0.1,par[1])
-        X_ <- X-par[2]
-        L1 <- c(sum(X_*(r[i,,2]-fp)),-par[1]*sum(r[i,,2]-fp)) #1st derivative of marginal likelihood
-        d <- sum(-par[1]^2*fW)
-        b <- par[1]*sum(X_*fW)
-        a <- sum(-X_^2*fW)
-        inv_L2 <- matrix(c(d,-b,-b,a), ncol = 2)/(a*d-b^2) #inverse of 2nd derivative of marginal likelihood
-        diff <- inv_L2%*%L1
-        if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
-          par <- par
-        } else{
-          if( sum(abs(diff)) > div){
-            par <- par-div/sum(abs(diff))*diff/10
-          } else {
-            par <- par-diff
-            div <- sum(abs(diff))
+        iter <- 0
+        div <- 3
+        par <- item[i,c(1,2)]
+        ####Newton-Raphson####
+        repeat{
+          iter <- iter+1
+          p <- P(theta = X, a=par[1], b=par[2])
+          fp <- f*p
+          fW <- fp*(1-p)
+          par[1] <- max(0.1,par[1])
+          X_ <- X-par[2]
+          L1 <- c(sum(X_*(r[i,,2]-fp)),-par[1]*sum(r[i,,2]-fp)) #1st derivative of marginal likelihood
+          d <- sum(-par[1]^2*fW)
+          b <- par[1]*sum(X_*fW)
+          a <- sum(-X_^2*fW)
+          inv_L2 <- matrix(c(d,-b,-b,a), ncol = 2)/(a*d-b^2) #inverse of 2nd derivative of marginal likelihood
+          diff <- inv_L2%*%L1
+          if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
+            par <- par
+          } else{
+            if( sum(abs(diff)) > div){
+              par <- par-div/sum(abs(diff))*diff/10
+            } else {
+              par <- par-diff
+              div <- sum(abs(diff))
+            }
           }
+          if( div <= threshold | iter > max_iter) break
         }
-        if( div <= threshold | iter > max_iter) break
-      }
-      item_estimated[i,c(1,2)] <- par
-      se[i,c(1,2)] <- sqrt(-c(inv_L2[1,1], inv_L2[2,2])) # asymptotic S.E.
+        item_estimated[i,c(1,2)] <- par
+        se[i,c(1,2)] <- sqrt(-c(inv_L2[1,1], inv_L2[2,2])) # asymptotic S.E.
 
-    } else if(model[i] %in% c(3, "3PL")){
+      } else if(model[i] %in% c(3, "3PL")){
 
-      iter <- 0
-      div <- 3
-      par <- item[i,c(1,2,3)]
-      ####Newton-Raphson####
-      repeat{
-        iter <- iter+1
-        p <- P(theta = X, a=par[1], b=par[2], c=par[3])
-        p_ <- P(theta = X, a=par[1], b=par[2])
-        fp <- f*p
-        fW <- fp*(1-p)
-        W_ <- (p_*(1-p_))/(p*(1-p))
-        par[1] <- max(0.1,par[1])
+        iter <- 0
+        div <- 3
+        par <- item[i,c(1,2,3)]
+        ####Newton-Raphson####
+        repeat{
+          iter <- iter+1
+          p <- P(theta = X, a=par[1], b=par[2], c=par[3])
+          p_ <- P(theta = X, a=par[1], b=par[2])
+          fp <- f*p
+          fW <- fp*(1-p)
+          W_ <- (p_*(1-p_))/(p*(1-p))
+          par[1] <- max(0.1,par[1])
+          par[3] <- max(0,par[3])
+          X_ <- X-par[2]
+
+          L1 <- c((1-par[3])*sum(X_*(r[i,,2]-fp)*W_),
+                  -par[1]*(1-par[3])*sum((r[i,,2]-fp)*W_),
+                  sum(r[i,,2]/p-f))/(1-par[3]) #1st derivative of marginal likelihood
+
+          L2 <- diag(c(sum(-X_^2*fW*(p_/p)^2), #2nd derivative of marginal likelihood
+                       -par[1]^2*sum(fW*(p_/p)^2),
+                       -sum(fW/(p^2))/(1-par[3])^2
+          ))
+          L2[2,1] <- par[1]*sum(X_*fW*(p_/p)^2); L2[1,2] <- L2[2,1]
+          L2[3,1] <- -sum(X_*fW*p_/p^2)/(1-par[3]); L2[1,3] <- L2[3,1]
+          L2[3,2] <- par[1]*sum(fW*p_/p^2)/(1-par[3]); L2[2,3] <- L2[3,2]
+          inv_L2 <- solve(L2) #inverse of 2nd derivative of marginal likelihood
+          diff <- inv_L2%*%L1
+          if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
+            par <- par
+          } else{
+            if( sum(abs(diff)) > div){
+              par <- par-div/sum(abs(diff))*diff/10
+            } else {
+              par <- par-diff
+              div <- sum(abs(diff))
+            }
+          }
+          if( div <= threshold | iter > max_iter) break
+        }
         par[3] <- max(0,par[3])
-        X_ <- X-par[2]
-
-        L1 <- c((1-par[3])*sum(X_*(r[i,,2]-fp)*W_),
-                -par[1]*(1-par[3])*sum((r[i,,2]-fp)*W_),
-                sum(r[i,,2]/p-f))/(1-par[3]) #1st derivative of marginal likelihood
-
-        L2 <- diag(c(sum(-X_^2*fW*(p_/p)^2), #2nd derivative of marginal likelihood
-                     -par[1]^2*sum(fW*(p_/p)^2),
-                     -sum(fW/(p^2))/(1-par[3])^2
-        ))
-        L2[2,1] <- par[1]*sum(X_*fW*(p_/p)^2); L2[1,2] <- L2[2,1]
-        L2[3,1] <- -sum(X_*fW*p_/p^2)/(1-par[3]); L2[1,3] <- L2[3,1]
-        L2[3,2] <- par[1]*sum(fW*p_/p^2)/(1-par[3]); L2[2,3] <- L2[3,2]
-        inv_L2 <- solve(L2) #inverse of 2nd derivative of marginal likelihood
-        diff <- inv_L2%*%L1
-        if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
-          par <- par
-        } else{
-          if( sum(abs(diff)) > div){
-            par <- par-div/sum(abs(diff))*diff/10
-          } else {
-            par <- par-diff
-            div <- sum(abs(diff))
-          }
-        }
-        if( div <= threshold | iter > max_iter) break
-      }
-      par[3] <- max(0,par[3])
-      item_estimated[i,c(1,2,3)] <- par
-      se[i,c(1,2,3)] <- sqrt(-c(inv_L2[1,1], inv_L2[2,2], inv_L2[3,3])) # asymptotic S.E.
-    } else warning("model is incorrect or unspecified.")
-
+        item_estimated[i,c(1,2,3)] <- par
+        se[i,c(1,2,3)] <- sqrt(-c(inv_L2[1,1], inv_L2[2,2], inv_L2[3,3])) # asymptotic S.E.
+      } else warning("model is incorrect or unspecified.")
+    }
   }
   return(list(item_estimated, se))
 }
@@ -341,140 +344,141 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-5, EMiter
   q <- length(X)
   ####item parameter estimation####
   for(i in 1:nitem){
-    if(model %in% c("PCM")){
+    if(sum(rik[i,,])!=0){
+      if(model %in% c("PCM")){
 
-      iter <- 0
-      div <- 3
-      par <- item[i,]
-      par <- par[!is.na(par)]
-      npar <- length(par)
-      ####Newton-Raphson####
-      repeat{
-        iter <- iter+1
-        par[1] <- 1
-        pmat <- P_P(theta = X, a=par[1], b=par[-1])
-        pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
-        tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
-        if(npar>3){
-          for(j in 3:(npar-1)){
-            pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
-            tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
-          }
-        }
-        a_supp <- NULL # diag(tcum[,-1]%*%t(pmat[,-1]))
-
-        # Gradients
-        Grad <- numeric(npar-1)
-
-        # Information Matrix
-        IM <- matrix(ncol = npar-1, nrow = npar-1)
-
-        for(r in 2:npar){
-          for(co in 1:npar){
-            Grad[r-1] <- Grad[r-1]+
-              sum(rik[i,,co]*PDs(probab = co, param = r, pmat,
-                                 pcummat, a_supp, par, tcum)/pmat[,co])
-          }
-        }
-        for(r in 2:npar){
-          for(co in 2:npar){
-            if(r >= co){
-              ssd <- 0
-              for(k in 1:npar){
-                ssd <- ssd+(PDs(probab = k, param = r, pmat,
-                                pcummat, a_supp, par, tcum)*
-                              PDs(probab = k, param = co, pmat,
-                                  pcummat, a_supp, par, tcum)/pmat[,k])
-              }
-              IM[r-1,co-1] <- rowSums(rik[i,,])%*%ssd
-              IM[co-1,r-1] <- IM[r-1,co-1]
+        iter <- 0
+        div <- 3
+        par <- item[i,]
+        par <- par[!is.na(par)]
+        npar <- length(par)
+        ####Newton-Raphson####
+        repeat{
+          iter <- iter+1
+          par[1] <- 1
+          pmat <- P_P(theta = X, a=par[1], b=par[-1])
+          pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
+          tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
+          if(npar>3){
+            for(j in 3:(npar-1)){
+              pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
+              tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
             }
           }
-        }
+          a_supp <- NULL # diag(tcum[,-1]%*%t(pmat[,-1]))
 
-        diff <- -solve(IM)%*%Grad
+          # Gradients
+          Grad <- numeric(npar-1)
 
-        if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
-          par <- par
-        } else{
-          if( sum(abs(diff)) > div){
-            par <- par-c(0, div/sum(abs(diff))*diff/10)
-          } else {
-            par <- par-c(0, diff)
-            div <- sum(abs(diff))
-          }
-        }
-        if( div <= threshold | iter > max_iter) break
-      }
-      item_estimated[i,1:npar] <- par
-      se[i,1:npar] <- c(NA, sqrt(diag(solve(IM)))) # asymptotic S.E.
+          # Information Matrix
+          IM <- matrix(ncol = npar-1, nrow = npar-1)
 
-    } else if(model %in% c("GPCM")){
-
-      iter <- 0
-      div <- 3
-      par <- item[i,]
-      par <- par[!is.na(par)]
-      npar <- length(par)
-      f <- rowSums(rik[i,,])
-      ####Newton-Raphson####
-      repeat{
-        iter <- iter+1
-        # par[1] <- max(0.1,par[1])
-        pmat <- P_P(theta = X, a=par[1], b=par[-1])
-        pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
-        tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
-        if(npar>3){
-          for(j in 3:(npar-1)){
-            pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
-            tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
-          }
-        }
-        a_supp <- diag(tcum[,-1]%*%t(pmat[,-1]))
-
-        # Gradients
-        Grad <- numeric(npar)
-
-        # Information Matrix
-        IM <- matrix(ncol = npar, nrow = npar)
-        for(r in 1:npar){
-          for(co in 1:npar){
-            Grad[r] <- Grad[r]+
-              sum(rik[i,,co]*PDs(probab = co, param = r, pmat,
-                                 pcummat, a_supp, par, tcum)/pmat[,co])
-            if(r >= co){
-              ssd <- 0
-              for(k in 1:npar){
-                ssd <- ssd+(PDs(probab = k, param = r, pmat,
-                                pcummat, a_supp, par, tcum)*
-                              PDs(probab = k, param = co, pmat,
-                                  pcummat, a_supp, par, tcum)/pmat[,k])
-              }
-              IM[r,co] <- f%*%ssd
-              IM[co,r] <- IM[r,co]
+          for(r in 2:npar){
+            for(co in 1:npar){
+              Grad[r-1] <- Grad[r-1]+
+                sum(rik[i,,co]*PDs(probab = co, param = r, pmat,
+                                   pcummat, a_supp, par, tcum)/pmat[,co])
             }
           }
-        }
-
-        diff <- -solve(IM)%*%Grad
-
-        if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
-          par <- par
-        } else{
-          if( sum(abs(diff)) > div){
-            par <- par-div/sum(abs(diff))*diff/10
-          } else {
-            par <- par-diff
-            div <- sum(abs(diff))
+          for(r in 2:npar){
+            for(co in 2:npar){
+              if(r >= co){
+                ssd <- 0
+                for(k in 1:npar){
+                  ssd <- ssd+(PDs(probab = k, param = r, pmat,
+                                  pcummat, a_supp, par, tcum)*
+                                PDs(probab = k, param = co, pmat,
+                                    pcummat, a_supp, par, tcum)/pmat[,k])
+                }
+                IM[r-1,co-1] <- rowSums(rik[i,,])%*%ssd
+                IM[co-1,r-1] <- IM[r-1,co-1]
+              }
+            }
           }
+
+          diff <- -solve(IM)%*%Grad
+
+          if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
+            par <- par
+          } else{
+            if( sum(abs(diff)) > div){
+              par <- par-c(0, div/sum(abs(diff))*diff/10)
+            } else {
+              par <- par-c(0, diff)
+              div <- sum(abs(diff))
+            }
+          }
+          if( div <= threshold | iter > max_iter) break
         }
-        if( div <= threshold | iter > max_iter) break
-      }
-      item_estimated[i,1:npar] <- par
-      se[i,1:npar] <- sqrt(diag(solve(IM))) # asymptotic S.E.
+        item_estimated[i,1:npar] <- par
+        se[i,1:npar] <- c(NA, sqrt(diag(solve(IM)))) # asymptotic S.E.
 
-    } else warning("model is incorrect or unspecified.")
+      } else if(model %in% c("GPCM")){
 
+        iter <- 0
+        div <- 3
+        par <- item[i,]
+        par <- par[!is.na(par)]
+        npar <- length(par)
+        f <- rowSums(rik[i,,])
+        ####Newton-Raphson####
+        repeat{
+          iter <- iter+1
+          # par[1] <- max(0.1,par[1])
+          pmat <- P_P(theta = X, a=par[1], b=par[-1])
+          pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
+          tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
+          if(npar>3){
+            for(j in 3:(npar-1)){
+              pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
+              tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
+            }
+          }
+          a_supp <- diag(tcum[,-1]%*%t(pmat[,-1]))
+
+          # Gradients
+          Grad <- numeric(npar)
+
+          # Information Matrix
+          IM <- matrix(ncol = npar, nrow = npar)
+          for(r in 1:npar){
+            for(co in 1:npar){
+              Grad[r] <- Grad[r]+
+                sum(rik[i,,co]*PDs(probab = co, param = r, pmat,
+                                   pcummat, a_supp, par, tcum)/pmat[,co])
+              if(r >= co){
+                ssd <- 0
+                for(k in 1:npar){
+                  ssd <- ssd+(PDs(probab = k, param = r, pmat,
+                                  pcummat, a_supp, par, tcum)*
+                                PDs(probab = k, param = co, pmat,
+                                    pcummat, a_supp, par, tcum)/pmat[,k])
+                }
+                IM[r,co] <- f%*%ssd
+                IM[co,r] <- IM[r,co]
+              }
+            }
+          }
+
+          diff <- -solve(IM)%*%Grad
+
+          if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
+            par <- par
+          } else{
+            if( sum(abs(diff)) > div){
+              par <- par-div/sum(abs(diff))*diff/10
+            } else {
+              par <- par-diff
+              div <- sum(abs(diff))
+            }
+          }
+          if( div <= threshold | iter > max_iter) break
+        }
+        item_estimated[i,1:npar] <- par
+        se[i,1:npar] <- sqrt(diag(solve(IM))) # asymptotic S.E.
+
+      } else warning("model is incorrect or unspecified.")
+    }
   }
   return(list(item_estimated, se))
 }
