@@ -274,7 +274,6 @@ item_fit.mix <- function(x,bins=10, bin.center='mean'){
 
 #' @importFrom ggplot2 cut_number
 binning <- function(theta_responded, bins, i, boolFalse=FALSE){
-  bins <- bins+1
   while(boolFalse==F)
   {
     bins <- bins-1
