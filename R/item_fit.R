@@ -284,7 +284,7 @@ binning <- function(theta_responded, bins, i, boolFalse=FALSE){
       message(sprintf("Insufficient data values to produce 10 bins for Item %i. %d bins will be used.", i, bins))
     },finally={})
   }
-  return(list(binned, bins))
+  return(list(binned, bins+1))
 }
 
 
