@@ -331,7 +331,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
 }
 
 
-Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-5, EMiter){
+Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter){
   nitem <- nrow(item)
   item_estimated <- matrix(nrow = nrow(item), ncol = 7)
   se <- matrix(nrow = nrow(item), ncol = 7)
@@ -400,7 +400,7 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-5, EMiter
             par <- par
           } else{
             if( sum(abs(diff)) > div){
-              par <- par-c(0, div/sum(abs(diff))*diff/10)
+              par <- par-c(0, div/sum(abs(diff))*diff/2)
             } else {
               par <- par-c(0, diff)
               div <- sum(abs(diff))
@@ -464,7 +464,11 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-5, EMiter
             par <- par
           } else{
             if( sum(abs(diff)) > div){
-              par <- par-div/sum(abs(diff))*diff/10
+              if(max(abs(diff[-1]))/abs(diff[1])>100){
+                par <- -par
+              } else{
+                par <- par-div/sum(abs(diff))*diff/2
+              }
             } else {
               par <- par-diff
               div <- sum(abs(diff))
