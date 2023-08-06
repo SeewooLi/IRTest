@@ -1,6 +1,10 @@
+# IRTest 1.5.0
+
+* `plot_item` has been developed to draw an item response function.
+
 # IRTest 1.4.1
 
-Enhanced algorithm convergence for `IRTest_Poly` when there exist one or more negative slope parameters.
+* Enhanced algorithm convergence for `IRTest_Poly` when there exist one or more negative slope parameters.
 
 # IRTest 1.4.0
 
