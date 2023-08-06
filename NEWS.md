@@ -1,3 +1,7 @@
+# IRTest 1.4.1
+
+Enhanced algorithm convergence for `IRTest_Poly` when there exist one or more negative slope parameters.
+
 # IRTest 1.4.0
 
 * `item_fit` evaluates item fit.
