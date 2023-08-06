@@ -53,7 +53,7 @@ plot_item.dich <- function(x, item.number, type=NULL){
       y = "probability",
       caption = sprintf("%s is applied.", model))+
     theme_bw()
-  print(ppp)
+  return(ppp)
 }
 
 #' @export
@@ -79,7 +79,7 @@ plot_item.poly <- function(x, item.number, type=NULL){
       y = "probability",
       caption = sprintf("%s is applied.", x$Option$model))+
     theme_bw()
-  print(ppp)
+  return(ppp)
 }
 
 #' @export
@@ -131,7 +131,7 @@ plot_item.mix <- function(x, item.number, type=NULL){
         caption = sprintf("%s is applied.", x$Option$model_P))+
       theme_bw()
   }
-  print(ppp)
+  return(ppp)
 }
 
 
