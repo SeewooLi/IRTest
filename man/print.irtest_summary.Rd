@@ -18,6 +18,7 @@ Printed summarized texts on the console.
 This function prints the summarized information.
 }
 \examples{
+\dontrun{
 Alldata <- DataGeneration(seed = 1,
                           #model_D = rep(1, 10),
                           N=1000,
@@ -41,7 +42,7 @@ M1 <- IRTest_Poly(initialitem = initialitem,
                   )
 
 summary(M1)
-
+}
 
 }
 \author{

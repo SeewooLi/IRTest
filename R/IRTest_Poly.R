@@ -160,7 +160,7 @@
 #'                   h=4 # an argument required only when "latent_dist = 'DC'"
 #'                   )
 #'
-IRTest_Poly <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
+IRTest_Poly <- function(data, range = c(-6,6), q = 121, model="GPCM",initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal",
                         max_iter=200, threshold=0.0001,bandwidth="SJ-ste",h=NULL){
 
@@ -198,6 +198,14 @@ IRTest_Poly <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
       E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range)
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
+
+      if(model == "PCM"){
+        ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,-1] <- initialitem[,-1]/ld_est$s
+        M1[[2]][,-1] <- M1[[2]][,-1]/ld_est$s
+      }
+
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
@@ -219,6 +227,12 @@ IRTest_Poly <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
 
+      if(model == "PCM"){
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,-1] <- initialitem[,-1]/ld_est$s
+        M1[[2]][,-1] <- M1[[2]][,-1]/ld_est$s
+      }
+
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
 
@@ -236,9 +250,15 @@ IRTest_Poly <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
       M2 <- M2step(E)
-      prob = M2[1];d = M2[3];sd_ratio = M2[4]
+      prob = M2$prob; d = M2$d; sd_ratio = M2$sd_ratio
       diff <- max(abs(I-initialitem), na.rm = TRUE)
-      I <- initialitem
+
+      if(model == "PCM"){
+        initialitem[,1] <- initialitem[,1]*M2$s
+        initialitem[,-1] <- initialitem[,-1]/M2$s
+        M1[[2]][,-1] <- M1[[2]][,-1]/M2$s
+      }
+
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
@@ -258,6 +278,12 @@ IRTest_Poly <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth, N=N, q=q)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+
+      if(model == "PCM"){
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,-1] <- initialitem[,-1]/ld_est$s
+        M1[[2]][,-1] <- M1[[2]][,-1]/ld_est$s
+      }
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
@@ -287,6 +313,12 @@ IRTest_Poly <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, phipar=phipar)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+
+      if(model == "PCM"){
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,-1] <- initialitem[,-1]/ld_est$s
+        M1[[2]][,-1] <- M1[[2]][,-1]/ld_est$s
+      }
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem

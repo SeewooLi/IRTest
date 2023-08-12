@@ -38,10 +38,10 @@ The `data_D` is an artificial item response data that could be used for some ana
 The `theta` and `item_D` are not used for the estimation process, but could play a role as true parameters if the artificial data (`data_D`) is used for an analysis.
 
 ```{r}
-Alldata <- DataGeneration(seed = 123456789,
-                          model_D = rep(1:2, each=5),
-                          N=500,
-                          nitem_D = 10,
+Alldata <- DataGeneration(seed = 1234,
+                          model_D = rep(1:2, each=10),
+                          N=1000,
+                          nitem_D = 20,
                           nitem_P = 0,
                           latent_dist = "2NM",
                           d = 1.664,
@@ -51,8 +51,8 @@ Alldata <- DataGeneration(seed = 123456789,
 data <- Alldata$data_D
 item <- Alldata$item_D
 theta <- Alldata$theta
-data[1:250, 1] <- NA
-data[251:500, 2] <- NA
+data[1:500, 1] <- NA
+data[501:1000, 2] <- NA
 ```
 
 If the artificial data (`data_D`) is used, the true latent distribution looks like;
@@ -76,7 +76,7 @@ ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
 ###### Kernel density estimation method ######
 ######                                  ######
 Mod1 <- IRTest_Dich(data = data,
-                    model = rep(1:2, each=5),
+                    model = rep(1:2, each=10),
                     latent_dist = "KDE",
                     max_iter = 200,
                     threshold = .0001)
@@ -308,10 +308,10 @@ The `theta` and `item_D` and `item_P` are not used for the estimation process, b
 
 
 ```{r}
-Alldata <- DataGeneration(seed = 123456789,
+Alldata <- DataGeneration(seed = 12345678,
                           model_D = rep(2,5),
                           model_P = "GPCM",
-                          categ = rep(3,5),
+                          categ = rep(5,5),
                           N=1000,
                           nitem_D = 5,
                           nitem_P = 5,

@@ -21,6 +21,7 @@ A plot of estimated latent distribution.
 This function draws a plot of the estimated latent distribution (the population distribution of the latent variable).
 }
 \examples{
+\dontrun{
 # Data generation and model fitting
 
 Alldata <- DataGeneration(seed = 1,
@@ -52,7 +53,7 @@ M1 <- IRTest_Poly(initialitem = initialitem,
 
 plot(x=M1, linewidth = 1, color = 'red') +
   ggplot2::lims(x = c(-6, 6), y = c(0, .5))
-
+}
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}

@@ -11,6 +11,7 @@
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @examples
+#' \dontrun{
 #' Alldata <- DataGeneration(seed = 1,
 #'                           #model_D = rep(1, 10),
 #'                           N=1000,
@@ -34,7 +35,7 @@
 #'                   )
 #'
 #' M1
-#'
+#'}
 #'
 print.irtest <- function(x, ...){
   cat('Convergence: ', '\n')
@@ -70,6 +71,7 @@ print.irtest <- function(x, ...){
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @examples
+#' \dontrun{
 #' Alldata <- DataGeneration(seed = 1,
 #'                           #model_D = rep(1, 10),
 #'                           N=1000,
@@ -93,7 +95,7 @@ print.irtest <- function(x, ...){
 #'                   )
 #'
 #' summary(M1)
-#'
+#'}
 #'
 print.irtest_summary <- function(x, ...){
   .prt.irtest.convergence(x)

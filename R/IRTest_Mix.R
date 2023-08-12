@@ -236,6 +236,17 @@ if(nrow(data_D)!=nrow(data_P)){
       initialitem_D <- M1_D[[1]]
       initialitem_P <- M1_P[[1]]
 
+      if(all(c(model_D, model_P) %in% c(1, "1PL", "Rasch", "RASCH", "PCM"))){
+        ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
+        initialitem_D[,1] <- initialitem_D[,1]*ld_est$s
+        initialitem_D[,2] <- initialitem_D[,2]/ld_est$s
+        M1_D[[2]][,2] <- M1_D[[2]][,2]/ld_est$s
+
+        initialitem_P[,1]  <- initialitem_P[,1]*ld_est$s
+        initialitem_P[,-1] <- initialitem_P[,-1]/ld_est$s
+        M1_P[[2]][,-1] <- M1_P[[2]][,-1]/ld_est$s
+      }
+
       diff <- max(c(max(abs(I_D-initialitem_D), na.rm = TRUE), max(abs(I_P-initialitem_P), na.rm = TRUE)))
       I_D <- initialitem_D
       I_P <- initialitem_P
@@ -262,6 +273,16 @@ if(nrow(data_D)!=nrow(data_P)){
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
 
+      if(all(c(model_D, model_P) %in% c(1, "1PL", "Rasch", "RASCH", "PCM"))){
+        initialitem_D[,1] <- initialitem_D[,1]*ld_est$s
+        initialitem_D[,2] <- initialitem_D[,2]/ld_est$s
+        M1_D[[2]][,2] <- M1_D[[2]][,2]/ld_est$s
+
+        initialitem_P[,1]  <- initialitem_P[,1]*ld_est$s
+        initialitem_P[,-1] <- initialitem_P[,-1]/ld_est$s
+        M1_P[[2]][,-1] <- M1_P[[2]][,-1]/ld_est$s
+      }
+
       diff <- max(c(max(abs(I_D-initialitem_D), na.rm = TRUE), max(abs(I_P-initialitem_P), na.rm = TRUE)))
       I_D <- initialitem_D
       I_P <- initialitem_P
@@ -284,7 +305,18 @@ if(nrow(data_D)!=nrow(data_P)){
       initialitem_P <- M1_P[[1]]
 
       M2 <- M2step(E)
-      prob = M2[1];d = M2[3];sd_ratio = M2[4]
+
+      if(all(c(model_D, model_P) %in% c(1, "1PL", "Rasch", "RASCH", "PCM"))){
+        initialitem_D[,1] <- initialitem_D[,1]*M2$s
+        initialitem_D[,2] <- initialitem_D[,2]/M2$s
+        M1_D[[2]][,2] <- M1_D[[2]][,2]/M2$s
+
+        initialitem_P[,1]  <- initialitem_P[,1]*M2$s
+        initialitem_P[,-1] <- initialitem_P[,-1]/M2$s
+        M1_P[[2]][,-1] <- M1_P[[2]][,-1]/M2$s
+      }
+
+      prob = M2$prob; d = M2$d; sd_ratio = M2$sd_ratio
       diff <- max(c(max(abs(I_D-initialitem_D), na.rm = TRUE), max(abs(I_P-initialitem_P), na.rm = TRUE)))
       I_D <- initialitem_D
       I_P <- initialitem_P
@@ -310,6 +342,16 @@ if(nrow(data_D)!=nrow(data_P)){
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth, N=N, q=q)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+
+      if(all(c(model_D, model_P) %in% c(1, "1PL", "Rasch", "RASCH", "PCM"))){
+        initialitem_D[,1] <- initialitem_D[,1]*ld_est$s
+        initialitem_D[,2] <- initialitem_D[,2]/ld_est$s
+        M1_D[[2]][,2] <- M1_D[[2]][,2]/ld_est$s
+
+        initialitem_P[,1]  <- initialitem_P[,1]*ld_est$s
+        initialitem_P[,-1] <- initialitem_P[,-1]/ld_est$s
+        M1_P[[2]][,-1] <- M1_P[[2]][,-1]/ld_est$s
+      }
 
       diff <- max(c(max(abs(I_D-initialitem_D), na.rm = TRUE), max(abs(I_P-initialitem_P), na.rm = TRUE)))
       I_D <- initialitem_D
@@ -344,6 +386,16 @@ if(nrow(data_D)!=nrow(data_P)){
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, phipar=phipar)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+
+      if(all(c(model_D, model_P) %in% c(1, "1PL", "Rasch", "RASCH", "PCM"))){
+        initialitem_D[,1] <- initialitem_D[,1]*ld_est$s
+        initialitem_D[,2] <- initialitem_D[,2]/ld_est$s
+        M1_D[[2]][,2] <- M1_D[[2]][,2]/ld_est$s
+
+        initialitem_P[,1]  <- initialitem_P[,1]*ld_est$s
+        initialitem_P[,-1] <- initialitem_P[,-1]/ld_est$s
+        M1_P[[2]][,-1] <- M1_P[[2]][,-1]/ld_est$s
+      }
 
       diff <- max(c(max(abs(I_D-initialitem_D), na.rm = TRUE), max(abs(I_P-initialitem_P), na.rm = TRUE)))
       I_D <- initialitem_D

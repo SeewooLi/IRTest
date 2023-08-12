@@ -18,8 +18,12 @@ DataGeneration(
   prob = 0.5,
   d = 1.7,
   sd_ratio = 1,
+  m = 0,
+  s = 1,
   a_l = 0.8,
   a_u = 2.5,
+  b_m = NULL,
+  b_sd = NULL,
   c_l = 0,
   c_u = 0.2,
   categ
@@ -65,9 +69,19 @@ Without loss of generality, \eqn{\mu_2 \ge \mu_1}, thus \eqn{\delta \ge 0}, is a
 \item{sd_ratio}{A numeric value required when \code{latent_dist = "Mixture"}.
 It is a \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} is the estimated standard deviation of the first Gaussian component, \eqn{\sigma_2} is the estimated standard deviation of the second Gaussian component (Li, 2021).}
 
+\item{m}{A numeric value of the overall mean of the latent distribution. The default is 0.}
+
+\item{s}{A numeric value of the overall standard deviation of the latent distribution. The default is 1.}
+
 \item{a_l}{A numeric value. The lower bound of item discrimination parameters (\emph{a}).}
 
 \item{a_u}{A numeric value. The upper bound of item discrimination parameters (\emph{a}).}
+
+\item{b_m}{A numeric value. The mean of item difficulty parameters (\emph{b}).
+If unspecified, \code{m} is passed on to the value.}
+
+\item{b_sd}{A numeric value. The standard deviation of item difficulty parameters (\emph{b}).
+If unspecified, \code{s} is passed on to the value.}
 
 \item{c_l}{A numeric value. The lower bound of item guessing parameters (\emph{c}).}
 

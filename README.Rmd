@@ -56,6 +56,10 @@ Followings are functions of **IRTest**.
   + `IRTest_Poly` is the estimation function when all items are *polytomously* scored.
   
   + `IRTest_Mix` is the estimation function for *a mixed-format test*, a test comprising both dichotomous item(s) and polytomous item(s).
+  
+  + `item_fit` tests the statistical fit of all items individually.
+  
+  + `plot_item` draws item response function(s) of an item.
 
   + `DataGeneration` generates several objects that can be useful for computer simulation studies. Among these are starting values for the estimation algorithm and artificial item-response data that can be passed into `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`.
   
@@ -76,13 +80,17 @@ library(IRTest)
 An artificial data of 1000 examinees and 20 items.
 
 ```{r generation}
-Alldata <- DataGeneration(seed = 123456789,
-                          model_D = rep(1, 20),
+Alldata <- DataGeneration(seed = 1234,
+                          model_D = rep(2, 40),
                           N=1000,
-                          nitem_D = 20,
+                          nitem_D = 40,
                           nitem_P = 0,
                           latent_dist = "2NM",
                           d = 1.664,
+                          m=0,
+                          s=2,
+                          a_l = 0.5,
+                          a_u = 0.51,
                           sd_ratio = 2,
                           prob = 0.3)
 
@@ -97,8 +105,8 @@ For an illustrative purpose, empirical histogram method is used for the estimati
 
 ```{r analysis, results='hide', message=FALSE}
 Mod1 <- IRTest_Dich(data = data,
-                    model = rep("1PL", 20),
-                    latent_dist = "EHM",
+                    model = rep("1PL", 40),
+                    latent_dist = "KDE",
                     threshold = .001
                     )
 ```
@@ -130,9 +138,9 @@ knitr::kables(
 ### Plotting
 par(mfrow=c(1,2))
 plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated", main = "item parameters")
-abline(a=0,b=1)
+abline(a=0,b=.5)
 plot(theta, Mod1$theta, xlab = "true", ylab = "estimated", main = "ability parameters")
-abline(a=0,b=1)
+abline(a=0,b=.5)
 ```
 
 * The result of latent distribution estimation
@@ -181,4 +189,17 @@ ggplot(data=post_sample, mapping=aes(x=X))+
   labs(title="Posterior densities for selected examinees", x=expression(theta), y='density')+
   facet_wrap(~ID, ncol=2)+
   theme_bw()
+```
+
+* Item fit
+
+```{r}
+item_fit(Mod1)
+```
+
+* Item response function
+
+```{r}
+# Item response function of Item 1
+plot_item(Mod1,1)
 ```

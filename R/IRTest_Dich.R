@@ -186,6 +186,14 @@ IRTest_Dich <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
       E <- Estep(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range)
       M1 <- M1step(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
+
+      if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
+        ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,2] <- initialitem[,2]/ld_est$s
+        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
+      }
+
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
@@ -207,6 +215,12 @@ IRTest_Dich <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
 
+      if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,2] <- initialitem[,2]/ld_est$s
+        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
+      }
+
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
@@ -221,9 +235,16 @@ IRTest_Dich <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
 
       E <- Estep(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range)
       M1 <- M1step(E, item=initialitem, model=model)
-      initialitem <- M1[[1]]
       M2 <- M2step(E)
-      prob = M2[1];d = M2[3];sd_ratio = M2[4]
+      prob = M2$prob; d = M2$d; sd_ratio = M2$sd_ratio
+
+      initialitem <- M1[[1]]
+      if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
+        initialitem[,1] <- initialitem[,1]*M2$s
+        initialitem[,2] <- initialitem[,2]/M2$s
+        M1[[2]][,2] <- M1[[2]][,2]/M2$s
+      }
+
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
@@ -245,6 +266,12 @@ IRTest_Dich <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth, N=N, q=q)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+
+      if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,2] <- initialitem[,2]/ld_est$s
+        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
+      }
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem
@@ -273,6 +300,12 @@ IRTest_Dich <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, phipar=phipar)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+
+      if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,2] <- initialitem[,2]/ld_est$s
+        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
+      }
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
       I <- initialitem

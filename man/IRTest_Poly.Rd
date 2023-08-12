@@ -8,7 +8,7 @@ IRTest_Poly(
   data,
   range = c(-6, 6),
   q = 121,
-  model,
+  model = "GPCM",
   initialitem = NULL,
   ability_method = "EAP",
   latent_dist = "Normal",

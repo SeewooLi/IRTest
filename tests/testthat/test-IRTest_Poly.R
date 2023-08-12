@@ -66,7 +66,7 @@ test_that("testing basic operations for IRTest_Poly", {
   expect_equal(dim(Mod1$par_est), dim(item))
   expect_equal(length(Mod1$theta), length(theta))
 
-  expect_warning(
+  expect_error(
     IRTest_Poly(initialitem = initialitem,
                 data = data,
                 model = NA,

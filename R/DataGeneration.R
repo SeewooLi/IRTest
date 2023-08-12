@@ -31,8 +31,14 @@
 #' Without loss of generality, \eqn{\mu_2 \ge \mu_1}, thus \eqn{\delta \ge 0}, is assumed.
 #' @param sd_ratio A numeric value required when \code{latent_dist = "Mixture"}.
 #' It is a \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} is the estimated standard deviation of the first Gaussian component, \eqn{\sigma_2} is the estimated standard deviation of the second Gaussian component (Li, 2021).
+#' @param m A numeric value of the overall mean of the latent distribution. The default is 0.
+#' @param s A numeric value of the overall standard deviation of the latent distribution. The default is 1.
 #' @param a_l A numeric value. The lower bound of item discrimination parameters (\emph{a}).
 #' @param a_u A numeric value. The upper bound of item discrimination parameters (\emph{a}).
+#' @param b_m A numeric value. The mean of item difficulty parameters (\emph{b}).
+#' If unspecified, \code{m} is passed on to the value.
+#' @param b_sd A numeric value. The standard deviation of item difficulty parameters (\emph{b}).
+#' If unspecified, \code{s} is passed on to the value.
 #' @param c_l A numeric value. The lower bound of item guessing parameters (\emph{c}).
 #' @param c_u A numeric value. The lower bound of item guessing parameters (\emph{c}).
 #' @param categ A numeric vector of length \code{nitem_P}.
@@ -127,12 +133,20 @@ DataGeneration <- function(seed=1, N=2000,
                            latent_dist=NULL,
                            item_D=NULL, item_P=NULL,
                            theta = NULL,
-                           prob=0.5, d=1.7, sd_ratio=1, a_l=0.8, a_u=2.5,
+                           prob=0.5, d=1.7, sd_ratio=1,
+                           m = 0, s = 1,
+                           a_l=0.8, a_u=2.5,
+                           b_m=NULL, b_sd=NULL,
                            c_l=0, c_u=0.2, categ){
   initialitem_D=NULL; data_D=NULL
   initialitem_P=NULL; data_P=NULL
 
-
+  if(is.null(b_m)){
+    b_m <- m
+  }
+  if(is.null(b_sd)){
+    b_sd <- s
+  }
 
   # ability parameters (i.e., theta)
   if(is.null(theta)){
@@ -147,9 +161,9 @@ DataGeneration <- function(seed=1, N=2000,
     }else if(latent_dist%in%c("Mixture", "2NM")){
       n1 <- round(N*prob)
       n2 <- N-n1
-      m1 <- -(1-prob)*d
-      m2 <- prob*d
-      s1 <- sqrt((1-prob*(1-prob)*d^2)/(prob+(1-prob)*sd_ratio^2))
+      m1 <- m-(1-prob)*d*s
+      m2 <- m+prob*d*s
+      s1 <- sqrt((1-prob*(1-prob)*d^2)/(prob+(1-prob)*sd_ratio^2))*s
       s2 <- s1*sd_ratio
 
       set.seed(seed)
@@ -165,30 +179,36 @@ DataGeneration <- function(seed=1, N=2000,
   if(is.null(item_D)){
     if((nitem_D!=0)&(!is.null(nitem_D))){
       data_D <- matrix(nrow = N, ncol = nitem_D)
-      item_D <- matrix(nrow = nitem_D, ncol = 3)
-      initialitem_D <- matrix(nrow = nitem_D, ncol = 3)
+      item_D <- matrix(0, nrow = nitem_D, ncol = 3)
+      item_D[,1] <- 1
+      initialitem_D <- matrix(0, nrow = nitem_D, ncol = 3)
+      initialitem_D[,1] <- 1
       set.seed(seed)
+      item_D[,2] <- round(
+        sample(
+          x = seq(-2*b_sd+b_m,2*b_sd+b_m,by=0.01*b_sd),
+          size = nitem_D,
+          replace = TRUE,
+          prob = dnorm(seq(-2,2,by=0.01))
+          ),
+        digits = 2)
+
+
       for(i in 1:nitem_D){
-        if(model_D[i]==1){
-          item_D[i,] <- round(c(1,
-                                sample(seq(-2,2,by=0.01),1, prob = dnorm(seq(-2,2,by=0.01))),
-                                0), digits = 2)
-          initialitem_D[i,] <- c(1,0,0)
-        }else if(model_D[i]==2){
-          item_D[i,] <- round(c(runif(1,a_l,a_u),
-                                sample(seq(-2,2,by=0.01),1, prob = dnorm(seq(-2,2,by=0.01))),
-                                0), digits = 2)
-          initialitem_D[i,] <- c((a_l+a_u)/2,0,0)
-        } else if(model_D[i]==3){
-          item_D[i,] <- round(c(runif(1,a_l,a_u),
-                                sample(seq(-2,2,by=0.01),1, prob = dnorm(seq(-2,2,by=0.01))),
-                                runif(1, min = c_l, max = c_u)), digits = 2)
-          initialitem_D[i,] <- c((a_l+a_u)/2,0,0)
+        if(model_D[i] %in% c(2,3)){
+          item_D[i,1] <- round(
+            runif(1,a_l,a_u),
+            digits = 2
+          )
+          initialitem_D[i,1] <- (a_l+a_u)/2
+        }
+        if(model_D[i]==3){
+          item_D[i,3] <- round(
+            runif(1, min = c_l, max = c_u),
+            digits = 2)
         }
 
-
         # item responses for dichotomous items
-
         for(j in 1:N){
           p <- P(theta = theta[j], a = item_D[i,1], b = item_D[i,2], c= item_D[i,3])
           data_D[j,i] <- rbinom(1,1,prob = p)
@@ -228,13 +248,12 @@ DataGeneration <- function(seed=1, N=2000,
       initialitem_P <- matrix(nrow = nitem_P, ncol = 7)
       set.seed(seed)
       for(i in 1:nitem_P){
+        center <- rnorm(1,b_m,b_sd*.5)
         if(model_P=="PCM"){
           item_P[i,1] <- 1
-          center <- rnorm(1,0,.5)
           item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,.2))
         } else if(model_P=="GPCM"){
           item_P[i,1] <- round(runif(1,a_l,a_u), digits = 2)
-          center <- rnorm(1,0,.5)
           item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,.2))
         }
         initialitem_P[i,1] <- 1

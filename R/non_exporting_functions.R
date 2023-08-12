@@ -228,9 +228,9 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
         ####Newton-Raphson####
         repeat{
           iter <- iter+1
-          p <- P(theta = X, b=par)
+          p <- P(theta = X, a = item[i,1], b=par)
           fW <- f*p*(1-p)
-          diff <- as.vector(sum(r[i,,2]-f*p)/sum(fW))
+          diff <- as.vector(sum(r[i,,2]-f*p)/sum(fW)/item[i,1])
 
           if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
             par <- par
@@ -344,7 +344,6 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter
   for(i in 1:nitem){
     if(sum(rik[i,,])!=0){
       if(model %in% c("PCM")){
-
         iter <- 0
         div <- 3
         par <- item[i,]
@@ -353,7 +352,6 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter
         ####Newton-Raphson####
         repeat{
           iter <- iter+1
-          par[1] <- 1
           pmat <- P_P(theta = X, a=par[1], b=par[-1])
           pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
           tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
@@ -532,7 +530,15 @@ M2step <- function(E, max_iter=200){
   sd_ratio <- s2/s1
   s2total <- prob*s1^2+(1-prob)*s2^2+prob*(1-prob)*d_raw^2
   d <- d_raw/sqrt(s2total)
-  return(c(prob,d_raw,d,sd_ratio,m1,m2))
+  return(
+    list(prob=prob,
+         d_raw=d_raw,
+         d=d,
+         sd_ratio=sd_ratio,
+         m=0,
+         s=s2total
+         )
+    )
 }
 
 #################################################################################################################
@@ -614,11 +620,18 @@ MLE_theta <- function(item, data, type){
 #'
 lin_inex <- function(qp, qh, range, rule=2){
   q <- length(qp)
-  m <- qp%*%qh
-  s <- (qp-c(m))^2%*%qh
-  qp <- (qp-as.vector(m))/sqrt(as.vector(s))
+  m <- as.vector(qp%*%qh)
+  s <- as.vector((qp-c(m))^2%*%qh)
+  qp <- (qp-m)/sqrt(s)
   ap <- approx(qp, y = qh, xout = seq(range[1],range[2],length=q),method = "linear", rule=rule)
-  return(list(qp=ap$x, qh=ap$y/sum(ap$y)))
+  return(
+    list(
+      qp=ap$x,
+      qh=ap$y/sum(ap$y),
+      m=m,
+      s=s
+      )
+    )
 }
 
 #################################################################################################################
@@ -626,20 +639,21 @@ lin_inex <- function(qp, qh, range, rule=2){
 #################################################################################################################
 latent_dist_est <- function(method, Xk, posterior, range,
                             bandwidth = NULL, phipar=NULL, N=NULL, q=NULL){
-  if(method=='EHM'){
+  if(method %in% c("Normal", "normal", "N", "EHM")){
     post_den <- posterior/sum(posterior)
     lin <- lin_inex(Xk, post_den, range = range)
   }
   if(method=='KDE'){
     post_den <- posterior/sum(posterior)
-    post_den <- lin_inex(Xk, post_den, range = range)$qh
-    nzindex <- round(post_den*N)!=0
-    SJPI <- density(rep(Xk[nzindex], times=round(post_den*N)[nzindex]),
+    post_den <- lin_inex(Xk, post_den, range = range)
+    nzindex <- round(post_den$qh*N)!=0
+    SJPI <- density(rep(Xk[nzindex], times=round(post_den$qh*N)[nzindex]),
                     bw = bandwidth,
                     n=q,
                     from = range[1],
                     to=range[2])
     lin <- lin_inex(Xk, SJPI$y/sum(SJPI$y), range = range)
+    lin$s <- post_den$s
   }
   if(method %in% c('DC', 'Davidian')){
     phipar <- nlminb(start = phipar,
@@ -657,6 +671,8 @@ latent_dist_est <- function(method, Xk, posterior, range,
     list(
       posterior_density = lin$qh,
       Xk = lin$qp,
+      m = lin$m,
+      s = lin$s,
       if(method=='KDE'){
         bw <- c(SJPI$bw, SJPI$n)
       } else NULL
