@@ -11,11 +11,11 @@
 #'
 #' @param data A matrix of item responses where responses are coded as \code{0, 1, ..., m} for an \code{m+1} category item.
 #' Rows and columns indicate examinees and items, respectively.
+#' @param model A character value that represents the type of a item characteristic function applied to the items.
+#' Currently, \code{PCM} and \code{GPCM} are available. The default is \code{"GPCM"}.
 #' @param range Range of the latent variable to be considered in the quadrature scheme.
 #' The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.
 #' @param q A numeric value that represents the number of quadrature points. The default value is 121.
-#' @param model A character value that represents the type of a item characteristic function applied to the items.
-#' Currently, \code{PCM} and \code{GPCM} are available.
 #' @param initialitem A matrix of initial item parameter values for starting the estimation algorithm.
 #' This matrix determines the number of categories for each item.
 #' @param ability_method The ability parameter estimation method.
@@ -160,9 +160,11 @@
 #'                   h=4 # an argument required only when "latent_dist = 'DC'"
 #'                   )
 #'
-IRTest_Poly <- function(data, range = c(-6,6), q = 121, model="GPCM",initialitem=NULL,
+IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal",
                         max_iter=200, threshold=0.0001,bandwidth="SJ-ste",h=NULL){
+
+  categories <- apply(data, MARGIN = 2, FUN = extract_cat)
 
   data <- reorder_mat(as.matrix(data))
   if(is.null(initialitem)){
@@ -177,7 +179,8 @@ IRTest_Poly <- function(data, range = c(-6,6), q = 121, model="GPCM",initialitem
 
   Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,
                  ability_method=ability_method,latent_dist=latent_dist,
-                 max_iter=max_iter, threshold=threshold,bandwidth=bandwidth,h=h)
+                 max_iter=max_iter, threshold=threshold,bandwidth=bandwidth,h=h,
+                 categories=categories)
 
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)

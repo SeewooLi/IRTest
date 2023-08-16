@@ -7,10 +7,10 @@
 IRTest_Mix(
   data_D,
   data_P,
+  model_D = "2PL",
+  model_P = "GPCM",
   range = c(-6, 6),
   q = 121,
-  model_D,
-  model_P = "GPCM",
   initialitem_D = NULL,
   initialitem_P = NULL,
   latent_dist = "Normal",
@@ -27,17 +27,17 @@ Rows and columns indicate examinees and items, respectively.}
 \item{data_P}{A matrix of polytomous item responses where responses are coded as \code{0, 1, ...}, or \code{m} for an \code{m+1} category item.
 Rows and columns indicate examinees and items, respectively.}
 
+\item{model_D}{A vector that represents types of item characteristic functions applied to each item.
+Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
+\code{2}, \code{"2PL"} for two-parameter logistic model,
+and \code{3}, \code{"3PL"} for three-parameter logistic model. The default is \code{"2PL"}.}
+
+\item{model_P}{Currently, only the default (\code{"GPCM"}) is available.}
+
 \item{range}{Range of the latent variable to be considered in the quadrature scheme.
 The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
 
 \item{q}{A numeric value that represents the number of quadrature points. The default value is 121.}
-
-\item{model_D}{A vector that represents types of item characteristic functions applied to each item.
-Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
-\code{2}, \code{"2PL"} for two-parameter logistic model,
-and \code{3}, \code{"3PL"} for three-parameter logistic model.}
-
-\item{model_P}{Currently, only the default (\code{"GPCM"}) is available.}
 
 \item{initialitem_D}{A matrix of initial dichotomous item parameter values for starting the estimation algorithm.}
 

@@ -10,13 +10,13 @@
 #'
 #' @param data A matrix of item responses where responses are coded as 0 or 1.
 #' Rows and columns indicate examinees and items, respectively.
-#' @param range Range of the latent variable to be considered in the quadrature scheme.
-#' The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.
-#' @param q A numeric value that represents the number of quadrature points. The default value is 121.
 #' @param model A vector that represents types of item characteristic functions applied to each item.
 #' Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
 #' \code{2}, \code{"2PL"} for two-parameter logistic model,
-#' and \code{3}, \code{"3PL"} for three-parameter logistic model.
+#' and \code{3}, \code{"3PL"} for three-parameter logistic model. The default is \code{"2PL"}.
+#' @param range Range of the latent variable to be considered in the quadrature scheme.
+#' The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.
+#' @param q A numeric value that represents the number of quadrature points. The default value is 121.
 #' @param initialitem A matrix of initial item parameter values for starting the estimation algorithm
 #' @param ability_method The ability parameter estimation method.
 #' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
@@ -145,8 +145,7 @@
 #'
 #' # Analysis
 #'
-#' M1 <- IRTest_Dich(initialitem = initialitem,
-#'                   data = data,
+#' M1 <- IRTest_Dich(data = data,
 #'                   model = rep(1,10),
 #'                   latent_dist = "KDE",
 #'                   bandwidth = "SJ-ste", # an argument required only when "latent_dist = 'KDE'"
@@ -155,12 +154,15 @@
 #'                   h=4 # an argument required only when "latent_dist = 'DC'"
 #'                   )
 #'
-IRTest_Dich <- function(data, range = c(-6,6), q = 121, model,initialitem=NULL,
+IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal", max_iter=200,
                         threshold=0.0001, bandwidth="SJ-ste", h=NULL){
 
   if(is.null(initialitem)){
     initialitem <- matrix(rep(c(1,0,0), each = ncol(data)), ncol = 3)
+  }
+  if(length(model)==1){
+    model <- rep(model, ncol(data))
   }
 
   Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,

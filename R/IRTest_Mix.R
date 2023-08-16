@@ -15,14 +15,14 @@
 #' Rows and columns indicate examinees and items, respectively.
 #' @param data_P A matrix of polytomous item responses where responses are coded as \code{0, 1, ...}, or \code{m} for an \code{m+1} category item.
 #' Rows and columns indicate examinees and items, respectively.
-#' @param range Range of the latent variable to be considered in the quadrature scheme.
-#' The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.
-#' @param q A numeric value that represents the number of quadrature points. The default value is 121.
 #' @param model_D A vector that represents types of item characteristic functions applied to each item.
 #' Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
 #' \code{2}, \code{"2PL"} for two-parameter logistic model,
-#' and \code{3}, \code{"3PL"} for three-parameter logistic model.
+#' and \code{3}, \code{"3PL"} for three-parameter logistic model. The default is \code{"2PL"}.
 #' @param model_P Currently, only the default (\code{"GPCM"}) is available.
+#' @param range Range of the latent variable to be considered in the quadrature scheme.
+#' The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.
+#' @param q A numeric value that represents the number of quadrature points. The default value is 121.
 #' @param initialitem_D A matrix of initial dichotomous item parameter values for starting the estimation algorithm.
 #' @param initialitem_P A matrix of initial polytomous item parameter values for starting the estimation algorithm.
 #' @param latent_dist A character string that determines latent distribution estimation method.
@@ -184,14 +184,17 @@
 #'                  h=9)
 #'
 
-IRTest_Mix <- function(data_D, data_P, range = c(-6,6),q = 121,model_D,
-                       model_P="GPCM",initialitem_D=NULL, initialitem_P=NULL,
+IRTest_Mix <- function(data_D, data_P, model_D="2PL",
+                       model_P="GPCM", range = c(-6,6),q = 121,
+                       initialitem_D=NULL, initialitem_P=NULL,
                        latent_dist="Normal", max_iter=200, threshold=0.0001,
                        bandwidth="SJ-ste", h=NULL){
 
   if(is.null(initialitem_D)){
     initialitem_D <- matrix(rep(c(1,0,0), each = ncol(data_D)), ncol = 3)
   }
+
+  categories <- apply(data, MARGIN = 2, FUN = extract_cat)
 
   data_P <- reorder_mat(as.matrix(data_P))
   if(is.null(initialitem_P)){
@@ -208,7 +211,7 @@ IRTest_Mix <- function(data_D, data_P, range = c(-6,6),q = 121,model_D,
                  data_D=data_D, data_P=data_P, range=range, q=q,
                  model_D=model_D, model_P=model_P,
                  latent_dist=latent_dist, max_iter=max_iter, threshold=threshold,
-                 bandwidth=bandwidth,h=h)
+                 bandwidth=bandwidth,h=h,categories=categories)
 if(nrow(data_D)!=nrow(data_P)){
   stop("data_D and data_P have different number of rows.")
 }else{

@@ -29,8 +29,10 @@ P_P <- function(theta, a, b){
     b <- b[!is.na(b)]
     ps <- matrix(nrow = length(theta), ncol = length(b))
     ps[,1] <- a*(theta-b[1])
-    for(i in 2:length(b)){
-      ps[,i] <- ps[,i-1]+a*(theta-b[i])
+    if(length(b)>1){
+      for(i in 2:length(b)){
+        ps[,i] <- ps[,i-1]+a*(theta-b[i])
+      }
     }
     ps <- cbind(1,exp(ps))
     ps <- ps/rowSums(ps)
@@ -53,8 +55,12 @@ dnormal <- function(x, mean=0, sd=1){
 #################################################################################################################
 # Reordering Scores for polytomous data
 #################################################################################################################
+extract_cat <- function(x){
+  sort(unique(x))
+}
+
 reorder_vec <- function(x){
-  match(x, table = sort(unique(x)))-1
+  match(x, table = extract_cat(x))-1
 }
 
 reorder_mat <- function(x){
@@ -353,10 +359,10 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter
         repeat{
           iter <- iter+1
           pmat <- P_P(theta = X, a=par[1], b=par[-1])
-          pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
-          tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
-          if(npar>3){
-            for(j in 3:(npar-1)){
+          pcummat <- cbind(pmat[,1])
+          tcum <- cbind(0,X-par[2])
+          if(npar>2){
+            for(j in 2:(npar-1)){
               pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
               tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
             }
@@ -422,10 +428,10 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter
           iter <- iter+1
           # par[1] <- max(0.1,par[1])
           pmat <- P_P(theta = X, a=par[1], b=par[-1])
-          pcummat <- cbind(pmat[,1],pmat[,1]+pmat[,2])
-          tcum <- cbind(0,X-par[2], 2*X-par[2]-par[3])
-          if(npar>3){
-            for(j in 3:(npar-1)){
+          pcummat <- cbind(pmat[,1])
+          tcum <- cbind(0,X-par[2])
+          if(npar>2){
+            for(j in 2:(npar-1)){
               pcummat <- cbind(pcummat, pcummat[,j-1]+pmat[,j])
               tcum <- cbind(tcum, tcum[,j]+X-par[j+1])
             }

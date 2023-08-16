@@ -69,7 +69,7 @@ Followings are functions of **IRTest**.
 
 ## Example
 
-A simple simulation study for a Rasch model can be done in following manners:
+A simple simulation study for a GPCM model can be done in following manners:
 
 ```{r library, message=FALSE}
 library(IRTest)
@@ -81,16 +81,13 @@ An artificial data of 1000 examinees and 20 items.
 
 ```{r generation}
 Alldata <- DataGeneration(seed = 1234,
-                          model_D = rep(2, 40),
+                          model_D = rep(2,20),
                           N=1000,
-                          nitem_D = 40,
-                          nitem_P = 0,
+                          nitem_D = 20,
                           latent_dist = "2NM",
-                          d = 1.664,
                           m=0,
-                          s=2,
-                          a_l = 0.5,
-                          a_u = 0.51,
+                          s=1,
+                          d = 1.664,
                           sd_ratio = 2,
                           prob = 0.3)
 
@@ -101,11 +98,11 @@ theta <- Alldata$theta
 
 * Analysis 
 
-For an illustrative purpose, empirical histogram method is used for the estimation of latent distribution.
+For an illustrative purpose, kernel density estimation (KDE) method is used for the estimation of latent distribution.
 
 ```{r analysis, results='hide', message=FALSE}
 Mod1 <- IRTest_Dich(data = data,
-                    model = rep("1PL", 40),
+                    model = "2PL",
                     latent_dist = "KDE",
                     threshold = .001
                     )
@@ -138,9 +135,9 @@ knitr::kables(
 ### Plotting
 par(mfrow=c(1,2))
 plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated", main = "item parameters")
-abline(a=0,b=.5)
+abline(a=0,b=1)
 plot(theta, Mod1$theta, xlab = "true", ylab = "estimated", main = "ability parameters")
-abline(a=0,b=.5)
+abline(a=0,b=1)
 ```
 
 * The result of latent distribution estimation

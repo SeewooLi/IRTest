@@ -6,9 +6,9 @@
 \usage{
 IRTest_Poly(
   data,
+  model = "GPCM",
   range = c(-6, 6),
   q = 121,
-  model = "GPCM",
   initialitem = NULL,
   ability_method = "EAP",
   latent_dist = "Normal",
@@ -22,13 +22,13 @@ IRTest_Poly(
 \item{data}{A matrix of item responses where responses are coded as \code{0, 1, ..., m} for an \code{m+1} category item.
 Rows and columns indicate examinees and items, respectively.}
 
+\item{model}{A character value that represents the type of a item characteristic function applied to the items.
+Currently, \code{PCM} and \code{GPCM} are available. The default is \code{"GPCM"}.}
+
 \item{range}{Range of the latent variable to be considered in the quadrature scheme.
 The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
 
 \item{q}{A numeric value that represents the number of quadrature points. The default value is 121.}
-
-\item{model}{A character value that represents the type of a item characteristic function applied to the items.
-Currently, \code{PCM} and \code{GPCM} are available.}
 
 \item{initialitem}{A matrix of initial item parameter values for starting the estimation algorithm.
 This matrix determines the number of categories for each item.}

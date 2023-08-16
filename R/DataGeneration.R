@@ -128,7 +128,7 @@
 #' theta <- Alldata$theta
 #'
 DataGeneration <- function(seed=1, N=2000,
-                           nitem_D=NULL, nitem_P=NULL,
+                           nitem_D=0, nitem_P=0,
                            model_D, model_P="GPCM",
                            latent_dist=NULL,
                            item_D=NULL, item_P=NULL,
