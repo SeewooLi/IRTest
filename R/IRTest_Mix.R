@@ -194,7 +194,7 @@ IRTest_Mix <- function(data_D, data_P, model_D="2PL",
     initialitem_D <- matrix(rep(c(1,0,0), each = ncol(data_D)), ncol = 3)
   }
 
-  categories <- apply(data, MARGIN = 2, FUN = extract_cat)
+  categories <- apply(data_P, MARGIN = 2, FUN = extract_cat)
 
   data_P <- reorder_mat(as.matrix(data_P))
   if(is.null(initialitem_P)){

@@ -81,14 +81,27 @@ summary.irtest <- function(object, ...){
       sum(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH")) +
       2*sum(object$Options$model %in% c(2, "2PL")) +
       3*sum(object$Options$model %in% c(3, "3PL"))
+    if(all(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH"))){
+      n_par$item <- n_par$item-1
+    }
   } else if(any(class(object) == "poly")){
-    n_par$item <- sum(!is.na(object$par_est))
+    if(object$Options$model == "PCM"){
+      n_par$item <- sum(!is.na(object$par_est[,-1]))-1
+    } else if(object$Options$model == "GPCM"){
+      n_par$item <- sum(!is.na(object$par_est))
+    }
   } else if(any(class(object) == "mix")){
     n_par$item <-
       sum(object$Options$model_D %in% c(1, "1PL", "Rasch", "RASCH")) +
       2*sum(object$Options$model_D %in% c(2, "2PL")) +
-      3*sum(object$Options$model_D %in% c(3, "3PL")) +
-      sum(!is.na(object$par_est$Polytomous))
+      3*sum(object$Options$model_D %in% c(3, "3PL"))
+    if(object$Options$model_P == "PCM"){
+      n_par$item <- n_par$item +
+        sum(!is.na(object$par_est$Polytomous[,-1]))
+    } else if(object$Options$model_P == "GPCM"){
+      n_par$item <- n_par$item +
+        sum(!is.na(object$par_est$Polytomous))
+    }
   }
 
   # latent distribution parameters

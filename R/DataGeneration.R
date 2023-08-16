@@ -251,10 +251,10 @@ DataGeneration <- function(seed=1, N=2000,
         center <- rnorm(1,b_m,b_sd*.5)
         if(model_P=="PCM"){
           item_P[i,1] <- 1
-          item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,.2))
+          item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,1))
         } else if(model_P=="GPCM"){
           item_P[i,1] <- round(runif(1,a_l,a_u), digits = 2)
-          item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,.2))
+          item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,1))
         }
         initialitem_P[i,1] <- 1
         initialitem_P[i,2:(categ[i])] <- 0#(-2:1+.5)/3

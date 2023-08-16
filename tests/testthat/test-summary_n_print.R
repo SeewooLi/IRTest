@@ -11,11 +11,9 @@ test_that(
                             prob = 0.3)
   data <- Alldata$data_D
   item <- Alldata$item_D
-  initialitem <- Alldata$initialitem_D
   theta <- Alldata$theta
 
-  Mod1 <- IRTest_Dich(initialitem = initialitem,
-                      data = data,
+  Mod1 <- IRTest_Dich(data = data,
                       model = rep(1:3, 3),
                       latent_dist = "EHM",
                       max_iter = 2,
@@ -23,8 +21,7 @@ test_that(
   print(Mod1)
   print(summary(Mod1))
 
-  Mod1 <- IRTest_Dich(initialitem = initialitem,
-                      data = data,
+  Mod1 <- IRTest_Dich(data = data,
                       model = rep(1, 10),
                       latent_dist = "2NM",
                       max_iter = 2,
@@ -32,8 +29,7 @@ test_that(
   print(Mod1)
   print(summary(Mod1))
 
-  Mod1 <- IRTest_Dich(initialitem = initialitem,
-                      data = data,
+  Mod1 <- IRTest_Dich(data = data,
                       model = rep(1, 10),
                       latent_dist = "N",
                       max_iter = 200,
@@ -41,8 +37,7 @@ test_that(
   print(Mod1)
   print(summary(Mod1))
 
-  Mod1 <- IRTest_Dich(initialitem = initialitem,
-                      data = data,
+  Mod1 <- IRTest_Dich(data = data,
                       model = rep(1, 10),
                       latent_dist = "KDE",
                       max_iter = 2,
@@ -50,8 +45,7 @@ test_that(
   print(Mod1)
   print(summary(Mod1))
 
-  Mod1 <- IRTest_Dich(initialitem = initialitem,
-                      data = data,
+  Mod1 <- IRTest_Dich(data = data,
                       model = rep(1, 10),
                       latent_dist = "DC",
                       max_iter = 2,
@@ -79,8 +73,7 @@ test_that(
   theta <- Alldata$theta
 
 
-  Mod1 <- IRTest_Poly(initialitem = initialitem,
-                      data = data,
+  Mod1 <- IRTest_Poly(data = data,
                       model = "GPCM",
                       latent_dist = "N",
                       max_iter = 2,
@@ -105,14 +98,10 @@ test_that(
   DataP <- Alldata$data_P
   itemD <- Alldata$item_D
   itemP <- Alldata$item_P
-  initialitemD <- Alldata$initialitem_D
-  initialitemP <- Alldata$initialitem_P
   theta <- Alldata$theta
 
 
-  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
-                     initialitem_P = initialitemP,
-                     data_D = DataD,
+  Mod1 <- IRTest_Mix(data_D = DataD,
                      data_P = DataP,
                      model_D = rep(1,5),
                      model_P = "GPCM",

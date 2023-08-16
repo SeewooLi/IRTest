@@ -334,3 +334,10 @@ plot_item(Mod1,1)
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+- Reliability
+
+``` r
+reliability(Mod1)
+#> [1] 0.8797212
+```

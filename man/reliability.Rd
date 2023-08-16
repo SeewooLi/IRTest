@@ -4,14 +4,38 @@
 \alias{reliability}
 \title{Marginal reliability coefficient of IRT}
 \usage{
-reliability(x)
+reliability(x, level = "test")
 }
 \arguments{
-\item{x}{}
+\item{x}{A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, or \code{IRTest_Mix}.}
+
+\item{level}{A character value of either \code{"test"} or \code{"item"}
+which is the level of reliability coefficient(s) to be returned.
+The default is \code{"test"}.}
 }
 \value{
 Estimated marginal reliability coefficient
 }
 \description{
 Marginal reliability coefficient of IRT
+}
+\examples{
+\dontrun{
+Alldata <- DataGeneration(seed = 1,
+                          model_D = rep(1, 10),
+                          N=500,
+                          nitem_D = 10,
+                          latent_dist = "2NM",
+                          d = 1.664,
+                          sd_ratio = 2,
+                          prob = 0.3)
+
+data <- Alldata$data_D
+
+# Analysis
+
+M1 <- IRTest_Dich(data)
+
+reliability(M1)
+}
 }
