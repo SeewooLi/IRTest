@@ -96,8 +96,13 @@ test_that("testing basic operations for IRTest_Mix", {
                      initialitem_P = initialitemP,
                      data_D = DataD,
                      data_P = DataP,
+<<<<<<< HEAD
                      model_D = c(1,1,1,2,3),
                      model_P = "GPCM",
+=======
+                     model_D = rep(1,5),
+                     model_P = "PCM",
+>>>>>>> 5ddb6abf59c95ae754b8eaa6b0b498619a20f638
                      latent_dist = "LLS",
                      max_iter = 2,
                      threshold = .001,
@@ -105,8 +110,11 @@ test_that("testing basic operations for IRTest_Mix", {
   expect_equal(dim(Mod1$par_est$Dichotomous), dim(itemD))
   expect_equal(dim(Mod1$par_est$Polytomous), dim(itemP))
   expect_equal(length(Mod1$theta), length(theta))
+<<<<<<< HEAD
   plot_item(Mod1, 4, type="d")
   plot_item(Mod1, 5, type="d")
+=======
+>>>>>>> 5ddb6abf59c95ae754b8eaa6b0b498619a20f638
 
   # GPCM
   Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
@@ -114,7 +122,11 @@ test_that("testing basic operations for IRTest_Mix", {
                      data_D = DataD,
                      data_P = DataP,
                      model_D = 1,
+<<<<<<< HEAD
                      model_P = "PCM",
+=======
+                     model_P = "GPCM",
+>>>>>>> 5ddb6abf59c95ae754b8eaa6b0b498619a20f638
                      latent_dist = "N",
                      max_iter = 2,
                      threshold = .001,
