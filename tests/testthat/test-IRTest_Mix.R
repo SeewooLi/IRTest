@@ -15,14 +15,10 @@ test_that("testing basic operations for IRTest_Mix", {
   DataP <- Alldata$data_P
   itemD <- Alldata$item_D
   itemP <- Alldata$item_P
-  initialitemD <- Alldata$initialitem_D
-  initialitemP <- Alldata$initialitem_P
   theta <- Alldata$theta
 
   # Normal Distribution
-  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
-                     initialitem_P = initialitemP,
-                     data_D = DataD,
+  Mod1 <- IRTest_Mix(data_D = DataD,
                      data_P = DataP,
                      model_D = rep(1,5),
                      model_P = "PCM",
@@ -34,9 +30,7 @@ test_that("testing basic operations for IRTest_Mix", {
   expect_equal(length(Mod1$theta), length(theta))
 
   # EHM
-  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
-                     initialitem_P = initialitemP,
-                     data_D = DataD,
+  Mod1 <- IRTest_Mix(data_D = DataD,
                      data_P = DataP,
                      model_D = rep(1,5),
                      model_P = "PCM",
@@ -48,9 +42,7 @@ test_that("testing basic operations for IRTest_Mix", {
   expect_equal(length(Mod1$theta), length(theta))
 
   # Two-component normal distribution
-  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
-                     initialitem_P = initialitemP,
-                     data_D = DataD,
+  Mod1 <- IRTest_Mix(data_D = DataD,
                      data_P = DataP,
                      model_D = rep(1,5),
                      model_P = "PCM",
@@ -62,9 +54,7 @@ test_that("testing basic operations for IRTest_Mix", {
   expect_equal(length(Mod1$theta), length(theta))
 
   # KDE
-  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
-                     initialitem_P = initialitemP,
-                     data_D = DataD,
+  Mod1 <- IRTest_Mix(data_D = DataD,
                      data_P = DataP,
                      model_D = rep(1,5),
                      model_P = "PCM",
@@ -77,9 +67,7 @@ test_that("testing basic operations for IRTest_Mix", {
   expect_equal(length(Mod1$theta), length(theta))
 
   # Davidian curve
-  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
-                     initialitem_P = initialitemP,
-                     data_D = DataD,
+  Mod1 <- IRTest_Mix(data_D = DataD,
                      data_P = DataP,
                      model_D = rep(1,5),
                      model_P = "PCM",
@@ -92,17 +80,10 @@ test_that("testing basic operations for IRTest_Mix", {
   expect_equal(length(Mod1$theta), length(theta))
 
   # LLS
-  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
-                     initialitem_P = initialitemP,
-                     data_D = DataD,
+  Mod1 <- IRTest_Mix(data_D = DataD,
                      data_P = DataP,
-<<<<<<< HEAD
-                     model_D = c(1,1,1,2,3),
-                     model_P = "GPCM",
-=======
                      model_D = rep(1,5),
                      model_P = "PCM",
->>>>>>> 5ddb6abf59c95ae754b8eaa6b0b498619a20f638
                      latent_dist = "LLS",
                      max_iter = 2,
                      threshold = .001,
@@ -110,23 +91,12 @@ test_that("testing basic operations for IRTest_Mix", {
   expect_equal(dim(Mod1$par_est$Dichotomous), dim(itemD))
   expect_equal(dim(Mod1$par_est$Polytomous), dim(itemP))
   expect_equal(length(Mod1$theta), length(theta))
-<<<<<<< HEAD
-  plot_item(Mod1, 4, type="d")
-  plot_item(Mod1, 5, type="d")
-=======
->>>>>>> 5ddb6abf59c95ae754b8eaa6b0b498619a20f638
 
   # GPCM
-  Mod1 <- IRTest_Mix(initialitem_D = initialitemD,
-                     initialitem_P = initialitemP,
-                     data_D = DataD,
+  Mod1 <- IRTest_Mix(data_D = DataD,
                      data_P = DataP,
-                     model_D = 1,
-<<<<<<< HEAD
-                     model_P = "PCM",
-=======
+                     model_D = c(2,3,1,1,1),
                      model_P = "GPCM",
->>>>>>> 5ddb6abf59c95ae754b8eaa6b0b498619a20f638
                      latent_dist = "N",
                      max_iter = 2,
                      threshold = .001,
@@ -134,11 +104,11 @@ test_that("testing basic operations for IRTest_Mix", {
   expect_equal(dim(Mod1$par_est$Dichotomous), dim(itemD))
   expect_equal(dim(Mod1$par_est$Polytomous), dim(itemP))
   expect_equal(length(Mod1$theta), length(theta))
+  plot_item(Mod1,1,type="d")
+  plot_item(Mod1,2,type="d")
 
   expect_error(
-    IRTest_Mix(initialitem_D = initialitemD,
-               initialitem_P = initialitemP,
-               data_D = DataD[1:900,],
+    IRTest_Mix(data_D = DataD[1:900,],
                data_P = DataP,
                model_D = rep(1,5),
                model_P = "PCM",
@@ -147,5 +117,5 @@ test_that("testing basic operations for IRTest_Mix", {
                threshold = .001,
                h=2)
   )
-  }
+}
 )
