@@ -33,7 +33,7 @@ In **IRTest**, including the conventional usage of Gaussian distribution, severa
     + empirical histogram method, \
     + two-component Gaussian mixture distribution, \
     + Davidian curve, \
-    + kernel density estimation,
+    + kernel density estimation,    
     + log-linear smoothing.
 
 ## Installation

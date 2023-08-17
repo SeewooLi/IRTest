@@ -27,7 +27,8 @@ distribution:
 + empirical histogram method,  
 + two-component Gaussian mixture distribution,  
 + Davidian curve,  
-+ kernel density estimation, + log-linear smoothing.
++ kernel density estimation,  
++ log-linear smoothing.
 
 ## Installation
 
