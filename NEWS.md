@@ -1,3 +1,5 @@
+# IRTest 1.7.0
+
 # IRTest 1.6.0
 
 * `reliability` has been developed to calculate marginal reliability coefficient of IRT.
