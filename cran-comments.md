@@ -2,9 +2,23 @@
 
 In this version I have:
 
-* Made generic functions (i.e., `plot`, `print`, and `summary`) available.
+* Made the `PCM` model for polytomous data available.
 
-* Conducted more thorough unit tests to enhance the stability of the functions.
+* Developed the `MLE` option for ability parameter estimation for polytomous data.
+
+* Revised the estimation functions to permit NA values.
+
+* Made automatic generation of starting values available, which rendered the estimation functions more user-friendly.
+
+* Developed functions (`item_fit`, `plot_item`, `reliability`) for practical usages of IRT.
+
+* Enhanced algorithm convergence when there exist one or more negative slope parameters.
+
+* Freed the constraint on the Rasch-type analysis to have the same slope parameters across all items but not fixed to 1.
+
+* Revised `IRTest_Poly` to accept dichotomous items.
+
+* Made log-linear smoothing method (`latent_dist="LLS"`) available.
 
   
 ## Test environments
