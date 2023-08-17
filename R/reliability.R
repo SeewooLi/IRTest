@@ -4,7 +4,26 @@
 #' @param level A character value of either \code{"test"} or \code{"item"}
 #' which is the level of reliability coefficient(s) to be returned.
 #' The default is \code{"test"}.
-#' @return Estimated marginal reliability coefficient
+#' @return Estimated marginal reliability coefficient.
+#'
+#' @details
+#' \describe{
+#' In accordance with the concept of \emph{reliability} in classical test theory (CTT),
+#' this function calculates the IRT reliability coefficient.
+#' \item{
+#' The basic concept and formula of the reliability coefficient can be expressed as follows (Kim, Feldt, 2010):
+#' }{
+#' An observed score of Item \eqn{i} (\eqn{X_i}) is decomposed as the sum of a true score \eqn{T_i} and an error \eqn{e_i}.
+#' Then, with the assumption of \eqn{\sigma_{T_{i}e_{j}}=\sigma_{e_{i}e_{j}}=0}, the reliability coefficient of a test is defined as;
+#' \deqn{\rho_{TX}=\rho_{XX^{'}}=\frac{\sigma_{T}^{2}}{\sigma_{X}^{2}}=\frac{\sigma_{T}^{2}}{\sigma_{T}^{2}+\sigma_{e}^{2}}=1-\frac{\sigma_{e}^{2}}{\sigma_{X}^{2}}}
+#' }
+#' }
+#'
+#' @author Seewoo Li \email{cu@@yonsei.ac.kr}
+#'
+#' @references
+#' Kim, S., Feldt, L.S. (2010). The estimation of the IRT reliability coefficient and its lower and upper bounds, with comparisons to CTT reliability statistics. \emph{Asia Pacific Education Review, 11}, 179–188.
+#'
 #' @export
 #'
 #' @examples
