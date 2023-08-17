@@ -18,7 +18,7 @@ test_that("testing basic operations for IRTest_Poly", {
   # Normal distribution
   Mod1 <- IRTest_Poly(initialitem = initialitem,
                       data = data,
-                      model = "GPCM",
+                      model = "PCM",
                       latent_dist = "N",
                       max_iter = 2,
                       threshold = .001)
@@ -28,7 +28,7 @@ test_that("testing basic operations for IRTest_Poly", {
   # EHM
   Mod1 <- IRTest_Poly(initialitem = initialitem,
                       data = data,
-                      model = "GPCM",
+                      model = "PCM",
                       latent_dist = "EHM",
                       max_iter = 2,
                       threshold = .001)
@@ -38,7 +38,7 @@ test_that("testing basic operations for IRTest_Poly", {
   # Two-component normal distribution
   Mod1 <- IRTest_Poly(initialitem = initialitem,
                       data = data,
-                      model = "GPCM",
+                      model = "PCM",
                       latent_dist = "2NM",
                       max_iter = 2,
                       threshold = .001)
@@ -48,7 +48,7 @@ test_that("testing basic operations for IRTest_Poly", {
   # KDE
   Mod1 <- IRTest_Poly(initialitem = initialitem,
                       data = data,
-                      model = "GPCM",
+                      model = "PCM",
                       latent_dist = "KDE",
                       max_iter = 2,
                       threshold = .001)
@@ -58,8 +58,19 @@ test_that("testing basic operations for IRTest_Poly", {
   # DC
   Mod1 <- IRTest_Poly(initialitem = initialitem,
                       data = data,
-                      model = "GPCM",
+                      model = "PCM",
                       latent_dist = "DC",
+                      max_iter = 2,
+                      threshold = .001,
+                      h=10)
+  expect_equal(dim(Mod1$par_est), dim(item))
+  expect_equal(length(Mod1$theta), length(theta))
+
+  # LLS
+  Mod1 <- IRTest_Poly(initialitem = initialitem,
+                      data = data,
+                      model = "PCM",
+                      latent_dist = "LLS",
                       max_iter = 2,
                       threshold = .001,
                       h=10)
