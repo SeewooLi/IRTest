@@ -1,11 +1,15 @@
+# IRTest 1.6.0
+
+* `reliability` has been developed to calculate marginal reliability coefficient of IRT.
+
 # IRTest 1.5.2
 
-Some of the polytomous items could be technically dichotomous when one or more of the categories are not observed in data.
+* Some of the polytomous items could be technically dichotomous when one or more of the categories are not observed in data.
 Now, these items can be analyised with the polytomous function.
 
 # IRTest 1.5.1
 
-Rasch-type analysis imposes a constraint on slope parameters to be equal across all items.
+* Rasch-type analysis imposes a constraint on slope parameters to be equal across all items.
 Before, they were fixed to 1 regardless of the characteristics of data.
 
 # IRTest 1.5.0
