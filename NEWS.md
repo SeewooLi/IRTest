@@ -1,5 +1,7 @@
 # IRTest 1.7.0
 
+* Log-linear smoothing method (`latent_dist = "LLS"`) can be applied to estimate a latent distribution.
+
 # IRTest 1.6.0
 
 * `reliability` has been developed to calculate marginal reliability coefficient of IRT.

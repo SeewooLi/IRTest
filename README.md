@@ -27,21 +27,17 @@ distribution:
 + empirical histogram method,  
 + two-component Gaussian mixture distribution,  
 + Davidian curve,  
-+ kernel density estimation.
++ kernel density estimation, + log-linear smoothing.
 
 ## Installation
 
 The CRAN version of **IRTest** can be installed on R-console with:
 
-``` r
-install.packages("IRTest")
-```
+    install.packages("IRTest")
 
 For the development version, it can be installed on R-console with:
 
-``` r
-devtools::install_github("SeewooLi/IRTest")
-```
+    devtools::install_github("SeewooLi/IRTest")
 
 ## Functions
 
@@ -59,6 +55,8 @@ Followings are functions of **IRTest**.
 - `item_fit` tests the statistical fit of all items individually.
 
 - `plot_item` draws item response function(s) of an item.
+
+- `reliability` calculates marginal reliability coefficient of IRT.
 
 - `DataGeneration` generates several objects that can be useful for
   computer simulation studies. Among these are starting values for the
@@ -107,11 +105,11 @@ For an illustrative purpose, kernel density estimation (KDE) method is
 used for the estimation of latent distribution.
 
 ``` r
-Mod1 <- IRTest_Dich(data = data,
-                    model = "2PL",
-                    latent_dist = "KDE",
-                    threshold = .001
-                    )
+Mod1 <- 
+  IRTest_Dich(
+    data = data,
+    latent_dist = "KDE"
+    )
 ```
 
 - Summary of the result
@@ -119,12 +117,12 @@ Mod1 <- IRTest_Dich(data = data,
 ``` r
 summary(Mod1)
 #> Convergence:  
-#> Successfully converged below the threshold of 0.001 on 11st iterations. 
+#> Successfully converged below the threshold of 1e-04 on 22nd iterations. 
 #> 
 #> Model Fit:  
-#>    deviance   18382.98 
-#>         AIC   18464.98 
-#>         BIC   18666.2 
+#>    deviance   18382.97 
+#>         AIC   18464.97 
+#>         BIC   18666.19 
 #> 
 #> The Number of Parameters:  
 #>        item   40 
@@ -207,22 +205,22 @@ True item parameters
 |-----:|------:|----:|
 | 1.47 | -0.28 |   0 |
 | 1.22 | -0.97 |   0 |
-| 1.77 | -0.84 |   0 |
+| 1.78 | -0.84 |   0 |
 | 1.41 | -0.59 |   0 |
 | 1.81 | -0.16 |   0 |
-| 1.20 | -1.00 |   0 |
-| 1.99 | -0.49 |   0 |
+| 1.20 | -0.99 |   0 |
+| 1.99 | -0.48 |   0 |
 | 1.87 |  1.41 |   0 |
 | 1.14 |  1.51 |   0 |
 | 1.05 |  1.68 |   0 |
 | 1.85 | -1.46 |   0 |
 | 2.20 | -0.05 |   0 |
-| 0.75 |  0.72 |   0 |
+| 0.75 |  0.73 |   0 |
 | 2.19 | -0.01 |   0 |
-| 1.54 | -1.10 |   0 |
+| 1.55 | -1.10 |   0 |
 | 2.25 |  1.99 |   0 |
-| 2.17 | -0.69 |   0 |
-| 2.40 |  1.77 |   0 |
+| 2.17 | -0.68 |   0 |
+| 2.41 |  1.77 |   0 |
 | 1.18 |  0.94 |   0 |
 | 1.90 | -0.71 |   0 |
 
@@ -237,8 +235,10 @@ Estimated item parameters
 
 
 ### Plotting
-par(mfrow=c(1,2))
-plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated", main = "item parameters")
+par(mfrow=c(1,3))
+plot(item[,1], Mod1$par_est[,1], xlab = "true", ylab = "estimated", main = "item discrimination parameters")
+abline(a=0,b=1)
+plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated", main = "item difficulty parameters")
 abline(a=0,b=1)
 plot(theta, Mod1$theta, xlab = "true", ylab = "estimated", main = "ability parameters")
 abline(a=0,b=1)
@@ -304,33 +304,37 @@ ggplot(data=post_sample, mapping=aes(x=X))+
 ``` r
 item_fit(Mod1)
 #>         stat df p.value
-#> 1  13.469663  7  0.0615
-#> 2   8.541813  7  0.2872
-#> 3  19.524974  7  0.0067
-#> 4   7.045802  7  0.4241
-#> 5  10.720393  7  0.1513
-#> 6  13.874404  7  0.0535
-#> 7   4.784380  7  0.6863
-#> 8  14.962374  7  0.0365
-#> 9   9.451649  7  0.2218
-#> 10 16.720180  7  0.0193
-#> 11  6.249525  7  0.5109
-#> 12  9.739056  7  0.2038
-#> 13  7.305287  7  0.3978
-#> 14 26.481248  7  0.0004
-#> 15 18.232721  7  0.0110
-#> 16 17.149747  7  0.0165
-#> 17  9.989355  7  0.1892
-#> 18 38.244264  7  0.0000
-#> 19 19.537622  7  0.0067
-#> 20 11.457360  7  0.1199
+#> 1  13.434320  7  0.0622
+#> 2   8.564615  7  0.2854
+#> 3  19.491468  7  0.0068
+#> 4   7.035466  7  0.4252
+#> 5  10.715746  7  0.1515
+#> 6  13.888048  7  0.0532
+#> 7   4.768391  7  0.6882
+#> 8  14.948235  7  0.0367
+#> 9   9.457740  7  0.2214
+#> 10 16.716254  7  0.0193
+#> 11  6.237493  7  0.5123
+#> 12  9.749979  7  0.2032
+#> 13  7.302189  7  0.3981
+#> 14 26.481630  7  0.0004
+#> 15 18.217503  7  0.0110
+#> 16 17.142660  7  0.0165
+#> 17  9.973517  7  0.1901
+#> 18 38.315609  7  0.0000
+#> 19 19.524826  7  0.0067
+#> 20 11.424843  7  0.1211
 ```
 
 - Item response function
 
 ``` r
 # Item response function of Item 1
-plot_item(Mod1,1)
+p1 <- plot_item(Mod1,10)
+p2 <- plot_item(Mod1,11)
+p3 <- plot_item(Mod1,13)
+p4 <- plot_item(Mod1,16)
+grid.arrange(p1, p2, p3, p4, ncol=2, nrow=2)
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
@@ -339,5 +343,6 @@ plot_item(Mod1,1)
 
 ``` r
 reliability(Mod1)
-#> [1] 0.8797212
+#> test reliability 
+#>        0.8798695
 ```
