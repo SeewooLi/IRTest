@@ -644,7 +644,7 @@ lin_inex <- function(qp, qh, range, rule=2){
 # Latent distribution estimation
 #################################################################################################################
 latent_dist_est <- function(method, Xk, posterior, range,
-                            bandwidth = NULL, phipar=NULL, N=NULL, q=NULL){
+                            bandwidth = NULL, par=NULL, N=NULL, q=NULL){
   if(method %in% c("Normal", "normal", "N", "EHM")){
     post_den <- posterior/sum(posterior)
     lin <- lin_inex(Xk, post_den, range = range)
@@ -660,16 +660,27 @@ latent_dist_est <- function(method, Xk, posterior, range,
                     to=range[2])
     lin <- lin_inex(Xk, SJPI$y/sum(SJPI$y), range = range)
     lin$s <- post_den$s
+    par <- c(SJPI$bw, SJPI$n)
   }
   if(method %in% c('DC', 'Davidian')){
-    phipar <- nlminb(start = phipar,
-                     objective = DC.LL,
-                     gradient = DC.grad,
-                     theta= Xk,
-                     freq = posterior)$par
+    par <- nlminb(start = par,
+                  objective = DC.LL,
+                  gradient = DC.grad,
+                  theta= Xk,
+                  freq = posterior)$par
 
-    post_den <- dcurver::ddc(x = Xk, phi = phipar)
+    post_den <- dcurver::ddc(x = Xk, phi = par)
     post_den <- post_den/sum(post_den)
+    lin <- lin_inex(Xk, post_den, range = range, rule = 2)
+  }
+  if(method=='LLS'){
+    LLS <- lls(Xk=Xk,
+               posterior=posterior,
+               bb=par,
+               N=N
+               )
+    post_den <- LLS$freq/N
+    par <- LLS$beta
     lin <- lin_inex(Xk, post_den, range = range, rule = 2)
   }
 
@@ -679,11 +690,9 @@ latent_dist_est <- function(method, Xk, posterior, range,
       Xk = lin$qp,
       m = lin$m,
       s = lin$s,
-      if(method=='KDE'){
-        bw <- c(SJPI$bw, SJPI$n)
-      } else NULL
+      par = par
+      )
     )
-  )
 }
 
 

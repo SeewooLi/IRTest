@@ -125,6 +125,10 @@ summary.irtest <- function(object, ...){
   else if(object$Options$latent_dist%in% c("DC", "Davidian")){
     n_par$dist <- object$Options$h
   }
+  # Log-linear smoothing
+  else if(object$Options$latent_dist%in% c("LLS")){
+    n_par$dist <- object$Options$h
+  }
 
   # the total number of parameters
   n_par$total <- n_par$item + n_par$dist

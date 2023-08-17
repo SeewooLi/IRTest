@@ -68,20 +68,23 @@ reliability <- function(x, level = "test"){
       }
     }
   } else if(any(class(x)=="mix")){
-    n_item_D <- nrow(param[[1]])
-    n_item_P <- nrow(param[[2]])
+    n_item_D <- nrow(param$Dichotomous)
+    n_item_P <- nrow(param$Polytomous)
 
     true_score_matrix <- matrix(nrow = length(Xk), ncol = n_item_D+n_item_P)
     squared <- matrix(nrow = length(Xk), ncol = n_item_D+n_item_P)
 
     for(i in 1:n_item_D){
-      true_score_matrix[,i] <- P(Xk, a = param[i,1], b = param[i,2], c = param[i,3])
+      true_score_matrix[,i] <- P(Xk,
+                                 a = param$Dichotomous[i,1],
+                                 b = param$Dichotomous[i,2],
+                                 c = param$Dichotomous[i,3])
       squared[,i] <- true_score_matrix[,i]
     }
-    for(i in n_item_D+(1:n_item_P)){
-      n_cat <- sum(!is.na(param[i,]))
-      true_score_matrix[,i] <- P_P(Xk, a = param[i,1], b = param[i,-1])%*%(0:(n_cat-1))
-      squared[,i] <- P_P(Xk, param[i,1], param[i,-1])%*%(0:(n_cat-1))^2
+    for(i in 1:n_item_P){
+      n_cat <- sum(!is.na(param$Polytomous[i,]))
+      true_score_matrix[,n_item_D+i] <- P_P(Xk, a = param$Polytomous[i,1], b = param$Polytomous[i,-1])%*%(0:(n_cat-1))
+      squared[,n_item_D+i] <- P_P(Xk, param$Polytomous[i,1], param$Polytomous[i,-1])%*%(0:(n_cat-1))^2
     }
   }
 

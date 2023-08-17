@@ -38,10 +38,10 @@ The `data_D` is an artificial item response data that could be used for some ana
 The `theta` and `item_D` are not used for the estimation process, but could play a role as true parameters if the artificial data (`data_D`) is used for an analysis.
 
 ```{r}
-Alldata <- DataGeneration(seed = 1234,
-                          model_D = rep(1:2, each=10),
+Alldata <- DataGeneration(seed = 123456789,
+                          model_D = rep(1:2, each=5),
                           N=1000,
-                          nitem_D = 20,
+                          nitem_D = 10,
                           nitem_P = 0,
                           latent_dist = "2NM",
                           d = 1.664,
@@ -72,52 +72,10 @@ ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
 + **Analysis** (parameter estimation)
 
 ```{r, results='hide', message=FALSE}
-######                                  ######
-###### Kernel density estimation method ######
-######                                  ######
 Mod1 <- IRTest_Dich(data = data,
-                    model = rep(1:2, each=10),
-                    latent_dist = "KDE",
-                    max_iter = 200,
-                    threshold = .0001)
-
-######                            ######
-###### Empirical histogram method ######
-######                            ######
-# Mod1 <- IRTest_Dich(data = data,
-#                     model = rep(1:2, each=5),
-#                     latent_dist = "KDE",
-#                     bandwidth = "SJ-ste",
-#                     max_iter = 200,
-#                     threshold = .001)
-
-######                      ######
-###### Normality assumption ######
-######                      ######
-#  Mod1 <- IRTest_Dich(data = data,
-#                      model = rep(1:2, each=5),
-#                      latent_dist = "Normal",
-#                      max_iter = 200,
-#                      threshold = .0001)
-
-######                                             ######
-###### Two-component Gaussian mixture distribution ######
-######                                             ######
-#  Mod1 <- IRTest_Dich(data = data,
-#                      model = rep(1:2, each=5),
-#                      latent_dist = "Mixture",
-#                      max_iter = 200,
-#                      threshold = .0001)
-
-######                                                       ######
-###### Davidian curve (for an arbitrarily chosen case of h=4)######
-######                                                       ######
-#  Mod1 <- IRTest_Dich(data = data,
-#                      model = rep(1:2, each=5),
-#                      latent_dist = "DC",
-#                      max_iter = 200,
-#                      threshold = .0001,
-#                      h=4)
+                    model = 2,
+                    latent_dist = "LLS",
+                    h=4)
 ```
 
 \
@@ -150,8 +108,11 @@ plot(Mod1) +
 ```{r}
 item_fit(Mod1)
 ```
-\
-\
+* Reliability
+
+```{r}
+reliability(Mod1)
+```
 
 ----------
 
@@ -207,52 +168,9 @@ ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
 + **Analysis** (parameter estimation)
 
 ```{r, results='hide', message=FALSE}
-######                                  ######
-###### Kernel density estimation method ######
-######                                  ######
 Mod1 <- IRTest_Poly(data = data,
                     model = "GPCM",
-                    latent_dist = "KDE",
-                    bandwidth = "SJ-ste",
-                    max_iter = 200,
-                    threshold = .001)
-
-######                      ######
-###### Normality assumption ######
-######                      ######
-#  Mod1 <- IRTest_Poly(data = data,
-#                      model = "GPCM",
-#                      latent_dist = "Normal",
-#                      max_iter = 200,
-#                      threshold = .001)
-
-######                            ######
-###### Empirical histogram method ######
-######                            ######
-#  Mod1 <- IRTest_Poly(data = data,
-#                      model = "GPCM",
-#                      latent_dist = "EHM",
-#                      max_iter = 200,
-#                      threshold = .001)
-
-######                                             ######
-###### Two-component Gaussian mixture distribution ######
-######                                             ######
-#  Mod1 <- IRTest_Poly(data = data,
-#                      model = "GPCM",
-#                      latent_dist = "Mixture",
-#                      max_iter = 200,
-#                      threshold = .001)
-
-######                                                        ######
-###### Davidian curve (for an arbitrarily chosen case of h=4) ######
-######                                                        ######
-#  Mod1 <- IRTest_Poly(data = data,
-#                      model = "GPCM",
-#                      latent_dist = "DC",
-#                      max_iter = 200,
-#                      threshold = .001,
-#                      h=4)
+                    latent_dist = "KDE")
 ```
 
 \
@@ -286,8 +204,11 @@ plot(Mod1) +
 item_fit(Mod1)
 ```
 
-\
-\
+* Reliability
+
+```{r}
+reliability(Mod1)
+```
 
 ----------
 
@@ -350,62 +271,11 @@ ggplot() +
 + **Analysis** (parameter estimation)
 
 ```{r, results='hide', message=FALSE}
-######                                  ######
-###### Kernel density estimation method ######
-######                                  ######
 Mod1 <- IRTest_Mix(data_D = DataD,
                    data_P = DataP,
-                   model_D = rep(2,5),
+                   model_D = "2PL",
                    model_P = "GPCM",
-                   latent_dist = "KDE",
-                   bandwidth = "SJ-ste",
-                   max_iter = 200,
-                   threshold = .001)
-
-######                      ######
-###### Normality assumption ######
-######                      ######
-#  Mod1 <- IRTest_Mix(data_D = DataD,
-#                     data_P = DataP,
-#                     model_D = rep(2,5),
-#                     model_P = "GPCM",
-#                     latent_dist = "Normal",
-#                     max_iter = 200,
-#                     threshold = .001)
-
-######                            ######
-###### Empirical histogram method ######
-######                            ######
-#  Mod1 <- IRTest_Mix(data_D = DataD,
-#                     data_P = DataP,
-#                     model_D = rep(2,5),
-#                     model_P = "GPCM",
-#                     latent_dist = "EHM",
-#                     max_iter = 200,
-#                     threshold = .001)
-
-######                                             ######
-###### Two-component Gaussian mixture distribution ######
-######                                             ######
-#  Mod1 <- IRTest_Mix(data_D = DataD,
-#                     data_P = DataP,
-#                     model_D = rep(2,5),
-#                     model_P = "GPCM",
-#                     latent_dist = "Mixture",
-#                     max_iter = 200,
-#                     threshold = .001)
-
-######                                                        ######
-###### Davidian curve (for an arbitrarily chosen case of h=4) ######
-######                                                        ######
-#  Mod1 <- IRTest_Mix(data_D = DataD,
-#                     data_P = DataP,
-#                     model_D = rep(2,5),
-#                     model_P = "GPCM",
-#                     latent_dist = "DC",
-#                     max_iter = 200,
-#                     threshold = .001,
-#                     h = 4)
+                   latent_dist = "KDE")
 ```
 
 \
@@ -439,7 +309,11 @@ plot(Mod1) +
 item_fit(Mod1)
 ```
 
-\
-\
+* Reliability
+
+```{r}
+reliability(Mod1)
+```
+
 ----
 

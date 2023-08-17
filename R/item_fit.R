@@ -281,7 +281,7 @@ binning <- function(theta_responded, bins, i, boolFalse=FALSE){
       binned <- ggplot2::cut_number(theta_responded, n = bins, label=1:bins)
       boolFalse<-T
     },error=function(e){
-      message(sprintf("Insufficient data values to produce 10 bins for Item %i. %d bins will be used.", i, bins))
+      message(sprintf("Insufficient data values to produce %d bins for Item %i. %d bins will be used.", bins+1, i, bins))
     },finally={})
   }
   return(list(binned, bins+1))

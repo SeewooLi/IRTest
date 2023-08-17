@@ -26,9 +26,9 @@
 #' \code{"EHM"} for empirical histogram method (Mislevy, 1984; Mislevy & Bock, 1985),
 #' \code{"Mixture"} or \code{"2NM"} for the method of two-component Gaussian mixture distribution (Li, 2021; Mislevy, 1984),
 #' \code{"DC"} or \code{"Davidian"} for Davidian-curve method (Woods & Lin, 2009),
-#' and \code{"KDE"} for kernel density estimation method (Li, 2022).
+#' \code{"KDE"} for kernel density estimation method (Li, 2022),
+#' and \code{"LLS"} for log-linear smoothing method (Casabianca, Lewis, 2015).
 #' The default value is set to \code{"Normal"} for the conventional normality assumption on latent distribution.
-#'
 #' @param max_iter A numeric value that determines the maximum number of iterations in the EM-MML.
 #' The default value is 200.
 #' @param threshold A numeric value that determines the threshold of EM-MML convergence.
@@ -80,6 +80,10 @@
 #' where \eqn{N} is the number of examinees, \eqn{\theta_j} is \eqn{j}th examinee's ability parameter, \eqn{h} is the bandwidth which corresponds to the argument \code{bw}, and \eqn{K( \bullet )} is a kernel function.
 #' The Gaussian kernel is used in this function.
 #'
+#' 5) Log-linear smoothing method
+#' \deqn{P(\theta=X_{q})=\exp{\beta_{0}+\sum_{m=1}^{h}{\beta_{m}X_{q}^{m}}}}
+#' where \eqn{h} is the hyper parameter which determines the smoothness of the density, and \eqn{\theta} can take total \eqn{Q} finite values (\eqn{X_1, \dots ,X_q, \dots, X_Q}).
+#'
 #' }
 #' }
 #'
@@ -88,13 +92,6 @@
 #' \item{se}{The standard errors for item parameter estimates.}
 #' \item{fk}{The estimated frequencies of examinees at each quadrature points.}
 #' \item{iter}{The number of EM-MML iterations required for the convergence.}
-#' \item{prob}{The estimated \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).}
-#' \item{d}{The estimated \eqn{\delta = \frac{\mu_2 - \mu_1}{\bar{\sigma}}} parameter of two-component Gaussian mixture distribution,
-#' where \eqn{\mu_1} is the estimated mean of the first Gaussian component,
-#' \eqn{\mu_2} is the estimated mean of the second Gaussian component,
-#' and \eqn{\bar{\sigma} = 1} is the standard deviation of the latent distribution (Li, 2021).
-#' Without loss of generality, \eqn{\mu_2 \ge \mu_1}, thus \eqn{\delta \ge 0}, is assumed.}
-#' \item{sd_ratio}{The estimated \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} is the estimated standard deviation of the first Gaussian component, \eqn{\sigma_2} is the estimated standard deviation of the second Gaussian component (Li, 2021).}
 #' \item{quad}{The location of quadrature points.}
 #' \item{diff}{The final value of the monitored maximum item parameter change.}
 #' \item{Ak}{The estimated discrete latent distribution.
@@ -105,14 +102,25 @@
 #' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
 #' If an examinee answers all or none of the items correctly, the function returns \code{NA}.}
 #' \item{logL}{The deviance (i.e., -2\emph{log}L).}
-#' \item{bw}{The bandwidth used.}
-#' \item{Options}{A replication of input arguments.}
+#' \item{density_par}{
+#' The estimated density parameters.
+#' If \code{latent_dist = "2NM"}, \code{prob} is the estimated \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees;
+#' \code{d} is the estimated \eqn{\delta = \frac{\mu_2 - \mu_1}{\bar{\sigma}}} parameter of two-component Gaussian mixture distribution,
+#' where \eqn{\mu_1} is the estimated mean of the first Gaussian component,
+#' \eqn{\mu_2} is the estimated mean of the second Gaussian component,
+#' and \eqn{\bar{\sigma} = 1} is the standard deviation of the latent distribution; and
+#' \code{sd_ratio} is the estimated \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} is the estimated standard deviation of the first Gaussian component, \eqn{\sigma_2} is the estimated standard deviation of the second Gaussian component (Li, 2021).
+#' Without loss of generality, \eqn{\mu_2 \ge \mu_1}, thus \eqn{\delta \ge 0}, is assumed.}
+#' \item{Options}{A replication of input arguments and other information.}
+#'
 #'
 #'
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @references
 #' Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.
+#'
+#' Casabianca, J. M., & Lewis, C. (2015). IRT item parameter recovery with marginal maximum likelihood estimation using loglinear smoothing models. \emph{Journal of Educational and Behavioral Statistics, 40}(6), 547-578.
 #'
 #' Li, S. (2021). Using a two-component normal mixture distribution as a latent distribution in estimating parameters of item response models. \emph{Journal of Educational Evaluation, 34}(4), 759-789.
 #'
@@ -191,7 +199,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
   d = 1
   sd_ratio = 1
   N = nrow(data)
-  bw <- NULL
+  density_par <- NULL
 
   # Normality assumption method
   if(latent_dist %in% c("Normal", "normal", "N")){
@@ -266,6 +274,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       flush.console()
     }
     Ak <- E$Ak
+    density_par <- list(prob=prob, d=d, sd_ratio=sd_ratio)
   }
 
   # Kernel density estimation method
@@ -294,12 +303,12 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
-    bw <- ld_est$bw
+    density_par <- ld_est$par
   }
 
   # Davidian curve method
   if(latent_dist %in% c("DC", "Davidian")){
-    phipar <- nlminb(start = rep(1,h),
+    density_par <- nlminb(start = rep(1,h),
                      objective = optim_phi,
                      gradient = optim_phi_grad,
                      hp=h,
@@ -313,7 +322,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       M1 <- Mstep_Poly(E, item=initialitem, model = model)
       initialitem <- M1[[1]]
 
-      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, phipar=phipar)
+      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
 
@@ -329,7 +338,38 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
+    density_par <- ld_est$par
   }
+  # Log-linear smoothing
+  if(latent_dist=="LLS"){
+    density_par <- rep(0, h)
+    while(iter < max_iter & diff > threshold){
+      iter <- iter +1
+
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1,
+                      range=range, Xk=Xk, Ak=Ak)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model)
+      initialitem <- M1[[1]]
+
+      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
+      Xk <- ld_est$Xk
+      Ak <- ld_est$posterior_density
+
+      if(model == "PCM"){
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,-1] <- initialitem[,-1]/ld_est$s
+        M1[[2]][,-1] <- M1[[2]][,-1]/ld_est$s
+      }
+
+      diff <- max(abs(I-initialitem), na.rm = TRUE)
+      I <- initialitem
+
+      message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
+      flush.console()
+    }
+    density_par <- ld_est$par
+  }
+
   # ability parameter estimation
   if(ability_method == 'EAP'){
     theta <- as.numeric(E$Pk%*%E$Xk)
@@ -356,9 +396,6 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
          se=M1[[2]],
          fk=E$fk,
          iter=iter,
-         prob=prob,
-         d=d,
-         sd_ratio=sd_ratio,
          quad=Xk,
          diff=diff,
          Ak=Ak,
@@ -366,7 +403,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
          theta = theta,
          theta_se = theta_se,
          logL=-2*logL, # deviance
-         bw=bw,
+         density_par = density_par,
          Options = Options # specified argument values
          ),
     class = c("poly", "irtest", "list")

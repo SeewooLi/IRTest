@@ -55,9 +55,9 @@ plot.irtest <- function(x, ...){
       stat_function(
         fun = dist2,
         args = list(
-          prob = x$prob,
-          d=x$d,
-          sd_ratio = x$sd_ratio
+          prob = x$density_par$prob,
+          d=x$density_par$d,
+          sd_ratio = x$density_par$sd_ratio
           ),
         ...
         )
