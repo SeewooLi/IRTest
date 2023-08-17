@@ -99,6 +99,17 @@ test_that(
   expect_equal(dim(Mod1$par_est), dim(item))
   expect_equal(length(Mod1$theta), length(theta))
 
+  # LLS
+  Mod1 <- IRTest_Dich(initialitem = initialitem,
+                      data = data,
+                      model = rep(1, 10),
+                      latent_dist = "LLS",
+                      max_iter = 2,
+                      threshold = .0001,
+                      h=2)
+  expect_equal(dim(Mod1$par_est), dim(item))
+  expect_equal(length(Mod1$theta), length(theta))
+
   expect_warning(
     IRTest_Dich(initialitem = initialitem,
                 data = data,
