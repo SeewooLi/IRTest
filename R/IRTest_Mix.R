@@ -100,7 +100,7 @@
 #' The Gaussian kernel is used in this function.
 #'
 #' 5) Log-linear smoothing method
-#' \deqn{P(\theta=X_{q})=\exp{\beta_{0}+\sum_{m=1}^{h}{\beta_{m}X_{q}^{m}}}}
+#' \deqn{P(\theta=X_{q})=\exp{\left(\beta_{0}+\sum_{m=1}^{h}{\beta_{m}X_{q}^{m}}\right)}}
 #' where \eqn{h} is the hyper parameter which determines the smoothness of the density, and \eqn{\theta} can take total \eqn{Q} finite values (\eqn{X_1, \dots ,X_q, \dots, X_Q}).
 #' }
 #' }
@@ -203,6 +203,8 @@ IRTest_Mix <- function(data_D, data_P, model_D="2PL",
                        latent_dist="Normal", max_iter=200, threshold=0.0001,
                        bandwidth="SJ-ste", h=NULL){
 
+  categories <- list()
+
   if(is.null(initialitem_D)){
     initialitem_D <- matrix(rep(c(1,0,0), each = ncol(data_D)), ncol = 3)
   }
@@ -210,8 +212,10 @@ IRTest_Mix <- function(data_D, data_P, model_D="2PL",
     model_D <- rep(model_D, ncol(data_D))
   }
 
-  categories <- apply(data_P, MARGIN = 2, FUN = extract_cat)
+  categories$Dichotomous <- apply(data_D, MARGIN = 2, FUN = extract_cat, simplify = FALSE)
+  categories$Polytomous <- apply(data_P, MARGIN = 2, FUN = extract_cat, simplify = FALSE)
 
+  data_D <- reorder_mat(as.matrix(data_D))
   data_P <- reorder_mat(as.matrix(data_P))
   if(is.null(initialitem_P)){
     category <- apply(data_P, 2, max, na.rm = TRUE)

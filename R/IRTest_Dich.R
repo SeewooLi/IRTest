@@ -80,7 +80,7 @@
 #' The Gaussian kernel is used in this function.
 #'
 #' 5) Log-linear smoothing method
-#' \deqn{P(\theta=X_{q})=\exp{\beta_{0}+\sum_{m=1}^{h}{\beta_{m}X_{q}^{m}}}}
+#' \deqn{P(\theta=X_{q})=\exp{\left(\beta_{0}+\sum_{m=1}^{h}{\beta_{m}X_{q}^{m}}\right)}}
 #' where \eqn{h} is the hyper parameter which determines the smoothness of the density, and \eqn{\theta} can take total \eqn{Q} finite values (\eqn{X_1, \dots ,X_q, \dots, X_Q}).
 #' }
 #' }
@@ -165,6 +165,18 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
                         ability_method = 'EAP', latent_dist="Normal", max_iter=200,
                         threshold=0.0001, bandwidth="SJ-ste", h=NULL){
 
+  categories <- apply(data, MARGIN = 2, FUN = extract_cat, simplify = FALSE)
+
+  if(
+    !all(
+      unlist(
+        lapply(categories, length)
+        )==2
+      )
+    ) stop("Not all items are dichotomously scored.")
+
+  data <- reorder_mat(as.matrix(data))
+
   if(is.null(initialitem)){
     initialitem <- matrix(rep(c(1,0,0), each = ncol(data)), ncol = 3)
   }
@@ -174,7 +186,8 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
 
   Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,
                  ability_method=ability_method,latent_dist=latent_dist,
-                 max_iter=max_iter, threshold=threshold,bandwidth=bandwidth, h=h)
+                 max_iter=max_iter, threshold=threshold,bandwidth=bandwidth, h=h,
+                 categories=categories)
 
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)

@@ -33,7 +33,7 @@
 #' \deqn{\sigma_1^2=\bar{\sigma}^2\left(\frac{1-\pi(1-\pi)\delta^2}{\pi+(1-\pi)\zeta^2}\right)}
 #'
 #' 4) Standard deviation of the second Gaussian component (\code{s2}).
-#' \deqn{\sigma_1^2=\bar{\sigma}^2\left(\frac{1-\pi(1-\pi)\delta^2}{\frac{1}{\zeta^2}\pi+(1-\pi)}\right)=\zeta^2\sigma_1^2}
+#' \deqn{\sigma_2^2=\bar{\sigma}^2\left(\frac{1-\pi(1-\pi)\delta^2}{\frac{1}{\zeta^2}\pi+(1-\pi)}\right)=\zeta^2\sigma_1^2}
 #' }
 #' }
 #'

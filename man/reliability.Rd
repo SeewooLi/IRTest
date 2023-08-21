@@ -4,14 +4,10 @@
 \alias{reliability}
 \title{Marginal reliability coefficient of IRT}
 \usage{
-reliability(x, level = "test")
+reliability(x)
 }
 \arguments{
 \item{x}{A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, or \code{IRTest_Mix}.}
-
-\item{level}{A character value of either \code{"test"} or \code{"item"}
-which is the level of reliability coefficient(s) to be returned.
-The default is \code{"test"}.}
 }
 \value{
 Estimated marginal reliability coefficient.

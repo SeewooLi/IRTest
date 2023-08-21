@@ -59,8 +59,7 @@ test_that(
   item_fit(Mod1)
   item_fit(Mod1, bin.center="median")
   plot(Mod1)
-  reliability(Mod1, level = "test")
-  reliability(Mod1, level = "item")
+  reliability(Mod1)
 
 
   # Polytomous
@@ -91,8 +90,7 @@ test_that(
   item_fit(Mod1)
   item_fit(Mod1, bin.center="median")
   plot(Mod1)
-  reliability(Mod1, level = "test")
-  reliability(Mod1, level = "item")
+  reliability(Mod1)
   plot_item(Mod1,1)
 
   Mod1 <- IRTest_Poly(data = data,
@@ -137,8 +135,7 @@ test_that(
   item_fit(Mod1)
   item_fit(Mod1, bin.center="median")
   plot(Mod1)
-  reliability(Mod1, level = "test")
-  reliability(Mod1, level = "item")
+  reliability(Mod1)
   plot_item(Mod1,1,type="d")
   plot_item(Mod1,1,type="p")
 
@@ -154,8 +151,7 @@ test_that(
   item_fit(Mod1)
   item_fit(Mod1, bin.center="median")
   plot(Mod1)
-  reliability(Mod1, level = "test")
-  reliability(Mod1, level = "item")
+  reliability(Mod1)
   plot_item(Mod1,1,type="d")
   plot_item(Mod1,1,type="p")
 }

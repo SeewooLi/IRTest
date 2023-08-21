@@ -159,7 +159,7 @@ where \eqn{N} is the number of examinees, \eqn{\theta_j} is \eqn{j}th examinee's
 The Gaussian kernel is used in this function.
 
 5) Log-linear smoothing method
-\deqn{P(\theta=X_{q})=\exp{\beta_{0}+\sum_{m=1}^{h}{\beta_{m}X_{q}^{m}}}}
+\deqn{P(\theta=X_{q})=\exp{\left(\beta_{0}+\sum_{m=1}^{h}{\beta_{m}X_{q}^{m}}\right)}}
 where \eqn{h} is the hyper parameter which determines the smoothness of the density, and \eqn{\theta} can take total \eqn{Q} finite values (\eqn{X_1, \dots ,X_q, \dots, X_Q}).
 }
 }
