@@ -182,26 +182,12 @@ Alldata <- DataGeneration(seed = 2,
                           sd_ratio = 2,
                           prob = 0.3)
 
-DataD <- Alldata$data_D
-DataP <- Alldata$data_P
-itemD <- Alldata$item_D
-itemP <- Alldata$item_P
-initialitemD <- Alldata$initialitem_D
-initialitemP <- Alldata$initialitem_P
-theta <- Alldata$theta
+DataD <- Alldata$data_D   # item response data for the dichotomous items
+DataP <- Alldata$data_P   # item response data for the polytomous items
 
 # Analysis
 
-M1 <- IRTest_Mix(initialitem_D = initialitemD,
-                 initialitem_P = initialitemP,
-                 data_D = DataD,
-                 data_P = DataP,
-                 model_D = rep(1:2, each=3),
-                 latent_dist = "KDE",
-                 bandwidth = "SJ-ste",
-                 max_iter = 200,
-                 threshold = .001,
-                 h=9)
+M1 <- IRTest_Mix(DataD, DataP)
 
 }
 \references{

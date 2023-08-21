@@ -139,34 +139,20 @@
 #' @examples
 #' # A preparation of dichotomous item response data
 #'
-#' Alldata <- DataGeneration(seed = 1,
-#'                           model_P = "GPCM",
-#'                           categ = rep(3:4, each = 4),
-#'                           N=1000,
-#'                           nitem_D = 0,
-#'                           nitem_P = 8,
-#'                           latent_dist = "2NM",
-#'                           d = 1.414,
-#'                           sd_ratio = 2,
-#'                           prob = 0.5)
-#'
-#' data <- Alldata$data_P
-#' item <- Alldata$item_P
-#' initialitem <- Alldata$initialitem_P
-#' theta <- Alldata$theta
-#'
+#' data <- DataGeneration(seed = 1,
+#'                        model_P = "GPCM",
+#'                        categ = rep(3:4, each = 4),
+#'                        N=1000,
+#'                        nitem_D = 0,
+#'                        nitem_P = 8,
+#'                        latent_dist = "2NM",
+#'                        d = 1.414,
+#'                        sd_ratio = 2,
+#'                        prob = 0.5)$data_P
 #'
 #' # Analysis
 #'
-#' M1 <- IRTest_Poly(initialitem = initialitem,
-#'                   data = data,
-#'                   model = "GPCM",
-#'                   latent_dist = "KDE",
-#'                   bandwidth = "SJ-ste", # an argument required only when "latent_dist = 'KDE'"
-#'                   max_iter = 200,
-#'                   threshold = .001,
-#'                   h=4 # an argument required only when "latent_dist = 'DC'"
-#'                   )
+#' M1 <- IRTest_Poly(data)
 #'
 IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal",

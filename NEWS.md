@@ -1,3 +1,8 @@
+# IRTest 1.8.0
+
+* `inform_f_item` and `inform_f_test` are developed.
+* Convergence for `"DC"` and `"LLS"` was enhanced by updating density parameters every iteration.
+
 # IRTest 1.7.1
 
 * Minor errors in the manual file are corrected.

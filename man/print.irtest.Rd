@@ -19,27 +19,18 @@ This function prints the summarized information.
 }
 \examples{
 \dontrun{
-Alldata <- DataGeneration(seed = 1,
-                          #model_D = rep(1, 10),
-                          N=1000,
-                          nitem_D = 0,
-                          nitem_P = 8,
-                          categ = rep(3:4,each = 4),
-                          latent_dist = "2NM",
-                          d = 1.664,
-                          sd_ratio = 2,
-                          prob = 0.3)
-data <- Alldata$data_P
-item <- Alldata$item_P
-initialitem <- Alldata$initialitem_P
-theta <- Alldata$theta
-M1 <- IRTest_Poly(initialitem = initialitem,
-                  data = data,
-                  model = "GPCM",
-                  latent_dist = "Mixture",
-                  max_iter = 200,
-                  threshold = .001,
-                  )
+data <- DataGeneration(seed = 1,
+                       #model_D = rep(1, 10),
+                       N=1000,
+                       nitem_D = 0,
+                       nitem_P = 8,
+                       categ = rep(3:4,each = 4),
+                       latent_dist = "2NM",
+                       d = 1.664,
+                       sd_ratio = 2,
+                       prob = 0.3)$data_P
+
+M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 
 M1
 }

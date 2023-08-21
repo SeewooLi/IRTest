@@ -8,12 +8,6 @@
 #' @return A plot of estimated latent distribution.
 #' @export
 #'
-#' @author Seewoo Li \email{cu@@yonsei.ac.kr}
-#'
-#' @examples
-#' # Summary
-#'
-#'
 #'
 summary.irtest <- function(object, ...){
   sum_result <- list()

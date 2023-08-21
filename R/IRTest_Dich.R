@@ -135,31 +135,20 @@
 #' @examples
 #' # A preparation of dichotomous item response data
 #'
-#' Alldata <- DataGeneration(seed = 1,
-#'                           model_D = rep(1, 10),
-#'                           N=500,
-#'                           nitem_D = 10,
-#'                           nitem_P = 0,
-#'                           latent_dist = "2NM",
-#'                           d = 1.664,
-#'                           sd_ratio = 2,
-#'                           prob = 0.3)
+#' data <- DataGeneration(seed = 1,
+#'                        model_D = rep(1, 10),
+#'                        N=500,
+#'                        nitem_D = 10,
+#'                        nitem_P = 0,
+#'                        latent_dist = "2NM",
+#'                        d = 1.664,
+#'                        sd_ratio = 2,
+#'                        prob = 0.3)$data_D
 #'
-#' data <- Alldata$data_D
-#' item <- Alldata$item_D
-#' initialitem <- Alldata$initialitem_D
-#' theta <- Alldata$theta
 #'
 #' # Analysis
 #'
-#' M1 <- IRTest_Dich(data = data,
-#'                   model = rep(1,10),
-#'                   latent_dist = "KDE",
-#'                   bandwidth = "SJ-ste", # an argument required only when "latent_dist = 'KDE'"
-#'                   max_iter = 200,
-#'                   threshold = .001,
-#'                   h=4 # an argument required only when "latent_dist = 'DC'"
-#'                   )
+#' M1 <- IRTest_Dich(data)
 #'
 IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal", max_iter=200,

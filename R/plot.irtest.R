@@ -19,29 +19,18 @@
 #' \dontrun{
 #' # Data generation and model fitting
 #'
-#' Alldata <- DataGeneration(seed = 1,
-#'                           #model_D = rep(1, 10),
-#'                           N=1000,
-#'                           nitem_D = 0,
-#'                           nitem_P = 8,
-#'                           categ = rep(3:4,each = 4),
-#'                           latent_dist = "2NM",
-#'                           d = 1.664,
-#'                           sd_ratio = 2,
-#'                           prob = 0.3)
+#' data <- DataGeneration(seed = 1,
+#'                        #model_D = rep(1, 10),
+#'                        N=1000,
+#'                        nitem_D = 0,
+#'                        nitem_P = 8,
+#'                        categ = rep(3:4,each = 4),
+#'                        latent_dist = "2NM",
+#'                        d = 1.664,
+#'                        sd_ratio = 2,
+#'                        prob = 0.3)$data_P
 #'
-#' data <- Alldata$data_P
-#' item <- Alldata$item_P
-#' initialitem <- Alldata$initialitem_P
-#' theta <- Alldata$theta
-#'
-#' M1 <- IRTest_Poly(initialitem = initialitem,
-#'                   data = data,
-#'                   model = "GPCM",
-#'                   latent_dist = "Mixture",
-#'                   max_iter = 200,
-#'                   threshold = .001,
-#'                   )
+#' M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 #'
 #'
 #' # Plotting the latent distribution

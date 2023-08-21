@@ -17,12 +17,3 @@ A plot of estimated latent distribution.
 \description{
 These functions summarize the outputs (e.g., convergence of the estimation algorithm, parameter estimates, AIC, etc.).
 }
-\examples{
-# Summary
-
-
-
-}
-\author{
-Seewoo Li \email{cu@yonsei.ac.kr}
-}
