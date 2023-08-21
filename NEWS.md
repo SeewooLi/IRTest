@@ -1,3 +1,5 @@
+# IRTest 1.7.1
+
 # IRTest 1.7.0
 
 * Log-linear smoothing method (`latent_dist = "LLS"`) can be applied to estimate a latent distribution.
