@@ -61,19 +61,27 @@ Followings are functions of **IRTest**.
   
   + `item_fit` tests the statistical fit of all items individually.
   
+  + `inform_f_item` calculates the information value(s) of an item.
+
+  + `inform_f_test` calculates the information value(s) of a test.
+    
   + `plot_item` draws item response function(s) of an item.
   
   + `reliability` calculates marginal reliability coefficient of IRT.
 
-  + `DataGeneration` generates several objects that can be useful for computer simulation studies. Among these are starting values for the estimation algorithm and artificial item-response data that can be passed into `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`.
+  + `DataGeneration` generates several objects that can be useful for computer simulation studies. Among these are simulated item parameters, ability parameters and the corresponding item-response data.
   
   + `dist2` is a probability density function of two-component Gaussian mixture distribution.
   
   + `original_par_2GM` converts re-parameterized parameters of two-component Gaussian mixture distribution into original parameters.  
+  
+  + `cat_clps` recommends category collapsing based on item parameters (or, equivalently, item response functions).
+  
+  + `recategorize` implements the category collapsing.
 
 ## Example
 
-A simple simulation study for a GPCM model can be done in following manners:
+A simple simulation study for a 2PL model can be done in following manners:
 
 ```{r library, message=FALSE}
 library(IRTest)
@@ -108,7 +116,8 @@ For an illustrative purpose, kernel density estimation (KDE) method is used for 
 Mod1 <- 
   IRTest_Dich(
     data = data,
-    latent_dist = "KDE"
+    latent_dist = "DC",
+    h=7
     )
 ```
 
@@ -216,3 +225,17 @@ grid.arrange(p1, p2, p3, p4, ncol=2, nrow=2)
 ```{r}
 reliability(Mod1)
 ```
+
+* Test information function
+
+```{r}
+ggplot()+
+  stat_function(
+    fun = inform_f_test,
+    args = list(Mod1)
+  )+
+  lims(x=c(-6,6))+
+  labs(title="Test information function", x=expression(theta), y='information')+
+  theme_bw()
+```
+

@@ -410,6 +410,7 @@ if(nrow(data_D)!=nrow(data_P)){
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+      density_par <- ld_est$par
 
       if(all(c(model_D, model_P) %in% c(1, "1PL", "Rasch", "RASCH", "PCM"))){
         initialitem_D[,1] <- initialitem_D[,1]*ld_est$s
@@ -428,7 +429,6 @@ if(nrow(data_D)!=nrow(data_P)){
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
-    density_par <- ld_est$par
   }
 
   # Log-linear smoothing
@@ -448,6 +448,7 @@ if(nrow(data_D)!=nrow(data_P)){
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+      density_par <- ld_est$par
 
       if(all(c(model_D, model_P) %in% c(1, "1PL", "Rasch", "RASCH", "PCM"))){
         initialitem_D[,1] <- initialitem_D[,1]*ld_est$s
@@ -466,7 +467,6 @@ if(nrow(data_D)!=nrow(data_P)){
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
-    density_par <- ld_est$par
   }
 }
 

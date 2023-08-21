@@ -55,14 +55,18 @@ Followings are functions of **IRTest**.
 
 - `item_fit` tests the statistical fit of all items individually.
 
+- `inform_f_item` calculates the information value(s) of an item.
+
+- `inform_f_test` calculates the information value(s) of a test.
+
 - `plot_item` draws item response function(s) of an item.
 
 - `reliability` calculates marginal reliability coefficient of IRT.
 
 - `DataGeneration` generates several objects that can be useful for
-  computer simulation studies. Among these are starting values for the
-  estimation algorithm and artificial item-response data that can be
-  passed into `IRTest_Dich`, `IRTest_Poly`, or `IRTest_Mix`.
+  computer simulation studies. Among these are simulated item
+  parameters, ability parameters and the corresponding item-response
+  data.
 
 - `dist2` is a probability density function of two-component Gaussian
   mixture distribution.
@@ -70,9 +74,14 @@ Followings are functions of **IRTest**.
 - `original_par_2GM` converts re-parameterized parameters of
   two-component Gaussian mixture distribution into original parameters.
 
+- `cat_clps` recommends category collapsing based on item parameters
+  (or, equivalently, item response functions).
+
+- `recategorize` implements the category collapsing.
+
 ## Example
 
-A simple simulation study for a GPCM model can be done in following
+A simple simulation study for a 2PL model can be done in following
 manners:
 
 ``` r
@@ -109,7 +118,8 @@ used for the estimation of latent distribution.
 Mod1 <- 
   IRTest_Dich(
     data = data,
-    latent_dist = "KDE"
+    latent_dist = "DC",
+    h=7
     )
 ```
 
@@ -118,35 +128,35 @@ Mod1 <-
 ``` r
 summary(Mod1)
 #> Convergence:  
-#> Successfully converged below the threshold of 1e-04 on 22nd iterations. 
+#> Successfully converged below the threshold of 1e-04 on 40th iterations. 
 #> 
 #> Model Fit:  
-#>    deviance   18382.97 
-#>         AIC   18464.97 
-#>         BIC   18666.19 
+#>    deviance   18390.3 
+#>         AIC   18484.3 
+#>         BIC   18714.96 
 #> 
 #> The Number of Parameters:  
 #>        item   40 
-#>        dist   1 
-#>       total   41 
+#>        dist   7 
+#>       total   47 
 #> 
 #> The Number of Items:  
 #> dichotomous   20 
 #> polyotomous   0 
 #> 
 #> The Estimated Latent Distribution:  
-#> method - KDE 
+#> method - DC 
 #> ----------------------------------------
 #>                                           
 #>                                           
 #>                                           
-#>                       @ @ @               
-#>                   . @ @ @ @ @             
-#>         . @ @ . @ @ @ @ @ @ @ @           
-#>       . @ @ @ @ @ @ @ @ @ @ @ @ .         
-#>     . @ @ @ @ @ @ @ @ @ @ @ @ @ @ .       
-#>   . @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ .     
-#> . @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ . 
+#>                       . . @ .             
+#>                 . . @ @ @ @ @ .           
+#>           . @ @ @ @ @ @ @ @ @ @ .         
+#>         @ @ @ @ @ @ @ @ @ @ @ @ @         
+#>       @ @ @ @ @ @ @ @ @ @ @ @ @ @ @       
+#>     @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ .     
+#> . @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ .   
 #> +---------+---------+---------+---------+
 #> -2        -1        0         1         2
 ```
@@ -204,26 +214,26 @@ True item parameters
 
 |    a |     b |   c |
 |-----:|------:|----:|
-| 1.47 | -0.28 |   0 |
-| 1.22 | -0.97 |   0 |
-| 1.78 | -0.84 |   0 |
-| 1.41 | -0.59 |   0 |
-| 1.81 | -0.16 |   0 |
-| 1.20 | -0.99 |   0 |
-| 1.99 | -0.48 |   0 |
-| 1.87 |  1.41 |   0 |
-| 1.14 |  1.51 |   0 |
-| 1.05 |  1.68 |   0 |
-| 1.85 | -1.46 |   0 |
-| 2.20 | -0.05 |   0 |
-| 0.75 |  0.73 |   0 |
-| 2.19 | -0.01 |   0 |
-| 1.55 | -1.10 |   0 |
-| 2.25 |  1.99 |   0 |
-| 2.17 | -0.68 |   0 |
-| 2.41 |  1.77 |   0 |
-| 1.18 |  0.94 |   0 |
-| 1.90 | -0.71 |   0 |
+| 1.50 | -0.26 |   0 |
+| 1.25 | -0.94 |   0 |
+| 1.81 | -0.81 |   0 |
+| 1.44 | -0.56 |   0 |
+| 1.85 | -0.14 |   0 |
+| 1.22 | -0.96 |   0 |
+| 2.03 | -0.46 |   0 |
+| 2.00 |  1.35 |   0 |
+| 1.19 |  1.46 |   0 |
+| 1.11 |  1.61 |   0 |
+| 1.86 | -1.43 |   0 |
+| 2.24 | -0.04 |   0 |
+| 0.77 |  0.71 |   0 |
+| 2.25 |  0.00 |   0 |
+| 1.57 | -1.07 |   0 |
+| 2.58 |  1.83 |   0 |
+| 2.21 | -0.65 |   0 |
+| 2.73 |  1.64 |   0 |
+| 1.22 |  0.92 |   0 |
+| 1.94 | -0.68 |   0 |
 
 Estimated item parameters
 
@@ -305,26 +315,26 @@ ggplot(data=post_sample, mapping=aes(x=X))+
 ``` r
 item_fit(Mod1)
 #>         stat df p.value
-#> 1  13.434320  7  0.0622
-#> 2   8.564615  7  0.2854
-#> 3  19.491468  7  0.0068
-#> 4   7.035466  7  0.4252
-#> 5  10.715746  7  0.1515
-#> 6  13.888048  7  0.0532
-#> 7   4.768391  7  0.6882
-#> 8  14.948235  7  0.0367
-#> 9   9.457740  7  0.2214
-#> 10 16.716254  7  0.0193
-#> 11  6.237493  7  0.5123
-#> 12  9.749979  7  0.2032
-#> 13  7.302189  7  0.3981
-#> 14 26.481630  7  0.0004
-#> 15 18.217503  7  0.0110
-#> 16 17.142660  7  0.0165
-#> 17  9.973517  7  0.1901
-#> 18 38.315609  7  0.0000
-#> 19 19.524826  7  0.0067
-#> 20 11.424843  7  0.1211
+#> 1  11.240810  7  0.1285
+#> 2  10.438912  7  0.1650
+#> 3  19.624820  7  0.0064
+#> 4   8.723559  7  0.2731
+#> 5   7.915895  7  0.3401
+#> 6  13.248208  7  0.0663
+#> 7   4.677790  7  0.6992
+#> 8  15.438317  7  0.0308
+#> 9   9.976055  7  0.1899
+#> 10 15.982290  7  0.0253
+#> 11  5.272871  7  0.6267
+#> 12  9.582016  7  0.2135
+#> 13  7.152190  7  0.4132
+#> 14 24.813763  7  0.0008
+#> 15 14.465369  7  0.0435
+#> 16 19.649980  7  0.0064
+#> 17  8.145667  7  0.3199
+#> 18 66.917846  7  0.0000
+#> 19 18.906368  7  0.0085
+#> 20 10.737711  7  0.1505
 ```
 
 - Item response function
@@ -344,6 +354,30 @@ grid.arrange(p1, p2, p3, p4, ncol=2, nrow=2)
 
 ``` r
 reliability(Mod1)
+#> $rel.summed.score.test
 #> test reliability 
-#>        0.8798695
+#>        0.8806951 
+#> 
+#> $rel.summed.score.item
+#>         1         2         3         4         5         6         7         8 
+#> 0.3081466 0.2234867 0.3538156 0.2862139 0.3887192 0.2164527 0.4200541 0.2669627 
+#>         9        10        11        12        13        14        15        16 
+#> 0.1549640 0.1349175 0.2907841 0.4644806 0.1090059 0.4638354 0.2823802 0.2295097 
+#>        17        18        19        20 
+#> 0.4421841 0.2790354 0.1980922 0.3894833
 ```
+
+- Test information function
+
+``` r
+ggplot()+
+  stat_function(
+    fun = inform_f_test,
+    args = list(Mod1)
+  )+
+  lims(x=c(-6,6))+
+  labs(title="Test information function", x=expression(theta), y='information')+
+  theme_bw()
+```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />

@@ -325,6 +325,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+      density_par <- ld_est$par
 
       if(model == "PCM"){
         initialitem[,1] <- initialitem[,1]*ld_est$s
@@ -338,7 +339,6 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
-    density_par <- ld_est$par
   }
   # Log-linear smoothing
   if(latent_dist=="LLS"){
@@ -354,6 +354,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+      density_par <- ld_est$par
 
       if(model == "PCM"){
         initialitem[,1] <- initialitem[,1]*ld_est$s
@@ -367,7 +368,6 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
-    density_par <- ld_est$par
   }
 
   # ability parameter estimation

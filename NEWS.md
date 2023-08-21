@@ -1,5 +1,10 @@
 # IRTest 1.7.1
 
+* Minor errors in the manual file are corrected.
+* `reliability` uses the raw value in a given data for calculating the reliability coefficient.
+* `reliability` returns both test reliability coefficient and item reliability coefficients.
+* Every estimation function returns the raw score-categories of items.
+
 # IRTest 1.7.0
 
 * Log-linear smoothing method (`latent_dist = "LLS"`) can be applied to estimate a latent distribution.

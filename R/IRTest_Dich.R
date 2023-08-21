@@ -289,6 +289,7 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth, N=N, q=q)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+      density_par <- ld_est$par
 
       if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
         initialitem[,1] <- initialitem[,1]*ld_est$s
@@ -301,7 +302,7 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
-    density_par <- ld_est$par
+
   }
 
   # Davidian curve method
@@ -309,9 +310,7 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
     density_par <- nlminb(start = rep(1,h),
                      objective = optim_phi,
                      gradient = optim_phi_grad,
-                     hp=h,
-                     lower = -pi/2,
-                     upper = pi/2)$par
+                     hp=h)$par
 
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
@@ -323,6 +322,7 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+      density_par <- ld_est$par
 
       if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
         initialitem[,1] <- initialitem[,1]*ld_est$s
@@ -335,7 +335,6 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
-    density_par <- ld_est$par
   }
 
   # Log-linear smoothing method
@@ -352,6 +351,7 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
+      density_par <- ld_est$par
 
       if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
         initialitem[,1] <- initialitem[,1]*ld_est$s
@@ -364,7 +364,6 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
-    density_par <- ld_est$par
   }
 
   # ability parameter estimation

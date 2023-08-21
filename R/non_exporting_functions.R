@@ -242,7 +242,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
             par <- par
           } else{
             if( sum(abs(diff)) > div){
-              par <- par-div/sum(abs(diff))*diff/10
+              par <- par-div/sum(abs(diff))*diff/2
             } else {
               par <- par-diff
               div <- sum(abs(diff))
@@ -275,7 +275,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
             par <- par
           } else{
             if( sum(abs(diff)) > div){
-              par <- par-div/sum(abs(diff))*diff/10
+              par <- par-div/sum(abs(diff))*diff/2
             } else {
               par <- par-diff
               div <- sum(abs(diff))
@@ -319,7 +319,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
             par <- par
           } else{
             if( sum(abs(diff)) > div){
-              par <- par-div/sum(abs(diff))*diff/10
+              par <- par-div/sum(abs(diff))*diff/2
             } else {
               par <- par-diff
               div <- sum(abs(diff))
@@ -827,5 +827,5 @@ DC.LL <- function (phi, theta, freq) {
 #' @importFrom dcurver dc_grad
 #'
 DC.grad <- function (phi, theta, freq) {
-  -colSums(dcurver::dc_grad(theta, phi) * freq)
+  -freq%*%dcurver::dc_grad(theta, phi)
 }
