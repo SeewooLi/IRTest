@@ -216,7 +216,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range, Xk=Xk, Ak=Ak)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
@@ -268,8 +268,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1,
-                      range=range, Xk=Xk, Ak=Ak)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
@@ -308,7 +307,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       M1 <- Mstep_Poly(E, item=initialitem, model = model)
       initialitem <- M1[[1]]
 
-      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par)
+      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
       density_par <- ld_est$par
@@ -332,20 +331,23 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1,
-                      range=range, Xk=Xk, Ak=Ak)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
-      density_par <- ld_est$par
 
       if(model == "PCM"){
         initialitem[,1] <- initialitem[,1]*ld_est$s
         initialitem[,-1] <- initialitem[,-1]/ld_est$s
         M1[[2]][,-1] <- M1[[2]][,-1]/ld_est$s
+        if(iter>3){
+          density_par <- ld_est$par
+        }
+      } else {
+        density_par <- ld_est$par
       }
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
@@ -354,6 +356,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
+    density_par <- ld_est$par
   }
 
   # ability parameter estimation

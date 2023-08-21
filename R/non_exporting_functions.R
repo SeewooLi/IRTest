@@ -663,25 +663,32 @@ latent_dist_est <- function(method, Xk, posterior, range,
     par <- c(SJPI$bw, SJPI$n)
   }
   if(method %in% c('DC', 'Davidian')){
+    post_den <- posterior/sum(posterior)
+    post_den <- lin_inex(Xk, post_den, range = range)
     par <- nlminb(start = par,
                   objective = DC.LL,
                   gradient = DC.grad,
                   theta= Xk,
-                  freq = posterior)$par
+                  freq = post_den$qh*N
+                  )$par
 
-    post_den <- dcurver::ddc(x = Xk, phi = par)
-    post_den <- post_den/sum(post_den)
-    lin <- lin_inex(Xk, post_den, range = range, rule = 2)
+    post_den2 <- dcurver::ddc(x = Xk, phi = par)
+    post_den2 <- post_den2/sum(post_den2)
+    lin <- lin_inex(Xk, post_den2, range = range, rule = 2)
+    # lin$s <- post_den$s
   }
   if(method=='LLS'){
+    post_den <- posterior/sum(posterior)
+    post_den <- lin_inex(Xk, post_den, range = range)
     LLS <- lls(Xk=Xk,
-               posterior=posterior,
+               posterior=post_den$qh*N,
                bb=par,
                N=N
                )
-    post_den <- LLS$freq/N
+    post_den2 <- LLS$freq/N
     par <- LLS$beta
-    lin <- lin_inex(Xk, post_den, range = range, rule = 2)
+    lin <- lin_inex(Xk, post_den2, range = range, rule = 2)
+    lin$s <- post_den$s
   }
 
   return(

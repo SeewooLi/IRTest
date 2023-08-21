@@ -63,14 +63,14 @@ test_that(
 
 
   # Polytomous
-  Alldata <- DataGeneration(seed = 1,
+  Alldata <- DataGeneration(seed = 10,
                             model_P = "GPCM",
                             categ = rep(c(3,7), each = 5),
-                            N=500,
+                            N=2000,
                             nitem_D = 0,
                             nitem_P = 10,
                             latent_dist = "2NM",
-                            d = 1.414,
+                            d = .894,
                             sd_ratio = 2,
                             prob = 0.5)
 

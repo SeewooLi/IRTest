@@ -308,7 +308,7 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
       M1 <- M1step(E, item=initialitem, model = model)
       initialitem <- M1[[1]]
 
-      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par)
+      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par,N=N)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
       density_par <- ld_est$par
@@ -340,12 +340,16 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
-      density_par <- ld_est$par
 
       if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
         initialitem[,1] <- initialitem[,1]*ld_est$s
         initialitem[,2] <- initialitem[,2]/ld_est$s
         M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
+        if(iter>3){
+          density_par <- ld_est$par
+        }
+      } else {
+        density_par <- ld_est$par
       }
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)

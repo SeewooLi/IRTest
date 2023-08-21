@@ -51,7 +51,7 @@ devtools::install_github("SeewooLi/IRTest")
 
 ## Functions
 
-Followings are functions of **IRTest**.
+Followings are the functions of **IRTest**.
 
   + `IRTest_Dich` is the estimation function when all items are *dichotomously* scored.
   
@@ -116,8 +116,7 @@ For an illustrative purpose, kernel density estimation (KDE) method is used for 
 Mod1 <- 
   IRTest_Dich(
     data = data,
-    latent_dist = "DC",
-    h=7
+    latent_dist = "KDE"
     )
 ```
 

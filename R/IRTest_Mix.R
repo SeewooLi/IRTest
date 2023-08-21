@@ -393,7 +393,7 @@ if(nrow(data_D)!=nrow(data_P)){
       initialitem_D <- M1_D[[1]]
       initialitem_P <- M1_P[[1]]
 
-      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par)
+      ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par,N=N)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
       density_par <- ld_est$par
@@ -444,6 +444,11 @@ if(nrow(data_D)!=nrow(data_P)){
         initialitem_P[,1]  <- initialitem_P[,1]*ld_est$s
         initialitem_P[,-1] <- initialitem_P[,-1]/ld_est$s
         M1_P[[2]][,-1] <- M1_P[[2]][,-1]/ld_est$s
+        if(iter>3){
+          density_par <- ld_est$par
+        }
+      } else {
+        density_par <- ld_est$par
       }
 
       diff <- max(c(max(abs(I_D-initialitem_D), na.rm = TRUE), max(abs(I_P-initialitem_P), na.rm = TRUE)))
