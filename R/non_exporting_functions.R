@@ -213,10 +213,7 @@ Estep_Mix <- function(item_D, item_P, data_D, data_P, range = c(-4,4), q = 100, 
 #################################################################################################################
 M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
   nitem <- nrow(item)
-  item_estimated <- matrix(c(rep(1,nitem),
-                             rep(0,nitem),
-                             rep(0,nitem)
-  ),nrow = nrow(item), ncol = 3)
+  item_estimated <- item
   se <- matrix(nrow = nrow(item), ncol = 3)
   X <- E$Xk
   r <- E$rik_D
@@ -251,7 +248,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
           if( div <= threshold | iter > max_iter) break
         }
         item_estimated[i,2] <- par
-        se[i,2] <- sqrt(1/sum(fW)) # asymptotic S.E.
+        se[i,2] <- sqrt(1/sum(fW)/item[i,1]^2) # asymptotic S.E.
 
       } else if(model[i] %in% c(2, "2PL")){
 
@@ -339,7 +336,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
 
 Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter){
   nitem <- nrow(item)
-  item_estimated <- matrix(nrow = nrow(item), ncol = 7)
+  item_estimated <- item
   se <- matrix(nrow = nrow(item), ncol = 7)
   X <- E$Xk
   Pk <- E$Pk

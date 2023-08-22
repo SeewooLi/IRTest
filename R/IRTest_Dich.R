@@ -278,7 +278,6 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth, N=N, q=q)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
-      density_par <- ld_est$par
 
       if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
         initialitem[,1] <- initialitem[,1]*ld_est$s
@@ -291,7 +290,7 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
-
+    density_par <- ld_est$par
   }
 
   # Davidian curve method

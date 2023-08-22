@@ -142,7 +142,9 @@ Alldata <- DataGeneration(seed = 123456789,
                           latent_dist = "2NM",
                           d = 1.414,
                           sd_ratio = 2,
-                          prob = 0.5)
+                          prob = 0.5,
+                          s=.5,
+                          b_sd = .5)
 
 data <- Alldata$data_P
 item <- Alldata$item_P
@@ -154,8 +156,9 @@ data[501:1000, 4:6] <- NA
 If the artificial data (`data_P`) is used, the true latent distribution looks like;
 
 ```{r, fig.align='center', fig.height=2.5, fig.width=6, echo=F}
-ggplot(data = data.frame(x = c(-6,6)), aes(x)) +
-  stat_function(fun = dist2, n = 101, args = list(prob = 0.5, d=1.414, sd_ratio = 2)) +
+ggplot() +
+  stat_function(fun = dist2, args = list(prob = 0.5, d=1.414, sd_ratio = 2, overallmean=0, overallsd=.5)) +
+  lims(x=c(-6,6))+
   ylab("latent density") +
   xlab(expression(theta)) +
   scale_y_continuous(breaks = NULL)

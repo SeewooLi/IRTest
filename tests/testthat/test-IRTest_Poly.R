@@ -73,7 +73,7 @@ test_that("testing basic operations for IRTest_Poly", {
                       latent_dist = "LLS",
                       max_iter = 2,
                       threshold = .001,
-                      h=10)
+                      h=5)
   expect_equal(dim(Mod1$par_est), dim(item))
   expect_equal(length(Mod1$theta), length(theta))
 
