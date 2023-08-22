@@ -4,23 +4,41 @@
 #'
 #' @return Estimated marginal reliability coefficient.
 #'
+#' @importFrom stats integrate
+#'
 #' @details
 #' \describe{
+#' \item{Reliability coefficient on summed-score scale}{
 #' In accordance with the concept of \emph{reliability} in classical test theory (CTT),
 #' this function calculates the IRT reliability coefficient.
-#' \item{
+#'
 #' The basic concept and formula of the reliability coefficient can be expressed as follows (Kim, Feldt, 2010):
-#' }{
-#' An observed score of Item \eqn{i} (\eqn{X_i}) is decomposed as the sum of a true score \eqn{T_i} and an error \eqn{e_i}.
+#'
+#' An observed score of Item \eqn{i}, \eqn{X_i}, is decomposed as the sum of a true score \eqn{T_i} and an error \eqn{e_i}.
 #' Then, with the assumption of \eqn{\sigma_{T_{i}e_{j}}=\sigma_{e_{i}e_{j}}=0}, the reliability coefficient of a test is defined as;
 #' \deqn{\rho_{TX}=\rho_{XX^{'}}=\frac{\sigma_{T}^{2}}{\sigma_{X}^{2}}=\frac{\sigma_{T}^{2}}{\sigma_{T}^{2}+\sigma_{e}^{2}}=1-\frac{\sigma_{e}^{2}}{\sigma_{X}^{2}}}
+#' }
+#'
+#' \item{Reliability coefficient on \eqn{\theta} scale}{
+#' For the coefficient on the \eqn{\theta} scale, this function calculates the parallel-forms reliability (Green et al., 1984; Kim, 2012):
+#' \deqn{
+#' \rho_{\hat{\theta} \hat{\theta}^{'}}
+#' =\frac{\sigma_{E\left(\hat{\theta}\mid \theta \right )}^{2}}{\sigma_{E\left(\hat{\theta}\mid \theta \right )}^{2}+E\left( \sigma_{\hat{\theta}|\theta}^{2} \right)}
+#' =\frac{1}{1+E\left(I\left(\hat{\theta}\right)^{-1}\right)}
+#' }
+#' This assumes that \eqn{\sigma_{E\left(\hat{\theta}\mid \theta \right )}^{2}=\sigma_{\theta}^{2}=1}.
+#' Although the formula is often employed in several IRT studies and applications, the underlying assumption may not be true.
 #' }
 #' }
 #'
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @references
+#' Green, B.F., Bock, R.D., Humphreys, L.G., Linn, R.L., & Reckase, M.D. (1984). Technical guidelines for assessing computerized adaptive tests. \emph{Journal of Educational Measurement, 21}(4), 347–360.
+#' Kim, S. (2012). A note on the reliability coefficients for item response model-based ability estimates. \emph{Psychometrika, 77}(1), 153-162.
 #' Kim, S., Feldt, L.S. (2010). The estimation of the IRT reliability coefficient and its lower and upper bounds, with comparisons to CTT reliability statistics. \emph{Asia Pacific Education Review, 11}, 179–188.
+#'
+#'
 #'
 #' @export
 #'
@@ -44,6 +62,8 @@
 #' reliability(M1)
 #'}
 reliability <- function(x){
+
+  # Summed score scale
   Ak <- x$Ak
   Xk <- x$quad
   param <- x$par_est
@@ -92,24 +112,36 @@ reliability <- function(x){
     }
   }
 
-  # test level
+    ## test level
     sigma2_e <- sum(Ak%*%(squared-true_score_matrix^2))
     mu_T <- rowSums(true_score_matrix)%*%Ak
     sigma2_T <- (rowSums(true_score_matrix)^2)%*%Ak-mu_T^2
     rxx1 <- as.vector(sigma2_T/(sigma2_T+sigma2_e))
     names(rxx1) <- "test reliability"
 
-  # item level
+    ## item level
     sigma2_e <- Ak%*%(squared-true_score_matrix^2)
     mu_T <- Ak%*%true_score_matrix
     sigma2_T <- Ak%*%true_score_matrix^2-mu_T^2
     rxx2 <- as.vector(sigma2_T/(sigma2_T+sigma2_e))
-    names(rxx2) <- 1:length(rxx2)
+    names(rxx2) <- row.names(param)
+
+  # theta scale
+    if(x$Options$latent_dist %in% c("EHM", "LLS")){
+      inform <- inform_f_test(x$quad, x)%*%x$Ak
+    } else {
+      inform <- integrate(f=function(theta)1/inform_f_test(theta, x)*latent_distribution(theta, x),
+                          lower = -10, upper = 10)$value
+    }
+    rxx3 <- 1/(inform+1)
+    names(rxx3) <- "test reliability"
 
     return(
       list(
-        rel.summed.score.test = rxx1,
-        rel.summed.score.item = rxx2
+        summed.score.scale = list(
+          test = rxx1,
+          item = rxx2),
+        theta.scale = rxx3
       )
     )
 }

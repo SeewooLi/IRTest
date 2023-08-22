@@ -1,7 +1,7 @@
 Package: IRTest
 Type: Package
 Title: Parameter Estimation of Item Response Theory with Estimation of Latent Distribution
-Version: 1.8.0
+Version: 1.8.1
 Authors@R: person("Seewoo", "Li", 
     email = "cu@yonsei.ac.kr",
     role = c("aut", "cre", "cph"))

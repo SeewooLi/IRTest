@@ -15,7 +15,7 @@
 inform_f_item<- function(x, item.matrix, item, type){
   param <- item.matrix[item,]
   if(type=="d"){
-    probs <- probs <- P(x, param[1], param[2], param[3])
+    probs <- P(x, param[1], param[2], param[3])
     probs_ <- first_deriv_dich(x, item.matrix, item)
     inform <- probs_^2/(probs*(1-probs))
   } else if(type=="p"){

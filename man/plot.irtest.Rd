@@ -7,7 +7,7 @@
 \method{plot}{irtest}(x, ...)
 }
 \arguments{
-\item{x}{An \code{class == "irtest"} object obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.}
+\item{x}{A \code{class == "irtest"} object obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.}
 
 \item{...}{Other argument(s) passed on to draw a plot of an estimated latent distribution.
 Arguments are passed on to \code{\link{stat_function}}, if the distribution estimation method is the one using two-component normal mixture distribution (i.e., \code{latent_dist == "Mixture"} or \code{"2NM"})

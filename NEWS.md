@@ -1,3 +1,7 @@
+# IRTest 1.8.1
+
+* Convergence of the estimation algorithm was enhanced for `"PCM"` by inserting latest item parameters instead of inserting starting values repeatedly.
+
 # IRTest 1.8.0
 
 * `inform_f_item` and `inform_f_test` are developed.

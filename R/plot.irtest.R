@@ -4,7 +4,7 @@
 #'
 #' @import ggplot2
 #'
-#' @param x An \code{class == "irtest"} object obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.
+#' @param x A \code{class == "irtest"} object obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.
 #' @param ... Other argument(s) passed on to draw a plot of an estimated latent distribution.
 #' Arguments are passed on to \code{\link{stat_function}}, if the distribution estimation method is the one using two-component normal mixture distribution (i.e., \code{latent_dist == "Mixture"} or \code{"2NM"})
 #' or the normal distribution (i.e., \code{latent_dist == "N"},  \code{"normal"}, or \code{"Normal"}).
@@ -51,7 +51,7 @@ plot.irtest <- function(x, ...){
         ...
         )
   }else if(x[["Options"]][["latent_dist"]]%in% c("Normal", "normal", "N")){
-    message('Latent distribution is always normal distribution if "latent_dist = "Normal""')
+    message('Latent distribution is always normal distribution if `latent_dist = "Normal"`')
     plt <- ggplot2::ggplot() +
       stat_function(
         fun = dnormal,
