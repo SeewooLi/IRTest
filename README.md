@@ -16,18 +16,18 @@ status](https://www.r-pkg.org/badges/version-last-release/IRTest)](https://CRAN.
 [![codecov](https://codecov.io/gh/SeewooLi/IRTest/branch/master/graph/badge.svg?token=N5RY2MYSM5)](https://app.codecov.io/gh/SeewooLi/IRTest)
 <!-- badges: end -->
 
-**IRTest** is a useful tool for (item response theory) parameter
-}imation, especially when the violation of normality assumption on
-latent distribution is suspected.  
-**IRTest** deals with uni-dimensional latent variable.  
-In **IRTest**, including the conventional usage of Gaussian
-distribution, several methods can be applied for estimation of latent
-distribution:  
-+ empirical histogram method,  
-+ two-component Gaussian mixture distribution,  
-+ Davidian curve,  
-+ kernel density estimation,  
-+ log-linear smoothing.
+#### **IRTest** is a useful tool for  (item response theory) parameter imation, especially when the violation of normality assumption on latent distribution is suspected.
+
+#### **IRTest** deals with uni-dimensional latent variable.
+
+- In **IRTest**, including the conventional usage of Gaussian
+  distribution, several methods are available for estimation of latent
+  distribution:
+  - empirical histogram method,
+  - two-component Gaussian mixture distribution,
+  - Davidian curve,
+  - kernel density estimation,  
+  - log-linear smoothing.
 
 ## Installation
 
