@@ -27,7 +27,7 @@ _Please feel free to_ [create an issue](https://github.com/SeewooLi/IRTest/issue
 [![codecov](https://codecov.io/gh/SeewooLi/IRTest/branch/master/graph/badge.svg?token=N5RY2MYSM5)](https://app.codecov.io/gh/SeewooLi/IRTest)
 <!-- badges: end -->
 
-**IRTest** is a useful tool for $\mathcal{\color{red}{IRT}}$ (item response theory) parameter $\mathcal{\color{red}{est}}\text{imation}$, especially when the violation of normality assumption on latent distribution is suspected. \
+**IRTest** is a useful tool for \textcolor{red}{IRT} (item response theory) parameter \textcolor{red}{est}}imation, especially when the violation of normality assumption on latent distribution is suspected. \
 **IRTest** deals with uni-dimensional latent variable. \
 In **IRTest**, including the conventional usage of Gaussian distribution, several methods can be applied for estimation of latent distribution: \
     + empirical histogram method, \
@@ -68,6 +68,8 @@ Followings are the functions of **IRTest**.
   + `plot_item` draws item response function(s) of an item.
   
   + `reliability` calculates marginal reliability coefficient of IRT.
+  
+  + `latent_distribution` returns evaluated PDF value(s) of an estimated latent distribution.
 
   + `DataGeneration` generates several objects that can be useful for computer simulation studies. Among these are simulated item parameters, ability parameters and the corresponding item-response data.
   
@@ -92,10 +94,10 @@ library(IRTest)
 An artificial data of 1000 examinees and 20 items.
 
 ```{r generation}
-Alldata <- DataGeneration(seed = 1234,
-                          model_D = rep(2,20),
+Alldata <- DataGeneration(seed = 123456789,
+                          model_D = rep(2,10),
                           N=1000,
-                          nitem_D = 20,
+                          nitem_D = 10,
                           latent_dist = "2NM",
                           m=0,
                           s=1,
@@ -110,13 +112,13 @@ theta <- Alldata$theta
 
 * Analysis 
 
-For an illustrative purpose, kernel density estimation (KDE) method is used for the estimation of latent distribution.
+For an illustrative purpose, the two-component Gaussian mixture distribution (2NM) method is used for the estimation of latent distribution.
 
 ```{r analysis, results='hide', message=FALSE}
 Mod1 <- 
   IRTest_Dich(
     data = data,
-    latent_dist = "KDE"
+    latent_dist = "2NM"
     )
 ```
 
@@ -173,7 +175,7 @@ plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
       colour="True"),
     linewidth = 1)+
   labs(
-    title="The estimated latent density using 'EHM'", colour= "Type"
+    title="The estimated latent density using '2NM'", colour= "Type"
     )+
   theme_bw()
 ```
@@ -204,7 +206,7 @@ ggplot(data=post_sample, mapping=aes(x=X))+
 
 * Item fit
 
-```{r}
+```{r, message=FALSE}
 item_fit(Mod1)
 ```
 
@@ -212,10 +214,10 @@ item_fit(Mod1)
 
 ```{r, fig.asp=0.7}
 # Item response function of Item 1
-p1 <- plot_item(Mod1,10)
-p2 <- plot_item(Mod1,11)
-p3 <- plot_item(Mod1,13)
-p4 <- plot_item(Mod1,16)
+p1 <- plot_item(Mod1,1)
+p2 <- plot_item(Mod1,4)
+p3 <- plot_item(Mod1,8)
+p4 <- plot_item(Mod1,10)
 grid.arrange(p1, p2, p3, p4, ncol=2, nrow=2)
 ```
 
@@ -232,6 +234,31 @@ ggplot()+
   stat_function(
     fun = inform_f_test,
     args = list(Mod1)
+  )+ 
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1$par_est, 1, "d"),
+    mapping = aes(color="Item 1")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1$par_est, 2, "d"),
+    mapping = aes(color="Item 2")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1$par_est, 3, "d"),
+    mapping = aes(color="Item 3")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1$par_est, 4, "d"),
+    mapping = aes(color="Item 4")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1$par_est, 5, "d"),
+    mapping = aes(color="Item 5")
   )+
   lims(x=c(-6,6))+
   labs(title="Test information function", x=expression(theta), y='information')+

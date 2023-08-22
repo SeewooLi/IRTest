@@ -59,7 +59,17 @@
 #'
 #' M1 <- IRTest_Dich(data)
 #'
-#' reliability(M1)
+#'
+#' # Reliability coefficients
+#' rel <- reliability(M1)
+#'
+#' ## On the summed-score scale
+#' rel$summed.score.scale$test
+#' rel$summed.score.scale$item
+#'
+#' ## On the summed-score scale
+#' rel$theta.scale
+#'
 #'}
 reliability <- function(x){
 

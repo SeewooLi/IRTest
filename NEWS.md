@@ -1,3 +1,8 @@
+# IRTest 1.9.0
+
+* `latent_distribution` has been developed. This function evaluates an estimated latent density function.
+* `reliability` calculates a coefficient on the $\theta$ scale.
+
 # IRTest 1.8.1
 
 * Convergence of the estimation algorithm was enhanced for `"PCM"` by inserting latest item parameters instead of inserting starting values repeatedly.

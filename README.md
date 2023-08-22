@@ -16,10 +16,9 @@ status](https://www.r-pkg.org/badges/version-last-release/IRTest)](https://CRAN.
 [![codecov](https://codecov.io/gh/SeewooLi/IRTest/branch/master/graph/badge.svg?token=N5RY2MYSM5)](https://app.codecov.io/gh/SeewooLi/IRTest)
 <!-- badges: end -->
 
-**IRTest** is a useful tool for $\mathcal{\color{red}{IRT}}$ (item
-response theory) parameter $\mathcal{\color{red}{est}}\text{imation}$,
-especially when the violation of normality assumption on latent
-distribution is suspected.  
+**IRTest** is a useful tool for (item response theory) parameter
+}imation, especially when the violation of normality assumption on
+latent distribution is suspected.  
 **IRTest** deals with uni-dimensional latent variable.  
 In **IRTest**, including the conventional usage of Gaussian
 distribution, several methods can be applied for estimation of latent
@@ -63,6 +62,9 @@ Followings are the functions of **IRTest**.
 
 - `reliability` calculates marginal reliability coefficient of IRT.
 
+- `latent_distribution` returns evaluated PDF value(s) of an estimated
+  latent distribution.
+
 - `DataGeneration` generates several objects that can be useful for
   computer simulation studies. Among these are simulated item
   parameters, ability parameters and the corresponding item-response
@@ -93,10 +95,10 @@ library(IRTest)
 An artificial data of 1000 examinees and 20 items.
 
 ``` r
-Alldata <- DataGeneration(seed = 1234,
-                          model_D = rep(2,20),
+Alldata <- DataGeneration(seed = 123456789,
+                          model_D = rep(2,10),
                           N=1000,
-                          nitem_D = 20,
+                          nitem_D = 10,
                           latent_dist = "2NM",
                           m=0,
                           s=1,
@@ -111,14 +113,15 @@ theta <- Alldata$theta
 
 - Analysis
 
-For an illustrative purpose, kernel density estimation (KDE) method is
-used for the estimation of latent distribution.
+For an illustrative purpose, the two-component Gaussian mixture
+distribution (2NM) method is used for the estimation of latent
+distribution.
 
 ``` r
 Mod1 <- 
   IRTest_Dich(
     data = data,
-    latent_dist = "KDE"
+    latent_dist = "2NM"
     )
 ```
 
@@ -127,35 +130,35 @@ Mod1 <-
 ``` r
 summary(Mod1)
 #> Convergence:  
-#> Successfully converged below the threshold of 1e-04 on 23rd iterations. 
+#> Successfully converged below the threshold of 1e-04 on 52nd iterations. 
 #> 
 #> Model Fit:  
-#>    deviance   18383.84 
-#>         AIC   18465.84 
-#>         BIC   18667.05 
+#>    deviance   9573.469 
+#>         AIC   9619.469 
+#>         BIC   9732.347 
 #> 
 #> The Number of Parameters:  
-#>        item   40 
-#>        dist   1 
-#>       total   41 
+#>        item   20 
+#>        dist   3 
+#>       total   23 
 #> 
 #> The Number of Items:  
-#> dichotomous   20 
+#> dichotomous   10 
 #> polyotomous   0 
 #> 
 #> The Estimated Latent Distribution:  
-#> method - KDE 
+#> method - 2NM 
 #> ----------------------------------------
 #>                                           
 #>                                           
 #>                                           
-#>                       @ @ @               
-#>                   . @ @ @ @ @             
-#>         . @ @ @ @ @ @ @ @ @ @ @           
-#>       . @ @ @ @ @ @ @ @ @ @ @ @ @         
-#>     . @ @ @ @ @ @ @ @ @ @ @ @ @ @ .       
-#>   . @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ .     
-#> . @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ . 
+#>                       . @ @ .             
+#>           .         . @ @ @ @ .           
+#>         @ @ @ . . . @ @ @ @ @ @           
+#>       @ @ @ @ @ @ @ @ @ @ @ @ @ @         
+#>     . @ @ @ @ @ @ @ @ @ @ @ @ @ @ @       
+#>     @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ .     
+#>   @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @   
 #> +---------+---------+---------+---------+
 #> -2        -1        0         1         2
 ```
@@ -185,26 +188,16 @@ knitr::kables(
 
 |    a |     b |   c |
 |-----:|------:|----:|
-| 1.62 | -0.30 |   0 |
-| 1.22 | -1.00 |   0 |
-| 1.73 | -0.90 |   0 |
-| 1.36 | -0.68 |   0 |
-| 2.19 | -0.14 |   0 |
-| 1.17 | -1.03 |   0 |
-| 1.80 | -0.52 |   0 |
-| 1.90 |  1.25 |   0 |
-| 1.06 |  1.71 |   0 |
-| 0.90 |  1.81 |   0 |
-| 2.12 | -1.39 |   0 |
-| 2.23 | -0.02 |   0 |
-| 0.87 |  0.62 |   0 |
-| 2.35 | -0.06 |   0 |
-| 1.50 | -1.08 |   0 |
-| 2.39 |  1.88 |   0 |
-| 2.25 | -0.64 |   0 |
-| 2.25 |  1.78 |   0 |
-| 1.10 |  1.03 |   0 |
-| 1.65 | -0.70 |   0 |
+| 2.25 |  0.09 |   0 |
+| 1.42 |  0.16 |   0 |
+| 2.11 | -1.57 |   0 |
+| 1.94 | -1.15 |   0 |
+| 1.41 | -1.89 |   0 |
+| 2.43 |  0.42 |   0 |
+| 2.41 | -1.57 |   0 |
+| 2.08 | -0.47 |   0 |
+| 1.32 | -0.50 |   0 |
+| 1.17 |  0.33 |   0 |
 
 True item parameters
 
@@ -213,26 +206,16 @@ True item parameters
 
 |    a |     b |   c |
 |-----:|------:|----:|
-| 1.47 | -0.28 |   0 |
-| 1.22 | -0.97 |   0 |
-| 1.77 | -0.84 |   0 |
-| 1.41 | -0.58 |   0 |
-| 1.81 | -0.15 |   0 |
-| 1.19 | -0.99 |   0 |
-| 1.98 | -0.48 |   0 |
-| 1.88 |  1.41 |   0 |
-| 1.14 |  1.51 |   0 |
-| 1.05 |  1.68 |   0 |
-| 1.84 | -1.46 |   0 |
-| 2.20 | -0.05 |   0 |
-| 0.75 |  0.73 |   0 |
-| 2.19 | -0.01 |   0 |
-| 1.54 | -1.10 |   0 |
-| 2.29 |  1.98 |   0 |
-| 2.16 | -0.68 |   0 |
-| 2.44 |  1.76 |   0 |
-| 1.18 |  0.94 |   0 |
-| 1.90 | -0.71 |   0 |
+| 2.15 |  0.12 |   0 |
+| 1.43 |  0.06 |   0 |
+| 2.05 | -1.45 |   0 |
+| 2.07 | -1.03 |   0 |
+| 1.26 | -1.97 |   0 |
+| 2.24 |  0.38 |   0 |
+| 2.21 | -1.68 |   0 |
+| 2.08 | -0.45 |   0 |
+| 1.31 | -0.49 |   0 |
+| 1.06 |  0.41 |   0 |
 
 Estimated item parameters
 
@@ -275,7 +258,7 @@ plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
       colour="True"),
     linewidth = 1)+
   labs(
-    title="The estimated latent density using 'EHM'", colour= "Type"
+    title="The estimated latent density using '2NM'", colour= "Type"
     )+
   theme_bw()
 ```
@@ -313,37 +296,27 @@ ggplot(data=post_sample, mapping=aes(x=X))+
 
 ``` r
 item_fit(Mod1)
-#>         stat df p.value
-#> 1  13.047984  7  0.0709
-#> 2   8.733441  7  0.2724
-#> 3  19.383423  7  0.0071
-#> 4   6.878263  7  0.4417
-#> 5  11.073217  7  0.1355
-#> 6  13.956565  7  0.0520
-#> 7   4.423842  7  0.7299
-#> 8  14.847199  7  0.0380
-#> 9   9.801792  7  0.2001
-#> 10 18.212654  7  0.0110
-#> 11  6.074096  7  0.5311
-#> 12  9.842054  7  0.1977
-#> 13  7.715410  7  0.3584
-#> 14 26.761115  7  0.0004
-#> 15 18.045903  7  0.0118
-#> 16 17.342742  7  0.0153
-#> 17  9.696964  7  0.2064
-#> 18 41.352840  7  0.0000
-#> 19 19.068656  7  0.0080
-#> 20 11.382014  7  0.1228
+#>        stat df p.value
+#> 1  21.05639  5  0.0008
+#> 2  39.02560  5  0.0000
+#> 3  18.38326  5  0.0025
+#> 4  26.05405  5  0.0001
+#> 5  14.32893  5  0.0136
+#> 6  38.58140  5  0.0000
+#> 7  25.55899  5  0.0001
+#> 8  14.43694  5  0.0131
+#> 9  18.29131  5  0.0026
+#> 10 65.25700  5  0.0000
 ```
 
 - Item response function
 
 ``` r
 # Item response function of Item 1
-p1 <- plot_item(Mod1,10)
-p2 <- plot_item(Mod1,11)
-p3 <- plot_item(Mod1,13)
-p4 <- plot_item(Mod1,16)
+p1 <- plot_item(Mod1,1)
+p2 <- plot_item(Mod1,4)
+p3 <- plot_item(Mod1,8)
+p4 <- plot_item(Mod1,10)
 grid.arrange(p1, p2, p3, p4, ncol=2, nrow=2)
 ```
 
@@ -353,17 +326,19 @@ grid.arrange(p1, p2, p3, p4, ncol=2, nrow=2)
 
 ``` r
 reliability(Mod1)
-#> $rel.summed.score.test
+#> $summed.score.scale
+#> $summed.score.scale$test
 #> test reliability 
-#>        0.8798594 
+#>        0.8133725 
 #> 
-#> $rel.summed.score.item
-#>         1         2         3         4         5         6         7         8 
-#> 0.3059621 0.2192103 0.3503349 0.2841813 0.3877848 0.2114709 0.4183149 0.2753318 
-#>         9        10        11        12        13        14        15        16 
-#> 0.1577073 0.1344473 0.2829392 0.4631938 0.1094399 0.4606663 0.2779550 0.2363950 
-#>        17        18        19        20 
-#> 0.4400902 0.2898488 0.1994503 0.3873396
+#> $summed.score.scale$item
+#>  [1] 0.4586843 0.3014154 0.3020563 0.3805659 0.1425990 0.4534580 0.2688948
+#>  [8] 0.4475414 0.2661783 0.1963062
+#> 
+#> 
+#> $theta.scale
+#> test reliability 
+#>        0.7457047
 ```
 
 - Test information function
@@ -373,6 +348,31 @@ ggplot()+
   stat_function(
     fun = inform_f_test,
     args = list(Mod1)
+  )+ 
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1$par_est, 1, "d"),
+    mapping = aes(color="Item 1")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1$par_est, 2, "d"),
+    mapping = aes(color="Item 2")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1$par_est, 3, "d"),
+    mapping = aes(color="Item 3")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1$par_est, 4, "d"),
+    mapping = aes(color="Item 4")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1$par_est, 5, "d"),
+    mapping = aes(color="Item 5")
   )+
   lims(x=c(-6,6))+
   labs(title="Test information function", x=expression(theta), y='information')+
