@@ -1,7 +1,7 @@
 Package: IRTest
 Type: Package
 Title: Parameter Estimation of Item Response Theory with Estimation of Latent Distribution
-Version: 1.9.0
+Version: 1.9.1
 Authors@R: person("Seewoo", "Li", 
     email = "cu@yonsei.ac.kr",
     role = c("aut", "cre", "cph"))
@@ -20,7 +20,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    V8
+    V8,
+    gridExtra
 VignetteBuilder: knitr
 Imports:
     betafunctions,

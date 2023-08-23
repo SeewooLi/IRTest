@@ -1,3 +1,9 @@
+# IRTest 1.9.1
+
+* Minor errors have been corrected such as the calculation of $\rho_{\theta\theta^{'}}$ with discrete latent distribution and the calculation of $sd$ in the Davidian-cure method.
+* Vignette file has been updated.
+* Outputs reflect item names in an input file.
+
 # IRTest 1.9.0
 
 * `latent_distribution` has been developed. This function evaluates an estimated latent density function.

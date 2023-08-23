@@ -133,6 +133,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # A preparation of dichotomous item response data
 #'
 #' data <- DataGeneration(seed = 1,
@@ -149,7 +150,7 @@
 #' # Analysis
 #'
 #' M1 <- IRTest_Dich(data)
-#'
+#'}
 IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal", max_iter=200,
                         threshold=0.0001, bandwidth="SJ-ste", h=NULL){
