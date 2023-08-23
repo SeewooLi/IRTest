@@ -21,7 +21,7 @@ inform_f_item<- function(x, item.matrix, item, type){
   } else if(type=="p"){
     probs <- P_P(x, param[1], param[-1])
     probs_ <- first_deriv_gpcm(x, item.matrix, item)
-    inform <- rowSums(probs_^2/probs)
+    inform <- rowSums((probs_^2)/probs)
   }
   return(inform)
 }
@@ -58,8 +58,8 @@ first_deriv_gpcm <- function(x, item.matrix, item){
   param <- item.matrix[item,]
   cats <- ((1:sum(!is.na(param)))-1)
   probs <- P_P(x, param[1], param[-1])
-  ws <- probs%*%cats
-  probs_ <- matrix(rep(x = cats, each=length(x)),nrow = length(x))-as.vector(ws)
+  ws <- as.vector(probs%*%cats)
+  probs_ <- matrix(rep(x = cats, each=length(x)),nrow = length(x))-ws
   probs_ <- probs_*probs*param[1]
   return(probs_)
 }

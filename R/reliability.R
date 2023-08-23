@@ -134,14 +134,19 @@ reliability <- function(x){
     mu_T <- Ak%*%true_score_matrix
     sigma2_T <- Ak%*%true_score_matrix^2-mu_T^2
     rxx2 <- as.vector(sigma2_T/(sigma2_T+sigma2_e))
-    names(rxx2) <- row.names(param)
+    if(any(class(x)=="mix")){
+      names(rxx2) <- c(paste(row.names(param$Dichotomous),"D", sep = "_"),
+                       paste(row.names(param$Polytomous),"D", sep = "_"))
+    } else {
+      names(rxx2) <- row.names(param)
+    }
 
   # theta scale
     if(x$Options$latent_dist %in% c("EHM", "LLS")){
-      inform <- inform_f_test(x$quad, x)%*%x$Ak
+      inform <- as.vector((1/inform_f_test(x$quad, x))%*%x$Ak)
     } else {
       inform <- integrate(f=function(theta)1/inform_f_test(theta, x)*latent_distribution(theta, x),
-                          lower = -10, upper = 10)$value
+                          lower = -6, upper = 6)$value
     }
     rxx3 <- 1/(inform+1)
     names(rxx3) <- "test reliability"

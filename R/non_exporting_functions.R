@@ -672,7 +672,7 @@ latent_dist_est <- function(method, Xk, posterior, range,
     post_den2 <- dcurver::ddc(x = Xk, phi = par)
     post_den2 <- post_den2/sum(post_den2)
     lin <- lin_inex(Xk, post_den2, range = range, rule = 2)
-    # lin$s <- post_den$s
+    lin$s <- post_den$s
   }
   if(method=='LLS'){
     post_den <- posterior/sum(posterior)

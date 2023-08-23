@@ -89,8 +89,8 @@ item_fit.dich <- function(x,bins=10, bin.center='mean'){
       digits = 4
     )
   }
+  dimnames(result) <- list(item=row.names(x$par_est), c("stat", "df", "p.value"))
   result <- data.frame(result)
-  dimnames(result) <- list(item=1:nrow(result), c("stat", "df", "p.value"))
   return(result)
 }
 
@@ -148,8 +148,8 @@ item_fit.poly <- function(x,bins=10, bin.center='mean'){
       digits = 4
       )
   }
+  dimnames(result) <- list(item=row.names(x$par_est), c("stat", "df", "p.value"))
   result <- data.frame(result)
-  dimnames(result) <- list(item=1:nrow(result), c("stat", "df", "p.value"))
   return(result)
 }
 
@@ -212,8 +212,8 @@ item_fit.mix <- function(x,bins=10, bin.center='mean'){
       digits = 4
     )
   }
+  dimnames(result1) <- list(item=row.names(x$par_est[[1]]), c("stat", "df", "p.value"))
   result1 <- data.frame(result1)
-  dimnames(result1) <- list(item=1:nrow(result1), c("stat", "df", "p.value"))
 
   # polytomous
   result2 <- matrix(nrow = nrow(x$par_est[[2]]), ncol = 3)
@@ -263,8 +263,8 @@ item_fit.mix <- function(x,bins=10, bin.center='mean'){
       digits = 4
     )
   }
+  dimnames(result2) <- list(item=row.names(x$par_est[[2]]), c("stat", "df", "p.value"))
   result2 <- data.frame(result2)
-  dimnames(result2) <- list(item=1:nrow(result2), c("stat", "df", "p.value"))
   return(list(
     Dichotomous = result1,
     Polytomous = result2

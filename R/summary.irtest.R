@@ -75,12 +75,12 @@ summary.irtest <- function(object, ...){
       sum(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH")) +
       2*sum(object$Options$model %in% c(2, "2PL")) +
       3*sum(object$Options$model %in% c(3, "3PL"))
-    if(all(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH"))){
-      n_par$item <- n_par$item-1
-    }
+    # if(all(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH"))){
+    #   n_par$item <- n_par$item-1
+    # }
   } else if(any(class(object) == "poly")){
     if(object$Options$model == "PCM"){
-      n_par$item <- sum(!is.na(object$par_est[,-1]))-1
+      n_par$item <- sum(!is.na(object$par_est[,-1]))
     } else if(object$Options$model == "GPCM"){
       n_par$item <- sum(!is.na(object$par_est))
     }
@@ -122,6 +122,13 @@ summary.irtest <- function(object, ...){
   # Log-linear smoothing
   else if(object$Options$latent_dist%in% c("LLS")){
     n_par$dist <- object$Options$h
+  }
+
+  if(any(class(object) %in% c("dich", "poly"))&all(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH","PCM"))){
+    n_par$dist <- n_par$dist+1
+  }
+  if(any(class(object) == "mix")&all(c(object$Options$model_D,object$Options$model_P) %in% c(1, "1PL", "Rasch", "RASCH","PCM"))){
+    n_par$dist <- n_par$dist+1
   }
 
   # the total number of parameters

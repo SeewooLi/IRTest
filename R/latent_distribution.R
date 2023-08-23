@@ -52,7 +52,6 @@ latent_distribution <- function(x, model.fit){
                      sd_ratio = model.fit$density_par$sd_ratio)
   } else if(model.fit$Options$latent_dist %in% c("Normal", "normal", "N")){
     dlatent <- dnorm(x)
-    message('Latent distribution is always normal distribution if `latent_dist = "Normal"`')
   } else{
     message('For `latent_dist = "EHM"` and `latent_dist = "LLS"`, a PMF is estimated instead of PDF. Approach the estimated PMF from the `model.fit$Ak`.')
   }

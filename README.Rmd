@@ -27,9 +27,11 @@ _Please feel free to_ [create an issue](https://github.com/SeewooLi/IRTest/issue
 [![codecov](https://codecov.io/gh/SeewooLi/IRTest/branch/master/graph/badge.svg?token=N5RY2MYSM5)](https://app.codecov.io/gh/SeewooLi/IRTest)
 <!-- badges: end -->
 
-#### **IRTest** is a useful tool for \textcolor{red}{IRT} (item response theory) parameter \textcolor{red}{est}imation, especially when the violation of normality assumption on latent distribution is suspected.
++ **IRTest** is a useful tool for $\mathcal{\color{red}{IRT}}$ (item response theory) parameter $\mathcal{\color{red}{est}}$imation, especially when the violation of normality assumption on latent distribution is suspected.
 
-#### **IRTest** deals with uni-dimensional latent variable.
++ **IRTest** deals with uni-dimensional latent variable.
+
++ For missing values, **IRTest** adopts full information maximum likelihood (FIML) approach.
 
 + In **IRTest**, including the conventional usage of Gaussian distribution, several methods are available for estimation of latent distribution:
     + empirical histogram method,
@@ -110,6 +112,7 @@ Alldata <- DataGeneration(seed = 123456789,
 data <- Alldata$data_D
 item <- Alldata$item_D
 theta <- Alldata$theta
+colnames(data) <- paste0("item",1:10)
 ```
 
 * Analysis 
@@ -215,7 +218,6 @@ item_fit(Mod1)
 * Item response function
 
 ```{r, fig.asp=0.7}
-# Item response function of Item 1
 p1 <- plot_item(Mod1,1)
 p2 <- plot_item(Mod1,4)
 p3 <- plot_item(Mod1,8)

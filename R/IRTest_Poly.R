@@ -248,7 +248,6 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       initialitem <- M1[[1]]
       M2 <- M2step(E)
       prob = M2$prob; d = M2$d; sd_ratio = M2$sd_ratio
-      diff <- max(abs(I-initialitem), na.rm = TRUE)
 
       if(model == "PCM"){
         initialitem[,1] <- initialitem[,1]*M2$s
@@ -256,6 +255,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
         M1[[2]][,-1] <- M1[[2]][,-1]/M2$s
       }
 
+      diff <- max(abs(I-initialitem), na.rm = TRUE)
+      I <- initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
     }
@@ -368,9 +369,9 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     theta <- mle_result[[1]]
     theta_se <- mle_result[[2]]
   }
-
-  colnames(initialitem) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6")
-  colnames(M1[[2]]) <- c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6")
+  dn <- list(colnames(data),c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6"))
+  dimnames(initialitem) <- dn
+  dimnames(M1[[2]]) <- dn
 
   # preparation for outputs
   logL <- 0

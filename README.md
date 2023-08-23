@@ -16,13 +16,20 @@ status](https://www.r-pkg.org/badges/version-last-release/IRTest)](https://CRAN.
 [![codecov](https://codecov.io/gh/SeewooLi/IRTest/branch/master/graph/badge.svg?token=N5RY2MYSM5)](https://app.codecov.io/gh/SeewooLi/IRTest)
 <!-- badges: end -->
 
-#### **IRTest** is a useful tool for  (item response theory) parameter imation, especially when the violation of normality assumption on latent distribution is suspected.
+- **IRTest** is a useful tool for $\mathcal{\color{red}{IRT}}$ (item
+  response theory) parameter $\mathcal{\color{red}{est}}$imation,
+  especially when the violation of normality assumption on latent
+  distribution is suspected.
 
-#### **IRTest** deals with uni-dimensional latent variable.
+- **IRTest** deals with uni-dimensional latent variable.
+
+- For missing values, **IRTest** adopts full information maximum
+  likelihood (FIML) approach.
 
 - In **IRTest**, including the conventional usage of Gaussian
   distribution, several methods are available for estimation of latent
   distribution:
+
   - empirical histogram method,
   - two-component Gaussian mixture distribution,
   - Davidian curve,
@@ -109,6 +116,7 @@ Alldata <- DataGeneration(seed = 123456789,
 data <- Alldata$data_D
 item <- Alldata$item_D
 theta <- Alldata$theta
+colnames(data) <- paste0("item",1:10)
 ```
 
 - Analysis
@@ -204,18 +212,18 @@ True item parameters
 </td>
 <td>
 
-|    a |     b |   c |
-|-----:|------:|----:|
-| 2.15 |  0.12 |   0 |
-| 1.43 |  0.06 |   0 |
-| 2.05 | -1.45 |   0 |
-| 2.07 | -1.03 |   0 |
-| 1.26 | -1.97 |   0 |
-| 2.24 |  0.38 |   0 |
-| 2.21 | -1.68 |   0 |
-| 2.08 | -0.45 |   0 |
-| 1.31 | -0.49 |   0 |
-| 1.06 |  0.41 |   0 |
+|        |    a |     b |   c |
+|--------|-----:|------:|----:|
+| item1  | 2.15 |  0.12 |   0 |
+| item2  | 1.43 |  0.06 |   0 |
+| item3  | 2.05 | -1.45 |   0 |
+| item4  | 2.07 | -1.03 |   0 |
+| item5  | 1.26 | -1.97 |   0 |
+| item6  | 2.24 |  0.38 |   0 |
+| item7  | 2.21 | -1.68 |   0 |
+| item8  | 2.08 | -0.45 |   0 |
+| item9  | 1.31 | -0.49 |   0 |
+| item10 | 1.06 |  0.41 |   0 |
 
 Estimated item parameters
 
@@ -296,23 +304,22 @@ ggplot(data=post_sample, mapping=aes(x=X))+
 
 ``` r
 item_fit(Mod1)
-#>        stat df p.value
-#> 1  21.05639  5  0.0008
-#> 2  39.02560  5  0.0000
-#> 3  18.38326  5  0.0025
-#> 4  26.05405  5  0.0001
-#> 5  14.32893  5  0.0136
-#> 6  38.58140  5  0.0000
-#> 7  25.55899  5  0.0001
-#> 8  14.43694  5  0.0131
-#> 9  18.29131  5  0.0026
-#> 10 65.25700  5  0.0000
+#>            stat df p.value
+#> item1  21.05639  5  0.0008
+#> item2  39.02560  5  0.0000
+#> item3  18.38326  5  0.0025
+#> item4  26.05405  5  0.0001
+#> item5  14.32893  5  0.0136
+#> item6  38.58140  5  0.0000
+#> item7  25.55899  5  0.0001
+#> item8  14.43694  5  0.0131
+#> item9  18.29131  5  0.0026
+#> item10 65.25700  5  0.0000
 ```
 
 - Item response function
 
 ``` r
-# Item response function of Item 1
 p1 <- plot_item(Mod1,1)
 p2 <- plot_item(Mod1,4)
 p3 <- plot_item(Mod1,8)
@@ -332,8 +339,10 @@ reliability(Mod1)
 #>        0.8133725 
 #> 
 #> $summed.score.scale$item
-#>  [1] 0.4586843 0.3014154 0.3020563 0.3805659 0.1425990 0.4534580 0.2688948
-#>  [8] 0.4475414 0.2661783 0.1963062
+#>     item1     item2     item3     item4     item5     item6     item7     item8 
+#> 0.4586843 0.3014154 0.3020563 0.3805659 0.1425990 0.4534580 0.2688948 0.4475414 
+#>     item9    item10 
+#> 0.2661783 0.1963062 
 #> 
 #> 
 #> $theta.scale

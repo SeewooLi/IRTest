@@ -367,9 +367,9 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
     theta <- mle_result[[1]]
     theta_se <- mle_result[[2]]
   }
-
-  colnames(initialitem) <- c("a", "b", "c")
-  colnames(M1[[2]]) <- c("a", "b", "c")
+  dn <- list(colnames(data),c("a", "b", "c"))
+  dimnames(initialitem) <- dn
+  dimnames(M1[[2]]) <- dn
 
   # preparation for outputs
 
