@@ -17,9 +17,9 @@ status](https://www.r-pkg.org/badges/version-last-release/IRTest)](https://CRAN.
 <!-- badges: end -->
 
 - **IRTest** is a useful tool for $\mathcal{\color{red}{IRT}}$ (item
-  response theory) parameter $\mathcal{\color{red}{est}}$imation,
-  especially when the violation of normality assumption on latent
-  distribution is suspected.
+  response theory) parameter
+  $\mathcal{\color{red}{est}}\textrm{imation}$, especially when the
+  violation of normality assumption on latent distribution is suspected.
 
 - **IRTest** deals with uni-dimensional latent variable.
 

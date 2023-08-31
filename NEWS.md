@@ -3,6 +3,7 @@
 * Minor errors have been corrected such as the calculation of $\rho_{\theta\theta^{'}}$ with discrete latent distribution and the calculation of $sd$ in the Davidian-cure method.
 * Vignette file has been updated.
 * Outputs reflect item names in an input file.
+* Enhanced algorithm convergence for `IRTest_Dich` when there exist one or more negative slope parameters.
 
 # IRTest 1.9.0
 
