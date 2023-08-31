@@ -274,7 +274,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
             warning("Infinite or `NA` estimates produced.")
           } else{
             if( sum(abs(diff)) > div){
-              if(max(abs(diff[-1]))/abs(diff[1])>100){
+              if(max(abs(diff[-1]))/abs(diff[1])>1000){
                 par <- -par
               } else{
                 par <- par-div/sum(abs(diff))*diff/2
@@ -323,7 +323,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
             warning("Infinite or `NA` estimates produced.")
           } else{
             if( sum(abs(diff)) > div){
-              if(max(abs(diff[-1]))/abs(diff[1])>100){
+              if(max(abs(diff[-1]))/abs(diff[1])>1000){
                 par <- -par
               } else{
                 par <- par-div/sum(abs(diff))*diff/2
@@ -476,7 +476,7 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter
             par <- par
           } else{
             if( sum(abs(diff)) > div){
-              if(max(abs(diff[-1]))/abs(diff[1])>100){
+              if(max(abs(diff[-1]))/abs(diff[1])>1000){
                 par <- -par
               } else{
                 par <- par-div/sum(abs(diff))*diff/2
