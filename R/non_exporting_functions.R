@@ -237,6 +237,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
 
           if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
             par <- par
+            warning("Infinite or `NA` estimates produced.")
           } else{
             if( sum(abs(diff)) > div){
               par <- par-div/sum(abs(diff))*diff/2
@@ -270,6 +271,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
           diff <- inv_L2%*%L1
           if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
             par <- par
+            warning("Infinite or `NA` estimates produced.")
           } else{
             if( sum(abs(diff)) > div){
               if(max(abs(diff[-1]))/abs(diff[1])>100){
@@ -318,6 +320,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
           diff <- inv_L2%*%L1
           if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
             par <- par
+            warning("Infinite or `NA` estimates produced.")
           } else{
             if( sum(abs(diff)) > div){
               if(max(abs(diff[-1]))/abs(diff[1])>100){
