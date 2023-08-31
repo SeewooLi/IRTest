@@ -164,10 +164,9 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
   data <- reorder_mat(as.matrix(data))
   if(is.null(initialitem)){
     category <- apply(data, 2, max, na.rm = TRUE)
-    initialitem <- matrix(nrow = ncol(data), ncol = 7)
+    initialitem <- matrix(nrow = ncol(data), ncol = max(category)+1)
     initialitem[,1] <- 1
-    initialitem[,2] <- 0
-    for(i in 3:7){
+    for(i in 2:ncol(initialitem)){
       initialitem[category>(i-2),i] <- 0
     }
   }
@@ -370,7 +369,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     theta <- mle_result[[1]]
     theta_se <- mle_result[[2]]
   }
-  dn <- list(colnames(data),c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6"))
+  dn <- list(colnames(data),c("a", paste("b", 1:(ncol(initialitem)-1), sep="_")))
   dimnames(initialitem) <- dn
   dimnames(M1[[2]]) <- dn
 

@@ -9,7 +9,7 @@ DataGeneration(
   N = 2000,
   nitem_D = 0,
   nitem_P = 0,
-  model_D,
+  model_D = "2PL",
   model_P = "GPCM",
   latent_dist = NULL,
   item_D = NULL,
@@ -26,7 +26,7 @@ DataGeneration(
   b_sd = NULL,
   c_l = 0,
   c_u = 0.2,
-  categ
+  categ = NULL
 )
 }
 \arguments{

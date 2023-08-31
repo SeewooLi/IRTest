@@ -20,8 +20,13 @@ P <- function(theta,a=1,b,c=0){
 
 P_P <- function(theta, a, b){
   if(length(theta)==1 & is.vector(b)){
-    ps <- c(1,exp(a*cumsum(theta-b)))
-    ps <- ps/sum(ps, na.rm = T)
+    if(length(a)==1){
+      ps <- c(1,exp(a*cumsum(theta-b)))
+      ps <- ps/sum(ps, na.rm = T)
+    } else {
+      ps <- cbind(1,exp(a*(theta-matrix(b))))
+      ps <- ps/rowSums(ps, na.rm = T)
+    }
   }else if(length(theta)==1 & is.matrix(b)){
     ps <- cbind(1,exp(t(apply(a*(theta-b),1,cumsum))))
     ps <- ps/rowSums(ps, na.rm = T)
@@ -348,7 +353,7 @@ M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
 Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter){
   nitem <- nrow(item)
   item_estimated <- item
-  se <- matrix(nrow = nrow(item), ncol = 7)
+  se <- matrix(nrow = nrow(item), ncol = ncol(item))
   X <- E$Xk
   Pk <- E$Pk
   rik <- E$rik_P
@@ -606,13 +611,13 @@ MLE_theta <- function(item, data, type){
         while(thres > 0.0001){
           p <- P_P(theta = th, a = item[,1], b = item[,-1])
           p[is.na(p)] <- 0
-          S <- p[,-1]%*%1:6
+          S <- p[,-1]%*%1:max(ncat)
           L1 <- sum(
             item[,1]*(data[i,]-S),
             na.rm = TRUE
           )
           L2 <- -sum(
-            item[,1]^2*(p[,-1]%*%(1:6)^2 - S^2)
+            item[,1]^2*(p[,-1]%*%(1:max(ncat))^2 - S^2)
           )
           diff <- L1/L2
           th <- th - diff

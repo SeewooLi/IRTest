@@ -129,7 +129,7 @@
 #'
 DataGeneration <- function(seed=1, N=2000,
                            nitem_D=0, nitem_P=0,
-                           model_D, model_P="GPCM",
+                           model_D="2PL", model_P="GPCM",
                            latent_dist=NULL,
                            item_D=NULL, item_P=NULL,
                            theta = NULL,
@@ -137,10 +137,16 @@ DataGeneration <- function(seed=1, N=2000,
                            m = 0, s = 1,
                            a_l=0.8, a_u=2.5,
                            b_m=NULL, b_sd=NULL,
-                           c_l=0, c_u=0.2, categ){
+                           c_l=0, c_u=0.2, categ=NULL){
   initialitem_D=NULL; data_D=NULL
   initialitem_P=NULL; data_P=NULL
 
+  if(!is.null(categ)&length(categ)==1){
+    categ <- rep(categ, nitem_P)
+  }
+  if(length(model_D)==1){
+    model_D <- rep(model_D, nitem_D)
+  }
   if(is.null(b_m)){
     b_m <- m
   }
@@ -241,11 +247,11 @@ DataGeneration <- function(seed=1, N=2000,
 
 
   # item parameters for polytomous items
-  if(is.null(item_P)){
+  if(is.null(item_P) & !is.null(categ)){
     if((nitem_P!=0)&(!is.null(nitem_P))){
       data_P <- matrix(nrow = N, ncol = nitem_P)
-      item_P <- matrix(nrow = nitem_P, ncol = 7)
-      initialitem_P <- matrix(nrow = nitem_P, ncol = 7)
+      item_P <- matrix(nrow = nitem_P, ncol = max(categ))
+      initialitem_P <- matrix(nrow = nitem_P, ncol = max(categ))
       set.seed(seed)
       for(i in 1:nitem_P){
         center <- rnorm(1,b_m,b_sd*.5)

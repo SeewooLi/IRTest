@@ -206,10 +206,9 @@ IRTest_Mix <- function(data_D, data_P, model_D="2PL",
   data_P <- reorder_mat(as.matrix(data_P))
   if(is.null(initialitem_P)){
     category <- apply(data_P, 2, max, na.rm = TRUE)
-    initialitem_P <- matrix(nrow = ncol(data_P), ncol = 7)
+    initialitem_P <- matrix(nrow = ncol(data_P), ncol = max(category)+1)
     initialitem_P[,1] <- 1
-    initialitem_P[,2] <- 0
-    for(i in 3:7){
+    for(i in 2:ncol(initialitem_P)){
       initialitem_P[category>(i-2),i] <- 0
     }
   }
@@ -463,7 +462,7 @@ if(nrow(data_D)!=nrow(data_P)){
 }
 
   dn_D <- list(colnames(data_D),c("a", "b", "c"))
-  dn_P <- list(colnames(data_P),c("a", "b_1", "b_2", "b_3", "b_4", "b_5", "b_6"))
+  dn_P <- list(colnames(data_P),c("a", paste("b", 1:(ncol(initialitem_P)-1), sep="_")))
   dimnames(initialitem_D) <- dn_D
   dimnames(initialitem_P) <- dn_P
   dimnames(M1_D[[2]]) <- dn_D
