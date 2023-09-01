@@ -4,6 +4,7 @@
 * Vignette file has been updated.
 * Outputs reflect item names in an input file.
 * Enhanced algorithm convergence for `IRTest_Dich` when there exist one or more negative slope parameters.
+* Error in calculating MLE in the presence of missing data is resolved.
 
 # IRTest 1.9.0
 
