@@ -564,12 +564,14 @@ M2step <- function(E, max_iter=200){
 # Ability parameter MLE
 #################################################################################################################
 MLE_theta <- function(item, data, type){
+  message("\n",appendLF=FALSE)
   mle <- NULL
   se <- NULL
   nitem <- nrow(item)
   if(type=="dich"){
     for(i in 1:nrow(data)){
-      if(sum(data[i,],na.rm = TRUE)==nitem){
+      message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
+      if(sum(data[i,],na.rm = TRUE)==sum(!is.na(data[i,]))){
         mle <- append(mle, Inf)
         se <- append(se, NA)
       } else if(sum(data[i,],na.rm = TRUE)==0){
@@ -598,8 +600,9 @@ MLE_theta <- function(item, data, type){
     }
   } else if(type=='poly'){
     for(i in 1:nrow(data)){
+      message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
       ncat <- rowSums(!is.na(item))-1
-      if(sum(data[i,],na.rm = TRUE)==sum(ncat)){
+      if(sum(data[i,],na.rm = TRUE)==sum(ncat[!is.na(data[i,])])){
         mle <- append(mle, Inf)
         se <- append(se, NA)
       } else if(sum(data[i,],na.rm = TRUE)==0){
