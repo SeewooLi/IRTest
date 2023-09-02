@@ -39,40 +39,21 @@
 #'   ggplot2::lims(x = c(-6, 6), y = c(0, .5))
 #'}
 plot.irtest <- function(x, ...){
-  if(x[["Options"]][["latent_dist"]] %in% c("Mixture", "2NM")){
-    plt <- ggplot2::ggplot() +
-      stat_function(
-        fun = dist2,
-        args = list(
-          prob = x$density_par$prob,
-          d=x$density_par$d,
-          sd_ratio = x$density_par$sd_ratio
-          ),
-        ...
-        )
-  }else if(x[["Options"]][["latent_dist"]]%in% c("Normal", "normal", "N")){
-    message('Latent distribution is always normal distribution if `latent_dist = "Normal"`')
-    plt <- ggplot2::ggplot() +
-      stat_function(
-        fun = dnormal,
-        args = list(mean=0, sd=1),
-        ...
-        )
-  }else if(x[["Options"]][["latent_dist"]]%in% c("KDE", "DC", "Davidian")){
+  if(x[["Options"]][["latent_dist"]] %in% c("EHM", "LLS")){
+    plt <- ggplot2::ggplot(
+      mapping=aes(
+        x=x$quad,
+        y=x$Ak*(1/(x$quad[2]-x$quad[1]))
+      )
+    ) +
+    geom_line(...)
+  }else{
     plt <- ggplot2::ggplot() +
       stat_function(
         fun = latent_distribution,
         args = list(x),
         ...
       )
-  }else{
-    plt <- ggplot2::ggplot(
-      mapping=aes(
-        x=x$quad,
-        y=x$Ak*(1/(x$quad[2]-x$quad[1]))
-        )
-      ) +
-      geom_line(...)
   }
 
   return(
