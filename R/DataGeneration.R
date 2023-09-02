@@ -201,14 +201,14 @@ DataGeneration <- function(seed=1, N=2000,
 
 
       for(i in 1:nitem_D){
-        if(model_D[i] %in% c(2,3)){
+        if(model_D[i] %in% c(2,"2PL",3,"3PL")){
           item_D[i,1] <- round(
             runif(1,a_l,a_u),
             digits = 2
           )
           initialitem_D[i,1] <- (a_l+a_u)/2
         }
-        if(model_D[i]==3){
+        if(model_D[i] %in% c(3,"3PL")){
           item_D[i,3] <- round(
             runif(1, min = c_l, max = c_u),
             digits = 2)
@@ -227,7 +227,7 @@ DataGeneration <- function(seed=1, N=2000,
       initialitem_D <- matrix(nrow = nitem_D, ncol = 3)
 
       for(i in 1:nitem_D){
-        if(model_D[i]==1){
+        if(model_D[i] %in% c(1, "1PL", "Rasch")){
           initialitem_D[i,] <- c(1,0,0)
         } else {
           initialitem_D[i,] <- c((a_l+a_u)/2,0,0)

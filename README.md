@@ -103,12 +103,12 @@ An artificial data of 1000 examinees and 20 items.
 
 ``` r
 Alldata <- DataGeneration(seed = 123456789,
-                          model_D = rep(2,10),
+                          model_D = 2,
                           N=1000,
                           nitem_D = 10,
                           latent_dist = "2NM",
-                          m=0,
-                          s=1,
+                          m=0, # mean of the latent distribution
+                          s=1, # s.d. of the latent distribution
                           d = 1.664,
                           sd_ratio = 2,
                           prob = 0.3)
@@ -141,9 +141,11 @@ summary(Mod1)
 #> Successfully converged below the threshold of 1e-04 on 52nd iterations. 
 #> 
 #> Model Fit:  
+#>  log-likeli   -4786.734 
 #>    deviance   9573.469 
 #>         AIC   9619.469 
 #>         BIC   9732.347 
+#>          HQ   9662.37 
 #> 
 #> The Number of Parameters:  
 #>        item   20 

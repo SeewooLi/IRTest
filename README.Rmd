@@ -99,12 +99,12 @@ An artificial data of 1000 examinees and 20 items.
 
 ```{r generation}
 Alldata <- DataGeneration(seed = 123456789,
-                          model_D = rep(2,10),
+                          model_D = 2,
                           N=1000,
                           nitem_D = 10,
                           latent_dist = "2NM",
-                          m=0,
-                          s=1,
+                          m=0, # mean of the latent distribution
+                          s=1, # s.d. of the latent distribution
                           d = 1.664,
                           sd_ratio = 2,
                           prob = 0.3)

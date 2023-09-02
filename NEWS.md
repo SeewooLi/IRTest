@@ -1,10 +1,14 @@
+# IRTest 1.10.0
+* Outputs reflect item names in an input file.
+* Enhanced algorithm convergence for `IRTest_Dich` when there exist one or more negative slope parameters.
+* Error in calculating MLE in the presence of missing data is resolved.
+* `summary` returns the HQ criterion.
+* Error in `DataGeneration`'s `model_D` argument is fixed.
+
 # IRTest 1.9.1
 
 * Minor errors have been corrected such as the calculation of $\rho_{\theta\theta^{'}}$ with discrete latent distribution and the calculation of $sd$ in the Davidian-cure method.
 * Vignette file has been updated.
-* Outputs reflect item names in an input file.
-* Enhanced algorithm convergence for `IRTest_Dich` when there exist one or more negative slope parameters.
-* Error in calculating MLE in the presence of missing data is resolved.
 
 # IRTest 1.9.0
 

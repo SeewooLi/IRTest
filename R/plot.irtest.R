@@ -58,6 +58,13 @@ plot.irtest <- function(x, ...){
         args = list(mean=0, sd=1),
         ...
         )
+  }else if(x[["Options"]][["latent_dist"]]%in% c("KDE", "DC", "Davidian")){
+    plt <- ggplot2::ggplot() +
+      stat_function(
+        fun = latent_distribution,
+        args = list(x),
+        ...
+      )
   }else{
     plt <- ggplot2::ggplot(
       mapping=aes(
