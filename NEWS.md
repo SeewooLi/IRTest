@@ -4,6 +4,7 @@
 * Error in calculating MLE in the presence of missing data is resolved.
 * `summary` returns the HQ criterion.
 * Error in `DataGeneration`'s `model_D` argument is fixed.
+* `plot` function employs `latent_distribution`.
 
 # IRTest 1.9.1
 
