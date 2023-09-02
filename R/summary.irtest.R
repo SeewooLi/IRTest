@@ -44,7 +44,8 @@ summary.irtest <- function(object, ...){
     data.frame(
       deviance = object$logL,
       AIC = object$logL+2*sum_result$n_par$total,
-      BIC = object$logL+log(sum_result$n_respondents)*sum_result$n_par$total
+      BIC = object$logL+log(sum_result$n_respondents)*sum_result$n_par$total,
+      HQ = object$logL+2*sum_result$n_par$total*log(log(sum_result$n_respondents))
     )
 
   sum_result$par_est <- object$par_est
