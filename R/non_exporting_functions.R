@@ -51,6 +51,7 @@ P_P <- function(theta, a, b){
 
 P_G <- function(theta, a, b){
   if(length(theta)==1 & is.vector(b)){
+    b <- b[!is.na(b)]
     if(length(a)==1){
       ps <- P(theta = theta, a = a, b = b)
       ps <- c(1, ps) - c(ps, 0)
@@ -462,7 +463,7 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter
         item_estimated[i,1:npar] <- par
         se[i,1:npar] <- c(NA, sqrt(diag(solve(IM)))) # asymptotic S.E.
 
-      } else if(model %in% c("GPCM", "GRM")){
+      } else if(model %in% c("GPCM")){
 
         iter <- 0
         div <- 3
@@ -529,6 +530,81 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter
         }
         item_estimated[i,1:npar] <- par
         se[i,1:npar] <- sqrt(diag(solve(IM))) # asymptotic S.E.
+
+      } else if(model %in% c("GRM")){
+
+        iter <- 0
+        div <- 3
+        par <- item[i,]
+        par <- par[!is.na(par)]
+        npar <- length(par)
+        f <- rowSums(rik[i,,])
+        ####Newton-Raphson####
+        repeat{
+          iter <- iter+1
+          pmat <- P_G(theta = X, a=par[1], b=par[-1])
+          p_ <- outer(X = X, Y = par[-1], FUN = P2, a=par[1])
+          X_ <- cbind(0, outer(X = X, Y = par[-1], FUN="-"), 0)
+          ws <- cbind(0, p_*(1-p_), 0)
+          # Gradients
+          Grad <- numeric(npar)
+
+          # Information Matrix
+          IM <- matrix(0, ncol = npar, nrow = npar)
+
+          IM[1,1] <- -f%*%((X_[,1]*ws[,1]-X_[,2]*ws[,2])^2/pmat[,1])
+          Grad[1] <- sum(rik[i,,1]*(X_[,1]*ws[,1]-X_[,2]*ws[,2])/pmat[,1])
+
+          for(k in 2:npar){
+            Grad[1] <- Grad[1] + sum(
+              rik[i,,k]*(X_[,k]*ws[,k]-X_[,k+1]*ws[,k+1])/pmat[,k]
+              )
+            IM[1,1] <- IM[1,1]-f%*%((X_[,k]*ws[,k]-X_[,k+1]*ws[,k+1])^2/pmat[,k])
+
+            Grad[k] <- sum(
+              par[1]*ws[,k]*(rik[i,,k-1]/pmat[,k-1] -rik[i,,k]/pmat[,k])
+            )
+            IM[1,k] <- -par[1]*f%*%(
+              ws[,k]*(
+                (X_[,k-1]*ws[,k-1]-X_[,k]*ws[,k])/pmat[,k-1]-
+                  (X_[,k]*ws[,k]-X_[,k+1]*ws[,k+1])/pmat[,k]
+                )
+              )
+            IM[k,k] <- -par[1]^2*f%*%(ws[,k]^2*(1/pmat[,k-1]+1/pmat[,k]))
+            if(k<npar){
+              IM[k,k+1] <- par[1]^2*f%*%(ws[,k]*ws[,k+1]/pmat[,k])
+            }
+          }
+
+
+          for(r in 1:npar){
+            for(co in 1:npar){
+              if(r < co){
+                IM[co,r] <- IM[r,co]
+              }
+            }
+          }
+
+          diff <- solve(IM)%*%Grad
+
+          if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
+            par <- par
+          } else{
+            if( sum(abs(diff)) > div){
+              if(max(abs(diff[-1]))/abs(diff[1])>1000){
+                par <- -par
+              } else{
+                par <- par-div/sum(abs(diff))*diff/2
+              }
+            } else {
+              par <- par-diff
+              div <- sum(abs(diff))
+            }
+          }
+          if( div <= threshold | iter > max_iter) break
+        }
+        item_estimated[i,1:npar] <- par
+        se[i,1:npar] <- sqrt(-diag(solve(IM))) # asymptotic S.E.
 
       } else warning("model is incorrect or unspecified.")
     }
