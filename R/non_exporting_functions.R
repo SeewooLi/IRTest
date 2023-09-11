@@ -18,6 +18,10 @@ P <- function(theta,a=1,b,c=0){
   c+(1-c)*(1/(1+exp(-a*(theta-b))))
 }
 
+P2 <- function(theta,b,a=1){
+  1/(1+exp(-a*(theta-b)))
+}
+
 P_P <- function(theta, a, b){
   if(length(theta)==1 & is.vector(b)){
     if(length(a)==1){
@@ -43,6 +47,31 @@ P_P <- function(theta, a, b){
     ps <- ps/rowSums(ps)
   }
   return(ps)
+}
+
+P_G <- function(theta, a, b){
+  if(length(theta)==1 & is.vector(b)){
+    if(length(a)==1){
+      ps <- P(theta = theta, a = a, b = b)
+      ps <- c(1, ps) - c(ps, 0)
+    } else {
+      ps <- cbind(1,exp(a*(theta-matrix(b))))
+      ps <- ps/rowSums(ps, na.rm = T)
+    }
+  }else if(length(theta)==1 & is.matrix(b)){
+    ps <- P(theta = theta, a = a, b = b)
+    ps <- cbind(1, ps)-add0(cbind(ps, NA))
+  }else if(length(theta)!=1 & is.vector(b)){
+    b <- b[!is.na(b)]
+    ps <- outer(X=theta, Y=b, FUN = P2, a=a)
+    ps <- cbind(1, ps)-cbind(ps, 0)
+  }
+  return(ps)
+}
+
+add0 <- function(x){
+  x[cbind(1:nrow(x),rowSums(!is.na(x))+1)] <- 0
+  return(x)
 }
 #################################################################################################################
 # Distribution
@@ -102,8 +131,13 @@ logLikeli <- function(item, data, theta){
   return(L)
 }
 
-logLikeli_Poly <- function(item, data, theta){
-  pmat <- P_P(theta = theta, a = item[,1], b = item[,-1])
+logLikeli_Poly <- function(item, data, theta, model){
+  if(model %in% c("PCM", "GPCM")){
+    pmat <- P_P(theta = theta, a = item[,1], b = item[,-1])
+  } else if(model == "GRM"){
+    pmat <- P_G(theta = theta, a = item[,1], b = item[,-1])
+  }
+
   L <- NULL
   for(i in 1:nrow(item)){
     L <- cbind(L, pmat[i,][data[,i]+1])
@@ -154,7 +188,7 @@ Estep <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
 }
 
 Estep_Poly <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
-                       sd_ratio = 1,Xk=NULL, Ak=NULL){
+                       sd_ratio = 1,Xk=NULL, Ak=NULL, model){
   if(is.null(Xk)) {
     # quadrature points
     Xk <- seq(range[1],range[2],length=q)
@@ -166,7 +200,7 @@ Estep_Poly <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
   Pk <- matrix(nrow = nrow(data), ncol = q)
   for(i in 1:q){
     # weighted likelihood where the weight is the latent distribution
-    Pk[,i] <- exp(logLikeli_Poly(item = item, data = data, theta = Xk[i]))*Ak[i]
+    Pk[,i] <- exp(logLikeli_Poly(item = item, data = data, theta = Xk[i], model))*Ak[i]
   }
   categ <- max(data, na.rm = TRUE)+1
   Pk <- Pk/rowSums(Pk) # posterior weights
@@ -181,7 +215,7 @@ Estep_Poly <- function(item, data, range = c(-4,4), q = 100, prob = 0.5, d = 0,
 }
 
 Estep_Mix <- function(item_D, item_P, data_D, data_P, range = c(-4,4), q = 100, prob = 0.5, d = 0,
-                       sd_ratio = 1,Xk=NULL, Ak=NULL){
+                       sd_ratio = 1,Xk=NULL, Ak=NULL, model){
   if(is.null(Xk)) {
     # quadrature points
     Xk <- seq(range[1],range[2],length=q)
@@ -194,7 +228,7 @@ Estep_Mix <- function(item_D, item_P, data_D, data_P, range = c(-4,4), q = 100, 
   for(i in 1:q){
     # weighted likelihood where the weight is the latent distribution
     Pk[,i] <- exp(logLikeli(item = item_D, data = data_D, theta = Xk[i])+
-                    logLikeli_Poly(item = item_P, data = data_P, theta = Xk[i]))*Ak[i]
+                    logLikeli_Poly(item = item_P, data = data_P, theta = Xk[i], model))*Ak[i]
   }
   categ <- max(data_P, na.rm = TRUE)+1
   Pk <- Pk/rowSums(Pk) # posterior weights
@@ -428,7 +462,7 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter
         item_estimated[i,1:npar] <- par
         se[i,1:npar] <- c(NA, sqrt(diag(solve(IM)))) # asymptotic S.E.
 
-      } else if(model %in% c("GPCM")){
+      } else if(model %in% c("GPCM", "GRM")){
 
         iter <- 0
         div <- 3

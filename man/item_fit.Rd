@@ -28,7 +28,7 @@ Bock's \eqn{\chi^{2}} (1960) or Yen's \eqn{Q_{1}} (1981) is currently available.
 \references{
 Bock, R.D. (1960), Methods and applications of optimal scaling. Chapel Hill, NC: L.L. Thurstone Psychometric Laboratory.
 
-Yen, W. M. (1981). Using simulation results to choose a latent trait model. Applied Psychological Measurement, 5, 245–262.
+Yen, W. M. (1981). Using simulation results to choose a latent trait model. \emph{Applied Psychological Measurement, 5}(2), 245–262.
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}

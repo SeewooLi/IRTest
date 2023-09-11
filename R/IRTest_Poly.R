@@ -166,8 +166,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     category <- apply(data, 2, max, na.rm = TRUE)
     initialitem <- matrix(nrow = ncol(data), ncol = max(category)+1)
     initialitem[,1] <- 1
-    for(i in 2:ncol(initialitem)){
-      initialitem[category>(i-2),i] <- 0
+    for(i in 1:nrow(initialitem)){
+      initialitem[i, 2:(category[i]+1)] <- seq(-.5,.5,length.out=category[i])
     }
   }
 
@@ -192,7 +192,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range, model=model)
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
@@ -216,7 +216,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model)
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
@@ -243,7 +243,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range, model=model)
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
       M2 <- M2step(E)
@@ -269,7 +269,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model)
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
@@ -304,7 +304,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model)
       M1 <- Mstep_Poly(E, item=initialitem, model = model)
       initialitem <- M1[[1]]
 
@@ -332,7 +332,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model)
       M1 <- Mstep_Poly(E, item=initialitem, model=model)
       initialitem <- M1[[1]]
 
@@ -376,7 +376,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
   # preparation for outputs
   logL <- 0
   for(i in 1:q){
-    logL <- logL+sum(logLikeli_Poly(initialitem, data, theta = Xk[i])*E$Pk[,i])
+    logL <- logL+sum(logLikeli_Poly(initialitem, data, theta = Xk[i], model=model)*E$Pk[,i])
   }
   E$Pk[E$Pk==0]<- .Machine$double.xmin
   Ak[Ak==0] <- .Machine$double.xmin

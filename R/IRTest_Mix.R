@@ -208,8 +208,8 @@ IRTest_Mix <- function(data_D, data_P, model_D="2PL",
     category <- apply(data_P, 2, max, na.rm = TRUE)
     initialitem_P <- matrix(nrow = ncol(data_P), ncol = max(category)+1)
     initialitem_P[,1] <- 1
-    for(i in 2:ncol(initialitem_P)){
-      initialitem_P[category>(i-2),i] <- 0
+    for(i in 1:nrow(initialitem_P)){
+      initialitem_P[i, 2:(category[i]+1)] <- seq(-.5,.5,length.out=category[i])
     }
   }
 
@@ -239,7 +239,7 @@ if(nrow(data_D)!=nrow(data_P)){
       iter <- iter +1
 
       E <- Estep_Mix(item_D=initialitem_D, item_P=initialitem_P, data_D=data_D,
-                     data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range)
+                     data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range, model=model_P)
       M1_D <- M1step(E, item=initialitem_D, model=model_D)
       M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
       initialitem_D <- M1_D[[1]]
@@ -272,7 +272,7 @@ if(nrow(data_D)!=nrow(data_P)){
 
       E <- Estep_Mix(item_D=initialitem_D, item_P=initialitem_P, data_D=data_D,
                      data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range,
-                     Xk = Xk, Ak=Ak)
+                     Xk = Xk, Ak=Ak, model=model_P)
       M1_D <- M1step(E, item=initialitem_D, model=model_D)
       M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
       initialitem_D <- M1_D[[1]]
@@ -307,7 +307,7 @@ if(nrow(data_D)!=nrow(data_P)){
       iter <- iter +1
 
       E <- Estep_Mix(item_D=initialitem_D, item_P=initialitem_P, data_D=data_D,
-                     data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range)
+                     data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range, model=model_P)
       M1_D <- M1step(E, item=initialitem_D, model=model_D)
       M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
       initialitem_D <- M1_D[[1]]
@@ -343,7 +343,7 @@ if(nrow(data_D)!=nrow(data_P)){
 
       E <- Estep_Mix(item_D=initialitem_D, item_P=initialitem_P, data_D=data_D,
                      data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range,
-                     Xk = Xk, Ak=Ak)
+                     Xk = Xk, Ak=Ak, model=model_P)
       M1_D <- M1step(E, item=initialitem_D, model=model_D)
       M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
       initialitem_D <- M1_D[[1]]
@@ -387,7 +387,7 @@ if(nrow(data_D)!=nrow(data_P)){
 
       E <- Estep_Mix(item_D=initialitem_D, item_P=initialitem_P, data_D=data_D,
                      data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range,
-                     Xk = Xk, Ak=Ak)
+                     Xk = Xk, Ak=Ak, model=model_P)
       M1_D <- M1step(E, item=initialitem_D, model=model_D)
       M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
       initialitem_D <- M1_D[[1]]
@@ -425,7 +425,7 @@ if(nrow(data_D)!=nrow(data_P)){
 
       E <- Estep_Mix(item_D=initialitem_D, item_P=initialitem_P, data_D=data_D,
                      data_P=data_P, q=q, prob=0.5, d=0, sd_ratio=1, range=range,
-                     Xk = Xk, Ak=Ak)
+                     Xk = Xk, Ak=Ak, model=model_P)
       M1_D <- M1step(E, item=initialitem_D, model=model_D)
       M1_P <- Mstep_Poly(E, item=initialitem_P, model=model_P)
       initialitem_D <- M1_D[[1]]
@@ -473,7 +473,7 @@ if(nrow(data_D)!=nrow(data_P)){
   logL <- 0
   for(i in 1:q){
     logL <- logL+sum(logLikeli(item = initialitem_D, data = data_D, theta = Xk[i])+
-                       logLikeli_Poly(item = initialitem_P, data = data_P, theta = Xk[i])*E$Pk[,i])
+                       logLikeli_Poly(item = initialitem_P, data = data_P, theta = Xk[i], model=model_P)*E$Pk[,i])
   }
   E$Pk[E$Pk==0]<- .Machine$double.xmin
   Ak[Ak==0] <- .Machine$double.xmin
