@@ -258,17 +258,21 @@ DataGeneration <- function(seed=1, N=2000,
         if(model_P=="PCM"){
           item_P[i,1] <- 1
           item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,1))
-        } else if(model_P=="GPCM"){
+        } else if(model_P %in% c("GPCM", "GRM")){
           item_P[i,1] <- round(runif(1,a_l,a_u), digits = 2)
           item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,1))
         }
         initialitem_P[i,1] <- 1
-        initialitem_P[i,2:(categ[i])] <- 0#(-2:1+.5)/3
+        initialitem_P[i,2:(categ[i])] <- seq(-.5,.5,length.out=categ[i]-1)
 
         # item responses for polytomous items
 
         for(j in 1:N){
-          pp <- P_P(theta = theta[j], a = item_P[i,1], b = item_P[i,-1])
+          if(model_P %in% c("GPCM", "PCM")){
+            pp <- P_P(theta = theta[j], a = item_P[i,1], b = item_P[i,-1])
+          } else if(model_P %in% c("GRM")){
+            pp <- P_G(theta = theta[j], a = item_P[i,1], b = item_P[i,-1])
+          }
           pp <- pp[!is.na(pp)]
           data_P[j,i] <- sample(x = 0:(categ[i]-1),1,prob=pp)
         }

@@ -120,8 +120,7 @@ test_that("testing basic operations for IRTest_Poly", {
                       threshold = .001)
 
   # GRM
-  Mod1 <- IRTest_Poly(initialitem = initialitem,
-                      data = data,
+  Mod1 <- IRTest_Poly(data = data,
                       model = "GRM",
                       ability_method = "MLE",
                       latent_dist = "N",

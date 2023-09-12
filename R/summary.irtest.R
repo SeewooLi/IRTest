@@ -82,7 +82,7 @@ summary.irtest <- function(object, ...){
   } else if(any(class(object) == "poly")){
     if(object$Options$model == "PCM"){
       n_par$item <- sum(!is.na(object$par_est[,-1]))
-    } else if(object$Options$model == "GPCM"){
+    } else if(object$Options$model %in% c("GPCM", "GRM")){
       n_par$item <- sum(!is.na(object$par_est))
     }
   } else if(any(class(object) == "mix")){
@@ -93,7 +93,7 @@ summary.irtest <- function(object, ...){
     if(object$Options$model_P == "PCM"){
       n_par$item <- n_par$item +
         sum(!is.na(object$par_est$Polytomous[,-1]))
-    } else if(object$Options$model_P == "GPCM"){
+    } else if(object$Options$model_P %in% c("GPCM", "GRM")){
       n_par$item <- n_par$item +
         sum(!is.na(object$par_est$Polytomous))
     }
