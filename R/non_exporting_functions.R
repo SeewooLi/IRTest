@@ -708,10 +708,10 @@ MLE_theta <- function(item, data, type){
         se <- append(se, sqrt(-1/L2))
       }
     }
-  } else if(type=='poly'){
+  } else if(type %in% c("PCM", "GPCM")){
+    ncat <- rowSums(!is.na(item))-1
     for(i in 1:nrow(data)){
       message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
-      ncat <- rowSums(!is.na(item))-1
       if(sum(data[i,],na.rm = TRUE)==sum(ncat[!is.na(data[i,])])){
         mle <- append(mle, Inf)
         se <- append(se, NA)
@@ -730,7 +730,44 @@ MLE_theta <- function(item, data, type){
             na.rm = TRUE
           )
           L2 <- -sum(
-            item[,1]^2*(p[,-1]%*%(1:max(ncat))^2 - S^2)
+            (item[,1]^2*(p[,-1]%*%(1:max(ncat))^2 - S^2))[!is.na(data[i,])],
+            na.rm = TRUE
+          )
+          diff <- L1/L2
+          th <- th - diff
+          thres <- abs(diff)
+        }
+        mle <- append(mle, th)
+        se <- append(se, sqrt(-1/L2))
+      }
+    }
+  } else if(type=='GRM'){
+    ncat <- rowSums(!is.na(item))-1
+    nitem <- length(ncat)
+    for(i in 1:nrow(data)){
+      message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
+      if(sum(data[i,],na.rm = TRUE)==sum(ncat[!is.na(data[i,])])){
+        mle <- append(mle, Inf)
+        se <- append(se, NA)
+      } else if(sum(data[i,],na.rm = TRUE)==0){
+        mle <- append(mle, -Inf)
+        se <- append(se, NA)
+      } else {
+        th <- 0
+        thres <- 1
+        while(thres > 0.0001){
+          pmat <- P_G(th, item[,1], item[,-1])
+          p_ <- P(th, item[,1], item[,-1])
+          ws <- add0(cbind(0, p_*(1-p_), NA))
+          q_p <- add0(cbind(0, 1-2*p_, NA))
+          L1 <- sum(
+            (item[,1]*(ws[,-ncol(ws)]-ws[,-1])/pmat)[cbind(1:nitem,data[i,]+1)],
+            na.rm = TRUE
+          )
+          L2 <- sum(
+            rowSums(item[,1]^2*((ws*q_p)[,-ncol(ws)]-(ws*q_p)[,-1])-(ws[,-ncol(ws)]-ws[,-1])^2/pmat,
+                    na.rm = TRUE)[!is.na(data[i,])],
+            na.rm = TRUE
           )
           diff <- L1/L2
           th <- th - diff

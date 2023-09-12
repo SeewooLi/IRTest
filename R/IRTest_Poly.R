@@ -365,7 +365,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     theta <- as.numeric(E$Pk%*%E$Xk)
     theta_se <- NULL
   } else if(ability_method == 'MLE'){
-    mle_result <- MLE_theta(item = initialitem, data = data, type = "poly")
+    mle_result <- MLE_theta(item = initialitem, data = data, type = model)
     theta <- mle_result[[1]]
     theta_se <- mle_result[[2]]
   }
