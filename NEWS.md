@@ -1,6 +1,10 @@
 # IRTest 1.11.0
 
+* Graded response model (`"GRM"`) is now available.
+* Developed `MLE` for mixed-format analysis.
+
 # IRTest 1.10.0
+
 * Outputs reflect item names in an input file.
 * Enhanced algorithm convergence for `IRTest_Dich` when there exist one or more negative slope parameters.
 * Error in calculating MLE in the presence of missing data is resolved.
