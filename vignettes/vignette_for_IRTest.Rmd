@@ -111,7 +111,6 @@ data[501:1000, 2] <- NA
 colnames(data) <- paste0("item", 1:15)
 ```
 
-
 \
 \
 \

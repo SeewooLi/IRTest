@@ -166,7 +166,11 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     initialitem <- matrix(nrow = ncol(data), ncol = max(category)+1)
     initialitem[,1] <- 1
     for(i in 1:nrow(initialitem)){
-      initialitem[i, 2:(category[i]+1)] <- seq(-.5,.5,length.out=category[i])
+      if(model!="GRM"){
+        initialitem[i, 2:(category[i]+1)] <- 0
+      } else {
+        initialitem[i, 2:(category[i]+1)] <- seq(-.01,.01,length.out=category[i])
+      }
     }
   }
 

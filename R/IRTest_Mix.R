@@ -215,7 +215,11 @@ IRTest_Mix <- function(data_D, data_P, model_D="2PL",
     initialitem_P <- matrix(nrow = ncol(data_P), ncol = max(category)+1)
     initialitem_P[,1] <- 1
     for(i in 1:nrow(initialitem_P)){
-      initialitem_P[i, 2:(category[i]+1)] <- seq(-.5,.5,length.out=category[i])
+      if(model_P!="GRM"){
+        initialitem_P[i, 2:(category[i]+1)] <- 0
+      } else {
+        initialitem_P[i, 2:(category[i]+1)] <- seq(-.01,.01,length.out=category[i])
+      }
     }
   }
 
