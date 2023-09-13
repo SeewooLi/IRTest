@@ -677,8 +677,7 @@ MLE_theta <- function(item, data, type){
   message("\n",appendLF=FALSE)
   mle <- NULL
   se <- NULL
-  nitem <- nrow(item)
-  if(type=="dich"){
+  if(all(type=="dich")){
     for(i in 1:nrow(data)){
       message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
       if(sum(data[i,],na.rm = TRUE)==sum(!is.na(data[i,]))){
@@ -708,7 +707,7 @@ MLE_theta <- function(item, data, type){
         se <- append(se, sqrt(-1/L2))
       }
     }
-  } else if(type %in% c("PCM", "GPCM", "GRM")){
+  } else if(all(type %in% c("PCM", "GPCM", "GRM"))){
     ncat <- rowSums(!is.na(item))-1
     for(i in 1:nrow(data)){
       message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
@@ -724,6 +723,45 @@ MLE_theta <- function(item, data, type){
         while(thres > 0.0001){
           l1l2 <- L1L2_Poly(th, item, data, type, ncat,i )
           diff <- l1l2[1]/l1l2[2]
+          th <- th - diff
+          thres <- abs(diff)
+        }
+        mle <- append(mle, th)
+        se <- append(se, sqrt(-1/l1l2[2]))
+      }
+    }
+  } else if(any(type %in% c("mix"))){
+    ncat <- rowSums(!is.na(item[[2]]))-1
+    for(i in 1:nrow(data[[1]])){
+      message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data[[1]]),sep="",appendLF=FALSE)
+      if(
+        sum(c(data[[1]][i,],data[[2]][i,]),na.rm = TRUE)==sum(c(!is.na(data[[1]][i,]),ncat[!is.na(data[[2]][i,])]))
+        ){
+        mle <- append(mle, Inf)
+        se <- append(se, NA)
+      } else if(sum(c(data[[1]][i,],data[[2]][i,]),na.rm = TRUE)==0){
+        mle <- append(mle, -Inf)
+        se <- append(se, NA)
+      } else {
+        th <- 0
+        thres <- 1
+        while(thres > 0.0001){
+          # dichotomous items
+          p_ <- P(theta = th, a = item[[1]][,1], b = item[[1]][,2], c = item[[1]][,3])
+          p <- p_*(1-item[[1]][,3])+item[[1]][,3]
+          L1 <- sum(
+            item[[1]][,1]*p_/p*(data[[1]][i,]-p),
+            na.rm = TRUE
+          )
+          L2 <- -sum(
+            item[[1]][,1]^2*p_^2*(1-p)/p
+          )
+
+          # polytomous items
+          l1l2 <- L1L2_Poly(th=th, item=item[[2]], data=data[[2]], type=type[2], ncat=ncat,i=i)
+
+          # add them
+          diff <- (L1+l1l2[1])/(L2+l1l2[2])
           th <- th - diff
           thres <- abs(diff)
         }

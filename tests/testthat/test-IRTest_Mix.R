@@ -117,5 +117,13 @@ test_that("testing basic operations for IRTest_Mix", {
                threshold = .001,
                h=2)
   )
+  Mod1 <- IRTest_Mix(data_D = DataD,
+                     data_P = DataP,
+                     model_D = c(2,3,1,1,1),
+                     model_P = "GRM",
+                     latent_dist = "N",
+                     max_iter = 2,
+                     threshold = .001,
+                     ability_method = "MLE")
 }
 )

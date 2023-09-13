@@ -13,6 +13,7 @@ IRTest_Mix(
   q = 121,
   initialitem_D = NULL,
   initialitem_P = NULL,
+  ability_method = "EAP",
   latent_dist = "Normal",
   max_iter = 200,
   threshold = 1e-04,
@@ -27,12 +28,13 @@ Rows and columns indicate examinees and items, respectively.}
 \item{data_P}{A matrix of polytomous item responses where responses are coded as \code{0, 1, ...}, or \code{m} for an \code{m+1} category item.
 Rows and columns indicate examinees and items, respectively.}
 
-\item{model_D}{A vector that represents types of item characteristic functions applied to each item.
+\item{model_D}{A vector dichotomous item response models.
 Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
 \code{2}, \code{"2PL"} for two-parameter logistic model,
 and \code{3}, \code{"3PL"} for three-parameter logistic model. The default is \code{"2PL"}.}
 
-\item{model_P}{Currently, only the default (\code{"GPCM"}) is available.}
+\item{model_P}{A character value of an item response model.
+Currently, \code{PCM}, \code{GPCM}, and \code{GRM} are available. The default is \code{"GPCM"}.}
 
 \item{range}{Range of the latent variable to be considered in the quadrature scheme.
 The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
@@ -42,6 +44,10 @@ The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
 \item{initialitem_D}{A matrix of initial dichotomous item parameter values for starting the estimation algorithm.}
 
 \item{initialitem_P}{A matrix of initial polytomous item parameter values for starting the estimation algorithm.}
+
+\item{ability_method}{The ability parameter estimation method.
+The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
+The default is \code{EAP}.}
 
 \item{latent_dist}{A character string that determines latent distribution estimation method.
 Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
@@ -81,8 +87,9 @@ and The second object is the matrix of standard errors for polytomous items.}
 \item{Ak}{The estimated discrete latent distribution.
 It is discrete (i.e., probability mass function) since quadrature scheme of EM-MML is used.}
 \item{Pk}{The posterior probabilities for each examinees at each quadrature points.}
-\item{theta}{The estimated ability parameter values.
-Expected \emph{a posteriori} (EAP) is used for ability parameter estimation.}
+\item{theta}{The estimated ability parameter values.}
+\item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
+If an examinee answers all or none of the items correctly, the function returns \code{NA}.}
 \item{logL}{The deviance (i.e., -2\emph{log}L).}
 \item{density_par}{
 The estimated density parameters.

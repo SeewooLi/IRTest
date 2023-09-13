@@ -23,7 +23,7 @@ IRTest_Poly(
 Rows and columns indicate examinees and items, respectively.}
 
 \item{model}{A character value that represents the type of a item characteristic function applied to the items.
-Currently, \code{PCM} and \code{GPCM} are available. The default is \code{"GPCM"}.}
+Currently, \code{PCM}, \code{GPCM}, and \code{GRM} are available. The default is \code{"GPCM"}.}
 
 \item{range}{Range of the latent variable to be considered in the quadrature scheme.
 The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
@@ -71,8 +71,7 @@ This function returns a \code{list} which contains several objects:
 \item{Ak}{The estimated discrete latent distribution.
 It is discrete (i.e., probability mass function) since quadrature scheme of EM-MML is used.}
 \item{Pk}{The posterior probabilities for each examinees at each quadrature points.}
-\item{theta}{The estimated ability parameter values.
-Expected \emph{a posteriori} (EAP) is used for ability parameter estimation.}
+\item{theta}{The estimated ability parameter values.}
 \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
 If an examinee answers all or none of the items correctly, the function returns \code{NA}.}
 \item{logL}{The deviance (i.e., -2\emph{log}L).}

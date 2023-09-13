@@ -67,7 +67,11 @@ plot_item.dich <- function(x, item.number, type=NULL){
 plot_item.poly <- function(x, item.number, type=NULL){
   item_par <- x$par_est[item.number,]
   npar <- sum(!is.na(item_par))
-  probs <- P_P(seq(-6,6,0.1),a = item_par[1],b = item_par[-1])
+  if(x$Option$model %in% c("PCM", "GPCM")){
+    probs <- P_P(seq(-6,6,0.1),a = item_par[1],b = item_par[-1])
+  } else if(x$Option$model %in% c("GRM")){
+    probs <- P_G(seq(-6,6,0.1),a = item_par[1],b = item_par[-1])
+  }
   category <- rep(paste("P", 1:npar-1, sep = ""), each=121)
   ppp <-
     ggplot(mapping = aes(x=rep(seq(-6,6,0.1), npar),y=as.vector(probs), colour=category))+
@@ -118,7 +122,11 @@ plot_item.mix <- function(x, item.number, type=NULL){
   } else if(type=="p"){
     item_par <- x$par_est[[2]][item.number,]
     npar <- sum(!is.na(item_par))
-    probs <- P_P(seq(-6,6,0.1),a = item_par[1],b = item_par[-1])
+    if(x$Option$model_P %in% c("PCM", "GPCM")){
+      probs <- P_P(seq(-6,6,0.1),a = item_par[1],b = item_par[-1])
+    } else if(x$Option$model_P %in% c("GRM")){
+      probs <- P_G(seq(-6,6,0.1),a = item_par[1],b = item_par[-1])
+    }
     category <- rep(paste("P", 1:npar-1, sep = ""), each=121)
     ppp <-
       ggplot(mapping = aes(x=rep(seq(-6,6,0.1), npar),y=as.vector(probs), colour=category))+

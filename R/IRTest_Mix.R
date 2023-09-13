@@ -15,16 +15,20 @@
 #' Rows and columns indicate examinees and items, respectively.
 #' @param data_P A matrix of polytomous item responses where responses are coded as \code{0, 1, ...}, or \code{m} for an \code{m+1} category item.
 #' Rows and columns indicate examinees and items, respectively.
-#' @param model_D A vector that represents types of item characteristic functions applied to each item.
+#' @param model_D A vector dichotomous item response models.
 #' Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
 #' \code{2}, \code{"2PL"} for two-parameter logistic model,
 #' and \code{3}, \code{"3PL"} for three-parameter logistic model. The default is \code{"2PL"}.
-#' @param model_P Currently, only the default (\code{"GPCM"}) is available.
+#' @param model_P A character value of an item response model.
+#' Currently, \code{PCM}, \code{GPCM}, and \code{GRM} are available. The default is \code{"GPCM"}.
 #' @param range Range of the latent variable to be considered in the quadrature scheme.
 #' The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.
 #' @param q A numeric value that represents the number of quadrature points. The default value is 121.
 #' @param initialitem_D A matrix of initial dichotomous item parameter values for starting the estimation algorithm.
 #' @param initialitem_P A matrix of initial polytomous item parameter values for starting the estimation algorithm.
+#' @param ability_method The ability parameter estimation method.
+#' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
+#' The default is \code{EAP}.
 #' @param latent_dist A character string that determines latent distribution estimation method.
 #' Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
 #' \code{"EHM"} for empirical histogram method (Mislevy, 1984; Mislevy & Bock, 1985),
@@ -119,8 +123,9 @@
 #' \item{Ak}{The estimated discrete latent distribution.
 #' It is discrete (i.e., probability mass function) since quadrature scheme of EM-MML is used.}
 #' \item{Pk}{The posterior probabilities for each examinees at each quadrature points.}
-#' \item{theta}{The estimated ability parameter values.
-#' Expected \emph{a posteriori} (EAP) is used for ability parameter estimation.}
+#' \item{theta}{The estimated ability parameter values.}
+#' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
+#' If an examinee answers all or none of the items correctly, the function returns \code{NA}.}
 #' \item{logL}{The deviance (i.e., -2\emph{log}L).}
 #' \item{density_par}{
 #' The estimated density parameters.
@@ -187,6 +192,7 @@
 IRTest_Mix <- function(data_D, data_P, model_D="2PL",
                        model_P="GPCM", range = c(-6,6),q = 121,
                        initialitem_D=NULL, initialitem_P=NULL,
+                       ability_method="EAP",
                        latent_dist="Normal", max_iter=200, threshold=0.0001,
                        bandwidth="SJ-ste", h=NULL){
 
@@ -461,6 +467,20 @@ if(nrow(data_D)!=nrow(data_P)){
   }
 }
 
+  # ability parameter estimation
+  if(ability_method == 'EAP'){
+    theta <- as.numeric(E$Pk%*%E$Xk)
+    theta_se <- NULL
+  } else if(ability_method == 'MLE'){
+    mle_result <- MLE_theta(
+      item = list(initialitem_D,initialitem_P),
+      data = list(data_D,data_P),
+      type = c("mix", model_P)
+      )
+    theta <- mle_result[[1]]
+    theta_se <- mle_result[[2]]
+  }
+
   dn_D <- list(colnames(data_D),c("a", "b", "c"))
   dn_P <- list(colnames(data_P),c("a", paste("b", 1:(ncol(initialitem_P)-1), sep="_")))
   dimnames(initialitem_D) <- dn_D
@@ -469,7 +489,6 @@ if(nrow(data_D)!=nrow(data_P)){
   dimnames(M1_P[[2]]) <- dn_P
 
   # preparation for outputs
-  EAP <- as.numeric(E$Pk%*%E$Xk)
   logL <- 0
   for(i in 1:q){
     logL <- logL+sum(logLikeli(item = initialitem_D, data = data_D, theta = Xk[i])+
@@ -489,7 +508,8 @@ if(nrow(data_D)!=nrow(data_P)){
          diff=diff,
          Ak=Ak,
          Pk=E$Pk,
-         theta = EAP,
+         theta = theta,
+         theta_se = theta_se,
          logL=-2*logL, # deviance
          density_par = density_par,
          Options = Options # specified argument values
