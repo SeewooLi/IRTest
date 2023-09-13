@@ -93,7 +93,11 @@ reliability <- function(x){
       }
     } else if(any(class(x)=="poly")){
       for(i in 1:n_item){
-        ppp <- P_P(Xk, a = param[i,1], b = param[i,-1])
+        if(x$Options$model %in% c("PCM", "GPCM")){
+          ppp <- P_P(Xk, a = param[i,1], b = param[i,-1])
+        } else if(x$Options$model %in% c("GRM")){
+          ppp <- P_G(Xk, a = param[i,1], b = param[i,-1])
+        }
         true_score_matrix[,i] <- ppp%*%cats[[i]]
         squared[,i] <- ppp%*%cats[[i]]^2
       }
@@ -116,7 +120,11 @@ reliability <- function(x){
       squared[,i] <- cbind(1-ppp,ppp)%*%cats$Dichotomous[[i]]^2
     }
     for(i in 1:n_item_P){
-      ppp <- P_P(Xk, a = param$Polytomous[i,1], b = param$Polytomous[i,-1])
+      if(x$Options$model_P %in% c("PCM", "GPCM")){
+        ppp <- P_P(Xk, a = param$Polytomous[i,1], b = param$Polytomous[i,-1])
+      } else if(x$Options$model_P %in% c("GRM")){
+        ppp <- P_G(Xk, a = param$Polytomous[i,1], b = param$Polytomous[i,-1])
+      }
       true_score_matrix[,n_item_D+i] <- ppp%*%cats$Polytomous[[i]]
       squared[,n_item_D+i] <- ppp%*%cats$Polytomous[[i]]^2
     }
@@ -136,7 +144,7 @@ reliability <- function(x){
     rxx2 <- as.vector(sigma2_T/(sigma2_T+sigma2_e))
     if(any(class(x)=="mix")){
       names(rxx2) <- c(paste(row.names(param$Dichotomous),"D", sep = "_"),
-                       paste(row.names(param$Polytomous),"D", sep = "_"))
+                       paste(row.names(param$Polytomous),"P", sep = "_"))
     } else {
       names(rxx2) <- row.names(param)
     }

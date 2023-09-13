@@ -362,27 +362,27 @@ ggplot()+
   )+ 
   stat_function(
     fun=inform_f_item,
-    args = list(Mod1$par_est, 1, "d"),
+    args = list(Mod1, 1),
     mapping = aes(color="Item 1")
   )+
   stat_function(
     fun=inform_f_item,
-    args = list(Mod1$par_est, 2, "d"),
+    args = list(Mod1, 2),
     mapping = aes(color="Item 2")
   )+
   stat_function(
     fun=inform_f_item,
-    args = list(Mod1$par_est, 3, "d"),
+    args = list(Mod1, 3),
     mapping = aes(color="Item 3")
   )+
   stat_function(
     fun=inform_f_item,
-    args = list(Mod1$par_est, 4, "d"),
+    args = list(Mod1, 4),
     mapping = aes(color="Item 4")
   )+
   stat_function(
     fun=inform_f_item,
-    args = list(Mod1$par_est, 5, "d"),
+    args = list(Mod1, 5),
     mapping = aes(color="Item 5")
   )+
   lims(x=c(-6,6))+

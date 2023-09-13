@@ -127,7 +127,11 @@ item_fit.poly <- function(x,bins=10, bin.center='mean'){
 
     counts = aggregate(bin_data$theta, by = list(bin_data$bin), FUN = length)[[2]]
 
-    prob <- P_P(theta = center, a = x$par_est[i,1], b = x$par_est[i,-1])
+    if(x$Options$model %in% c("PCM", "GPCM")){
+      prob <- P_P(theta = center, a = x$par_est[i,1], b = x$par_est[i,-1])
+    } else if(x$Options$model %in% c("GRM")){
+      prob <- P_G(theta = center, a = x$par_est[i,1], b = x$par_est[i,-1])
+    }
     observed_freq <- as.matrix(
       xtabs(~bin+response,cbind(bin_data, response = x$Options$data[,i][NA_index]))
       )
@@ -138,7 +142,7 @@ item_fit.poly <- function(x,bins=10, bin.center='mean'){
     result[i,2] <- (binned[[2]]-1)*(ncol(prob)-1)-
       if(x$Options$model=="PCM"){
         ncol(prob)-1
-      }else if(x$Options$model=="GPCM"){
+      }else if(x$Options$model %in% c("GPCM", "GRM")){
         ncol(prob)
       }
     result[i,3] <- round(
@@ -242,7 +246,11 @@ item_fit.mix <- function(x,bins=10, bin.center='mean'){
 
     counts = aggregate(bin_data$theta, by = list(bin_data$bin), FUN = length)[[2]]
 
-    prob <- P_P(theta = center, a = x$par_est[[2]][i,1], b = x$par_est[[2]][i,-1])
+    if(x$Options$model_P %in% c("PCM", "GPCM")){
+      prob <- P_P(theta = center, a = x$par_est[[2]][i,1], b = x$par_est[[2]][i,-1])
+    } else if(x$Options$model_P %in% c("GRM")){
+      prob <- P_G(theta = center, a = x$par_est[[2]][i,1], b = x$par_est[[2]][i,-1])
+    }
     observed_freq <- as.matrix(
       xtabs(~bin+response,cbind(bin_data, response = x$Options$data_P[,i][NA_index]))
     )
@@ -253,7 +261,7 @@ item_fit.mix <- function(x,bins=10, bin.center='mean'){
     result2[i,2] <- (binned[[2]]-1)*(ncol(prob)-1)-
       if(x$Options$model_P=="PCM"){
         ncol(prob)-1
-      }else if(x$Options$model_P=="GPCM"){
+      }else if(x$Options$model_P %in% c("GPCM", "GRM")){
         ncol(prob)
       }
     result2[i,3] <- round(

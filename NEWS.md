@@ -1,3 +1,5 @@
+# IRTest 1.11.0
+
 # IRTest 1.10.0
 * Outputs reflect item names in an input file.
 * Enhanced algorithm convergence for `IRTest_Dich` when there exist one or more negative slope parameters.
