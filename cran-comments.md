@@ -1,24 +1,19 @@
 ## Submission for package enhancement
 
-In this version I have:
+### Major changes
 
-* Made the `PCM` model for polytomous data available.
+* Developed an option for graded response model.
+* Made MLE available for all model-fitting functions.
+* Developed `latent_distribution`.
+* Developed `inform_f_item` and `inform_f_test`.
 
-* Developed the `MLE` option for ability parameter estimation for polytomous data.
+### Minor changes
 
-* Revised the estimation functions to permit NA values.
-
-* Made automatic generation of starting values available, which rendered the estimation functions more user-friendly.
-
-* Developed functions (`item_fit`, `plot_item`, `reliability`) for practical usages of IRT.
-
-* Enhanced algorithm convergence when there exist one or more negative slope parameters.
-
-* Freed the constraint on the Rasch-type analysis to have the same slope parameters across all items but not fixed to 1.
-
-* Revised `IRTest_Poly` to accept dichotomous items.
-
-* Made log-linear smoothing method (`latent_dist="LLS"`) available.
+* Outputs reflect item names in an input file.
+* Enhanced algorithm convergence for model-fitting functions.
+* `reliability` calculates a coefficient on the $\theta$ scale.
+* `reliability` uses the raw value in a given data for calculating the reliability coefficient.
+* `reliability` returns both test reliability coefficient and item reliability coefficients.
 
   
 ## Test environments

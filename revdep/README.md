@@ -42,15 +42,15 @@
   </tr>
   <tr>
    <td style="text-align:left;"> date </td>
-   <td style="text-align:left;"> 2023-08-23 </td>
+   <td style="text-align:left;"> 2023-09-19 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> rstudio </td>
-   <td style="text-align:left;"> 2023.03.1+446 Cherry Blossom (desktop) </td>
+   <td style="text-align:left;"> 2023.06.2+561 Mountain Hydrangea (desktop) </td>
   </tr>
   <tr>
    <td style="text-align:left;"> pandoc </td>
-   <td style="text-align:left;"> 2.19.2 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown) </td>
+   <td style="text-align:left;"> 3.1.1 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown) </td>
   </tr>
 </tbody>
 </table>
@@ -70,19 +70,7 @@
   <tr>
    <td style="text-align:left;"> IRTest </td>
    <td style="text-align:left;"> 1.7.0 </td>
-   <td style="text-align:left;"> 1.9.0 </td>
-   <td style="text-align:left;"> * </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ggplot2 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 3.4.3 </td>
-   <td style="text-align:left;"> * </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> gtable </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 0.3.4 </td>
+   <td style="text-align:left;"> 1.11.0 </td>
    <td style="text-align:left;"> * </td>
   </tr>
 </tbody>
