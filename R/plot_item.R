@@ -14,8 +14,26 @@
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @export
+#' @examples
+#' # A preparation of dichotomous item response data
 #'
-plot_item <- function(x, item.number, type=NULL){
+#' data <- DataGeneration(N=500,
+#'                        nitem_D = 10,
+#'                        latent_dist = "2NM",
+#'                        d = 1.664,
+#'                        sd_ratio = 2,
+#'                        prob = 0.3)$data_D
+#'
+#'
+#' # Analysis
+#'
+#' M1 <- IRTest_Dich(data)
+#'
+#' # Plotting item response function
+#'
+#' plot_item(M1, item.number = 1)
+#'
+plot_item <- function(x, item.number=1, type=NULL){
   UseMethod("plot_item", x)
 }
 
@@ -29,7 +47,7 @@ plot_item <- function(x, item.number, type=NULL){
 #' @importFrom ggplot2 labs
 #' @importFrom ggplot2 theme_bw
 #'
-plot_item.dich <- function(x, item.number, type=NULL){
+plot_item.dich <- function(x, item.number=1, type=NULL){
   item_par <- x$par_est[item.number,]
   probs <- P(theta = seq(-6,6,0.1),
              a = item_par[1],
@@ -64,7 +82,7 @@ plot_item.dich <- function(x, item.number, type=NULL){
 #' @importFrom ggplot2 labs
 #' @importFrom ggplot2 theme_bw
 #'
-plot_item.poly <- function(x, item.number, type=NULL){
+plot_item.poly <- function(x, item.number=1, type=NULL){
   item_par <- x$par_est[item.number,]
   npar <- sum(!is.na(item_par))
   if(x$Option$model %in% c("PCM", "GPCM")){
@@ -94,7 +112,7 @@ plot_item.poly <- function(x, item.number, type=NULL){
 #' @importFrom ggplot2 labs
 #' @importFrom ggplot2 theme_bw
 #'
-plot_item.mix <- function(x, item.number, type=NULL){
+plot_item.mix <- function(x, item.number=1, type="d"){
   if(type=="d"){
     item_par <- x$par_est[[1]][item.number,]
     probs <- P(theta = seq(-6,6,0.1),

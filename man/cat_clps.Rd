@@ -21,6 +21,26 @@ In a polytomous item, one or more score categories may not have the highest prob
 In this case, the category could be regarded as a redundant one in a psychometric point of view and can be collapsed into another score category.
 This function returns a recommendation for a recategorization scheme based on item parameters.
 }
+\examples{
+\donttest{
+# Preparation of dichotomous item response data
+
+data <- DataGeneration(N=1000,
+                       nitem_P = 8,
+                       latent_dist = "2NM",
+                       d = 1.414,
+                       sd_ratio = 2,
+                       prob = 0.5)$data_P
+
+# Analysis
+
+M1 <- IRTest_Poly(data)
+
+# Recommendation of category collapsing
+
+cat_clps(M1$par_est)
+}
+}
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}
 }

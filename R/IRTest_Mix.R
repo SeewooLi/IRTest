@@ -164,23 +164,12 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # A preparation of mixed-format item response data
 #'
-#' Alldata <- DataGeneration(seed = 2,
-#'                           model_D = rep(1:2, each=3),# 1PL model is applied to item #1~10
-#'                                                       # and 2PL model is applied to item #11~20.
-#'                           N=1000,
+#' Alldata <- DataGeneration(N=1000,
 #'                           nitem_D = 6,
 #'                           nitem_P = 5,
-#'                           categ = rep(3:7,each = 1),# 3 categories for item #21-22,
-#'                                                     # 4 categories for item #23-24,
-#'                                                     # ...,
-#'                                                     # and 7 categories for item #29-30.
-#'                           latent_dist = "2NM",
-#'                           d = 1.664,
-#'                           sd_ratio = 2,
-#'                           prob = 0.3)
+#'                           )
 #'
 #' DataD <- Alldata$data_D   # item response data for the dichotomous items
 #' DataP <- Alldata$data_P   # item response data for the polytomous items
@@ -188,7 +177,7 @@
 #' # Analysis
 #'
 #' M1 <- IRTest_Mix(DataD, DataP)
-#'}
+#'
 IRTest_Mix <- function(data_D, data_P, model_D="2PL",
                        model_P="GPCM", range = c(-6,6),q = 121,
                        initialitem_D=NULL, initialitem_P=NULL,
@@ -472,7 +461,10 @@ if(nrow(data_D)!=nrow(data_P)){
 }
 
   # ability parameter estimation
-  if(ability_method == 'EAP'){
+  if(is.null(ability_method)){
+    theta <- NULL
+    theta_se <- NULL
+  } else if(ability_method == 'EAP'){
     theta <- as.numeric(E$Pk%*%E$Xk)
     theta_se <- NULL
   } else if(ability_method == 'MLE'){
@@ -518,7 +510,7 @@ if(nrow(data_D)!=nrow(data_P)){
          density_par = density_par,
          Options = Options # specified argument values
          ),
-    class = c("mix", "irtest", "list")
+    class = c("mix", "IRTest", "list")
     )
   )
 }

@@ -26,6 +26,24 @@
 #'
 #'
 #' @export
+#' @examples
+#' # A preparation of dichotomous item response data
+#'
+#' data <- DataGeneration(N=500,
+#'                        nitem_D = 10,
+#'                        latent_dist = "2NM",
+#'                        d = 1.664,
+#'                        sd_ratio = 2,
+#'                        prob = 0.3)$data_D
+#'
+#'
+#' # Analysis
+#'
+#' M1 <- IRTest_Dich(data)
+#'
+#' # Item fit statistics
+#'
+#' item_fit(M1)
 #'
 item_fit <- function(x, bins=10, bin.center='mean'){
   UseMethod("item_fit",x)

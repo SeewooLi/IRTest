@@ -17,3 +17,29 @@ Recategorized data
 \description{
 With a recategorization scheme as an input, this function implements recategorization for the input data.
 }
+\examples{
+# Preparation of dichotomous item response data
+
+data <- DataGeneration(N=1000,
+                       nitem_P = 8,
+                       latent_dist = "2NM",
+                       d = 1.414,
+                       sd_ratio = 2,
+                       prob = 0.5)$data_P
+
+# Analysis
+
+M1 <- IRTest_Poly(data)
+
+# Recommendation of category collapsing
+
+new_cat <- cat_clps(M1$par_est)
+
+# Recategorization of data
+
+recategorize(data, new_cat)
+
+}
+\author{
+Seewoo Li \email{cu@yonsei.ac.kr}
+}

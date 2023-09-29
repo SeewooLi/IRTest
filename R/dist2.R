@@ -34,6 +34,12 @@
 #' @references
 #' Li, S. (2021). Using a two-component normal mixture distribution as a latent distribution in estimating parameters of item response models. \emph{Journal of Educational Evaluation, 34}(4), 759-789.
 #'
+#' @examples
+#' # Evaluated density
+#' dnst <- dist2(seq(-6,6,.1), prob = 0.3, d = 1, sd_ratio=0.5)
+#'
+#' # Plot of the density
+#' plot(seq(-6,6,.1), dnst)
 #'
 dist2 <- function(x, prob = 0.5, d = 0, sd_ratio = 1, overallmean=0, overallsd=1){
   m1 <- -(1-prob)*d*overallsd+overallmean

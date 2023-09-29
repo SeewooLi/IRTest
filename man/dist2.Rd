@@ -40,6 +40,14 @@ Probability density for the re-parameterized two-component normal mixture distri
 }
 }
 }
+\examples{
+# Evaluated density
+dnst <- dist2(seq(-6,6,.1), prob = 0.3, d = 1, sd_ratio=0.5)
+
+# Plot of the density
+plot(seq(-6,6,.1), dnst)
+
+}
 \references{
 Li, S. (2021). Using a two-component normal mixture distribution as a latent distribution in estimating parameters of item response models. \emph{Journal of Educational Evaluation, 34}(4), 759-789.
 }

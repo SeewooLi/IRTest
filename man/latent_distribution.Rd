@@ -18,15 +18,9 @@ The evaluated values of PDF, a length of which equals to that of \code{x}.
 Density function of the estimated latent distribution with mean and standard deviation equal to 0 and 1, respectively.
 }
 \examples{
-\dontrun{
 # Data generation and model fitting
-
-data <- DataGeneration(seed = 1,
-                       model_P = "GPCM",
-                       N=1000,
-                       nitem_D = 0,
+data <- DataGeneration(N=1000,
                        nitem_P = 10,
-                       categ = rep(5,10),
                        latent_dist = "2NM",
                        d = 1.664,
                        sd_ratio = 2,
@@ -36,9 +30,9 @@ M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 
 
 # Plotting the latent distribution
-ggplot()+
-  stat_function(fun=latent_distribution, args=list(M1))+
-  lims(x=c(-6,6))
-}
+ggplot2::ggplot()+
+  ggplot2::stat_function(fun=latent_distribution, args=list(M1))+
+  ggplot2::lims(x=c(-6,6), y=c(0,0.5))
+
 
 }

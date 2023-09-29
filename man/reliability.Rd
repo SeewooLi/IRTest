@@ -41,10 +41,7 @@ Although the formula is often employed in several IRT studies and applications, 
 }
 }
 \examples{
-\dontrun{
-Alldata <- DataGeneration(seed = 1,
-                          model_D = rep(1, 10),
-                          N=500,
+Alldata <- DataGeneration(N=500,
                           nitem_D = 10,
                           latent_dist = "2NM",
                           d = 1.664,
@@ -65,10 +62,9 @@ rel <- reliability(M1)
 rel$summed.score.scale$test
 rel$summed.score.scale$item
 
-## On the summed-score scale
+## On the theta scale
 rel$theta.scale
 
-}
 }
 \references{
 Green, B.F., Bock, R.D., Humphreys, L.G., Linn, R.L., & Reckase, M.D. (1984). Technical guidelines for assessing computerized adaptive tests. \emph{Journal of Educational Measurement, 21}(4), 347–360.

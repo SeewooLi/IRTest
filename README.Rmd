@@ -63,6 +63,8 @@ Followings are the functions of **IRTest**.
   
   + `IRTest_Mix` is the estimation function for *a mixed-format test*, a test comprising both dichotomous item(s) and polytomous item(s).
   
+  + `factor_score` estimates factor scores of examinees.
+  
   + `item_fit` tests the statistical fit of all items individually.
   
   + `inform_f_item` calculates the information value(s) of an item.
@@ -152,12 +154,14 @@ knitr::kables(
 
 
 ### Plotting
+fscores <- factor_score(Mod1, ability_method = "MLE")
+
 par(mfrow=c(1,3))
 plot(item[,1], Mod1$par_est[,1], xlab = "true", ylab = "estimated", main = "item discrimination parameters")
 abline(a=0,b=1)
 plot(item[,2], Mod1$par_est[,2], xlab = "true", ylab = "estimated", main = "item difficulty parameters")
 abline(a=0,b=1)
-plot(theta, Mod1$theta, xlab = "true", ylab = "estimated", main = "ability parameters")
+plot(theta, fscores$theta, xlab = "true", ylab = "estimated", main = "ability parameters")
 abline(a=0,b=1)
 ```
 

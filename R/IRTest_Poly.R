@@ -136,14 +136,9 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # A preparation of dichotomous item response data
+#' # Preparation of dichotomous item response data
 #'
-#' data <- DataGeneration(seed = 1,
-#'                        model_P = "GPCM",
-#'                        categ = rep(3:4, each = 4),
-#'                        N=1000,
-#'                        nitem_D = 0,
+#' data <- DataGeneration(N=1000,
 #'                        nitem_P = 8,
 #'                        latent_dist = "2NM",
 #'                        d = 1.414,
@@ -153,7 +148,7 @@
 #' # Analysis
 #'
 #' M1 <- IRTest_Poly(data)
-#'}
+#'
 IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal",
                         max_iter=200, threshold=0.0001,bandwidth="SJ-ste",h=NULL){
@@ -364,7 +359,10 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
   }
 
   # ability parameter estimation
-  if(ability_method == 'EAP'){
+  if(is.null(ability_method)){
+    theta <- NULL
+    theta_se <- NULL
+  } else if(ability_method == 'EAP'){
     theta <- as.numeric(E$Pk%*%E$Xk)
     theta_se <- NULL
   } else if(ability_method == 'MLE'){
@@ -399,7 +397,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
          density_par = density_par,
          Options = Options # specified argument values
          ),
-    class = c("poly", "irtest", "list")
+    class = c("poly", "IRTest", "list")
     )
   )
 }

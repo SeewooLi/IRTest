@@ -2,8 +2,8 @@
 #'
 #' @description This function prints the summarized information.
 #'
-#' @param x An object returned from \code{\link{summary.irtest}}.
-#' @param ... Additional arguments (currently nonfunctioning).
+#' @param x An object of \code{"IRTest"}-class obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.
+#' @param ... Additional arguments (currently non-functioning).
 #'
 #' @return Printed texts on the console recommending the usage of \code{summary} function and the direct access to the details using "$" sign.
 #' @export
@@ -11,13 +11,8 @@
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @examples
-#' \dontrun{
-#' data <- DataGeneration(seed = 1,
-#'                        #model_D = rep(1, 10),
-#'                        N=1000,
-#'                        nitem_D = 0,
+#' data <- DataGeneration(N=1000,
 #'                        nitem_P = 8,
-#'                        categ = rep(3:4,each = 4),
 #'                        latent_dist = "2NM",
 #'                        d = 1.664,
 #'                        sd_ratio = 2,
@@ -26,9 +21,8 @@
 #' M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 #'
 #' M1
-#'}
 #'
-print.irtest <- function(x, ...){
+print.IRTest <- function(x, ...){
   cat('Convergence: ', '\n')
   if(x$diff<=x$Options$threshold){
     cat("Successfully converged.",'\n')
@@ -54,41 +48,28 @@ print.irtest <- function(x, ...){
 #'
 #' @description This function prints the summarized information.
 #'
-#' @param x An object returned from \code{\link{summary.irtest}}.
-#' @param ... Additional arguments (currently nonfunctioning).
+#' @param x An object returned from \code{\link{summary.IRTest}}.
+#' @param ... Additional arguments (currently non-functioning).
 #' @return Printed summarized texts on the console.
 #' @export
 #'
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @examples
-#' \dontrun{
-#' Alldata <- DataGeneration(seed = 1,
-#'                           #model_D = rep(1, 10),
-#'                           N=1000,
-#'                           nitem_D = 0,
+#' data <- DataGeneration(N=1000,
 #'                           nitem_P = 8,
-#'                           categ = rep(3:4,each = 4),
 #'                           latent_dist = "2NM",
 #'                           d = 1.664,
 #'                           sd_ratio = 2,
-#'                           prob = 0.3)
-#' data <- Alldata$data_P
-#' item <- Alldata$item_P
-#' initialitem <- Alldata$initialitem_P
-#' theta <- Alldata$theta
-#' M1 <- IRTest_Poly(initialitem = initialitem,
-#'                   data = data,
-#'                   model = "GPCM",
+#'                           prob = 0.3)$data_P
+#'
+#' M1 <- IRTest_Poly(data = data,
 #'                   latent_dist = "Mixture",
-#'                   max_iter = 200,
-#'                   threshold = .001,
 #'                   )
 #'
 #' summary(M1)
-#'}
 #'
-print.irtest_summary <- function(x, ...){
+print.IRTest_summary <- function(x, ...){
   .prt.irtest.convergence(x)
   .prt.irtest.model_fit(x)
   .prt.irtest.n_par(x)

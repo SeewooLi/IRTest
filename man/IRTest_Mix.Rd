@@ -172,23 +172,12 @@ where \eqn{h} is the hyper parameter which determines the smoothness of the dens
 }
 }
 \examples{
-\dontrun{
 # A preparation of mixed-format item response data
 
-Alldata <- DataGeneration(seed = 2,
-                          model_D = rep(1:2, each=3),# 1PL model is applied to item #1~10
-                                                      # and 2PL model is applied to item #11~20.
-                          N=1000,
+Alldata <- DataGeneration(N=1000,
                           nitem_D = 6,
                           nitem_P = 5,
-                          categ = rep(3:7,each = 1),# 3 categories for item #21-22,
-                                                    # 4 categories for item #23-24,
-                                                    # ...,
-                                                    # and 7 categories for item #29-30.
-                          latent_dist = "2NM",
-                          d = 1.664,
-                          sd_ratio = 2,
-                          prob = 0.3)
+                          )
 
 DataD <- Alldata$data_D   # item response data for the dichotomous items
 DataP <- Alldata$data_P   # item response data for the polytomous items
@@ -196,7 +185,7 @@ DataP <- Alldata$data_P   # item response data for the polytomous items
 # Analysis
 
 M1 <- IRTest_Mix(DataD, DataP)
-}
+
 }
 \references{
 Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.

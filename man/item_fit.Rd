@@ -25,6 +25,26 @@ This function analyses and reports item-fit test results.
 \details{
 Bock's \eqn{\chi^{2}} (1960) or Yen's \eqn{Q_{1}} (1981) is currently available.
 }
+\examples{
+# A preparation of dichotomous item response data
+
+data <- DataGeneration(N=500,
+                       nitem_D = 10,
+                       latent_dist = "2NM",
+                       d = 1.664,
+                       sd_ratio = 2,
+                       prob = 0.3)$data_D
+
+
+# Analysis
+
+M1 <- IRTest_Dich(data)
+
+# Item fit statistics
+
+item_fit(M1)
+
+}
 \references{
 Bock, R.D. (1960), Methods and applications of optimal scaling. Chapel Hill, NC: L.L. Thurstone Psychometric Laboratory.
 

@@ -2,14 +2,25 @@
 #'
 #' @description These functions summarize the outputs (e.g., convergence of the estimation algorithm, parameter estimates, AIC, etc.).
 #'
-#' @param object An \code{class == "irtest"} object obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.
+#' @param object An object of \code{"IRTest"}-class obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.
 #' @param ... Other argument(s) passed on to summarize the results.
 #'
 #' @return A plot of estimated latent distribution.
 #' @export
 #'
+#' @examples
+#' data <- DataGeneration(N=1000,
+#'                        nitem_P = 8,
+#'                        latent_dist = "2NM",
+#'                        d = 1.664,
+#'                        sd_ratio = 2,
+#'                        prob = 0.3)$data_P
 #'
-summary.irtest <- function(object, ...){
+#' M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
+#'
+#' summary(M1)
+#'
+summary.IRTest <- function(object, ...){
   sum_result <- list()
 
   sum_result$convergence <- if(object$diff<=object$Options$threshold){
@@ -61,7 +72,7 @@ summary.irtest <- function(object, ...){
   return(
     structure(
       sum_result,
-      class = c('irtest_summary', 'list')
+      class = c('IRTest_summary', 'list')
     )
   )
 }
@@ -71,7 +82,7 @@ summary.irtest <- function(object, ...){
   n_par <- data.frame(item = 0, dist = 0, total = 0)
 
   # item parameters
-  if(any(class(object) == "dich")){
+  if(inherits(object, c("dich"))){
     n_par$item <-
       sum(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH")) +
       2*sum(object$Options$model %in% c(2, "2PL")) +
@@ -79,13 +90,13 @@ summary.irtest <- function(object, ...){
     # if(all(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH"))){
     #   n_par$item <- n_par$item-1
     # }
-  } else if(any(class(object) == "poly")){
+  } else if(inherits(object, c("poly"))){
     if(object$Options$model == "PCM"){
       n_par$item <- sum(!is.na(object$par_est[,-1]))
     } else if(object$Options$model %in% c("GPCM", "GRM")){
       n_par$item <- sum(!is.na(object$par_est))
     }
-  } else if(any(class(object) == "mix")){
+  } else if(inherits(object, c("mix"))){
     n_par$item <-
       sum(object$Options$model_D %in% c(1, "1PL", "Rasch", "RASCH")) +
       2*sum(object$Options$model_D %in% c(2, "2PL")) +
@@ -125,10 +136,10 @@ summary.irtest <- function(object, ...){
     n_par$dist <- object$Options$h
   }
 
-  if(any(class(object) %in% c("dich", "poly"))&all(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH","PCM"))){
+  if(inherits(object, c("dich", "poly"))&all(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH","PCM"))){
     n_par$dist <- n_par$dist+1
   }
-  if(any(class(object) == "mix")&all(c(object$Options$model_D,object$Options$model_P) %in% c(1, "1PL", "Rasch", "RASCH","PCM"))){
+  if(inherits(object, c("mix"))&all(c(object$Options$model_D,object$Options$model_P) %in% c(1, "1PL", "Rasch", "RASCH","PCM"))){
     n_par$dist <- n_par$dist+1
   }
 
@@ -139,13 +150,13 @@ summary.irtest <- function(object, ...){
 }
 
 .n_item_used <- function(object){
-  if(any(class(object)=='dich')){
+  if(inherits(object, c("dich"))){
     data.frame(dich = nrow(object$par_est),
                poly = 0)
-  } else if(any(class(object)=='poly')){
+  } else if(inherits(object, c("poly"))){
     data.frame(dich = 0,
                poly = nrow(object$par_est))
-  } else if(any(class(object)=='mix')){
+  } else if(inherits(object, c("mix"))){
     data.frame(dich = nrow(object$par_est$Dichotomous),
                poly = nrow(object$par_est$Polytomous))
   }

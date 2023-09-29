@@ -10,21 +10,15 @@
 #' The evaluated values of PDF, a length of which equals to that of \code{x}.
 #'
 #' @export
-#'
+#' @import ggplot2
 #'
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 stat_function
 #' @importFrom ggplot2 lims
 #' @examples
-#' \dontrun{
 #' # Data generation and model fitting
-#'
-#' data <- DataGeneration(seed = 1,
-#'                        model_P = "GPCM",
-#'                        N=1000,
-#'                        nitem_D = 0,
+#' data <- DataGeneration(N=1000,
 #'                        nitem_P = 10,
-#'                        categ = rep(5,10),
 #'                        latent_dist = "2NM",
 #'                        d = 1.664,
 #'                        sd_ratio = 2,
@@ -34,10 +28,10 @@
 #'
 #'
 #' # Plotting the latent distribution
-#' ggplot()+
-#'   stat_function(fun=latent_distribution, args=list(M1))+
-#'   lims(x=c(-6,6))
-#' }
+#' ggplot2::ggplot()+
+#'   ggplot2::stat_function(fun=latent_distribution, args=list(M1))+
+#'   ggplot2::lims(x=c(-6,6), y=c(0,0.5))
+#'
 #'
 latent_distribution <- function(x, model.fit){
   dlatent <- NULL

@@ -43,10 +43,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' Alldata <- DataGeneration(seed = 1,
-#'                           model_D = rep(1, 10),
-#'                           N=500,
+#' Alldata <- DataGeneration(N=500,
 #'                           nitem_D = 10,
 #'                           latent_dist = "2NM",
 #'                           d = 1.664,
@@ -67,10 +64,9 @@
 #' rel$summed.score.scale$test
 #' rel$summed.score.scale$item
 #'
-#' ## On the summed-score scale
+#' ## On the theta scale
 #' rel$theta.scale
 #'
-#'}
 reliability <- function(x){
 
   # Summed score scale
@@ -78,20 +74,20 @@ reliability <- function(x){
   Xk <- x$quad
   param <- x$par_est
 
-  if(any(class(x)%in%c("dich", "poly"))){
+  if(inherits(x, c("dich", "poly"))){
     n_item <- nrow(param)
     true_score_matrix <- matrix(nrow = length(Xk), ncol = n_item)
     squared <- matrix(nrow = length(Xk), ncol = n_item)
 
     cats <- x$Options$categories
 
-    if(any(class(x)=="dich")){
+    if(inherits(x, c("dich"))){
       for(i in 1:n_item){
         ppp <- P(Xk, a = param[i,1], b = param[i,2], c = param[i,3])
         true_score_matrix[,i] <- cbind(1-ppp,ppp)%*%cats[[i]]
         squared[,i] <- cbind(1-ppp,ppp)%*%cats[[i]]^2
       }
-    } else if(any(class(x)=="poly")){
+    } else if(inherits(x, c("poly"))){
       for(i in 1:n_item){
         if(x$Options$model %in% c("PCM", "GPCM")){
           ppp <- P_P(Xk, a = param[i,1], b = param[i,-1])
@@ -102,7 +98,7 @@ reliability <- function(x){
         squared[,i] <- ppp%*%cats[[i]]^2
       }
     }
-  } else if(any(class(x)=="mix")){
+  } else if(inherits(x, c("mix"))){
     n_item_D <- nrow(param$Dichotomous)
     n_item_P <- nrow(param$Polytomous)
 
@@ -142,7 +138,7 @@ reliability <- function(x){
     mu_T <- Ak%*%true_score_matrix
     sigma2_T <- Ak%*%true_score_matrix^2-mu_T^2
     rxx2 <- as.vector(sigma2_T/(sigma2_T+sigma2_e))
-    if(any(class(x)=="mix")){
+    if(inherits(x, c("mix"))){
       names(rxx2) <- c(paste(row.names(param$Dichotomous),"D", sep = "_"),
                        paste(row.names(param$Polytomous),"P", sep = "_"))
     } else {

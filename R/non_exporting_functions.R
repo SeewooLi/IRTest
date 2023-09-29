@@ -2,7 +2,7 @@
 # citation
 #################################################################################################################
 .onAttach <- function(libname, pkgname) {
-  package_citation <- "Li, S. (2022). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 1.11.0). R package. \n"
+  package_citation <- "Li, S. (2023). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 1.11.0). R package. \n"
   package_URL <- "URL: https://CRAN.R-project.org/package=IRTest"
   packageStartupMessage("Thank you for using IRTest!")
   packageStartupMessage("Please cite the package as: \n")
@@ -888,6 +888,22 @@ latent_dist_est <- function(method, Xk, posterior, range,
     )
 }
 
+#################################################################################################################
+# Gauss-Hermite constants
+#################################################################################################################
+GHc <- c(1,0,
+         1,0,
+         3,0,
+         15,0,
+         105,0,
+         945,0,
+         10395,0,
+         135135,0,
+         2027025,0,
+         34459425,0,
+         654729075)
+
+usethis::use_data(GHc, internal = TRUE, overwrite = TRUE)
 
 #################################################################################################################
 # B matrix
@@ -895,7 +911,7 @@ latent_dist_est <- function(method, Xk, posterior, range,
 B_mat <- function(h){
   mmat <- matrix(nrow = h+1, ncol = h+1)
   for(i in 1:(1+h)){
-    mmat[i,] <- IRTest::GHc[(1:(1+h))+(i-1)]
+    mmat[i,] <- GHc[(1:(1+h))+(i-1)]
   }
   umat <- diag(sqrt(eigen(mmat)$values))%*%t(eigen(mmat)$vectors)
   return(umat)

@@ -10,8 +10,7 @@
 #' @param N A numeric value. The number of examinees.
 #' @param nitem_D A numeric value. The number of dichotomous items.
 #' @param nitem_P A numeric value. The number of polytomous items.
-#' @param model_D A vector of length \code{nitem_D}.
-#' The \emph{i}th element is the probability model for the \emph{i}th dichotomous item.
+#' @param model_D A vector or a character string that represents the probability model for the dichotomous items.
 #' @param model_P A character string that represents the probability model for the polytomous items.
 #' @param latent_dist A character string that determines the type of latent distribution.
 #' Currently available options are \code{"beta"} (four-parameter beta distribution; \code{\link{rBeta.4P}}),
@@ -41,7 +40,7 @@
 #' If unspecified, \code{s} is passed on to the value.
 #' @param c_l A numeric value. The lower bound of item guessing parameters (\emph{c}).
 #' @param c_u A numeric value. The lower bound of item guessing parameters (\emph{c}).
-#' @param categ A numeric vector of length \code{nitem_P}.
+#' @param categ A numeric vector of length \code{nitem_P}. The default is 5.
 #' The \emph{i}th element equals the number of categories of the \emph{i}th polyotomous item.
 #'
 #' @return This function returns a \code{list} which contains several objects:
@@ -66,78 +65,48 @@
 #' # Dichotomous item responses only
 #'
 #' Alldata <- DataGeneration(seed = 1,
-#'                           model_D = rep(3, 10),
+#'                           model_D = 3,
 #'                           N=500,
 #'                           nitem_D = 10,
-#'                           nitem_P = 0,
 #'                           latent_dist = "2NM",
 #'                           d = 1.664,
 #'                           sd_ratio = 2,
 #'                           prob = 0.3)
-#'
-#' data <- Alldata$data_D
-#' item <- Alldata$item_D
-#' initialitem <- Alldata$initialitem_D
-#' theta <- Alldata$theta
 #'
 #'
 #' # Polytomous item responses only
 #'
-#' Alldata <- DataGeneration(seed = 2,
+#' Alldata <- DataGeneration(seed = 1,
 #'                           N=1000,
-#'                           item_D=NULL,
-#'                           item_P=NULL,
-#'                           theta = NULL,
-#'                           nitem_D = 0,
 #'                           nitem_P = 10,
-#'                           categ = rep(3:7,each = 2),
 #'                           latent_dist = "2NM",
 #'                           d = 1.664,
 #'                           sd_ratio = 2,
 #'                           prob = 0.3)
-#'
-#' data <- Alldata$data_P
-#' item <- Alldata$item_P
-#' initialitem <- Alldata$initialitem_P
-#' theta <- Alldata$theta
 #'
 #'
 #' # Mixed-format items
 #'
 #' Alldata <- DataGeneration(seed = 2,
-#'                           model_D = rep(1:2, each=10),# 1PL model is applied to item #1~10
-#'                                                       # and 2PL model is applied to item #11~20.
 #'                           N=1000,
 #'                           nitem_D = 20,
 #'                           nitem_P = 10,
-#'                           categ = rep(3:7,each = 2),# 3 categories for item #21-22,
-#'                                                     # 4 categories for item #23-24,
-#'                                                     # ...,
-#'                                                     # and 7 categories for item #29-30.
 #'                           latent_dist = "2NM",
 #'                           d = 1.664,
 #'                           sd_ratio = 2,
 #'                           prob = 0.3)
 #'
-#' DataD <- Alldata$data_D
-#' DataP <- Alldata$data_P
-#' itemD <- Alldata$item_D
-#' itemP <- Alldata$item_P
-#' initialitemD <- Alldata$initialitem_D
-#' initialitemP <- Alldata$initialitem_P
-#' theta <- Alldata$theta
-#'
 DataGeneration <- function(seed=1, N=2000,
                            nitem_D=0, nitem_P=0,
                            model_D="2PL", model_P="GPCM",
-                           latent_dist=NULL,
+                           latent_dist="Normal",
                            item_D=NULL, item_P=NULL,
                            theta = NULL,
                            prob=0.5, d=1.7, sd_ratio=1,
                            m = 0, s = 1,
                            a_l=0.8, a_u=2.5,
                            b_m=NULL, b_sd=NULL,
-                           c_l=0, c_u=0.2, categ=NULL){
+                           c_l=0, c_u=0.2, categ=5){
   initialitem_D=NULL; data_D=NULL
   initialitem_P=NULL; data_P=NULL
 

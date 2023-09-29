@@ -4,10 +4,9 @@
 #'
 #' @import ggplot2
 #'
-#' @param x A \code{class == "irtest"} object obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.
+#' @param x An object of \code{"IRTest"}-class obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.
 #' @param ... Other argument(s) passed on to draw a plot of an estimated latent distribution.
-#' Arguments are passed on to \code{\link{stat_function}}, if the distribution estimation method is the one using two-component normal mixture distribution (i.e., \code{latent_dist == "Mixture"} or \code{"2NM"})
-#' or the normal distribution (i.e., \code{latent_dist == "N"},  \code{"normal"}, or \code{"Normal"}).
+#' Arguments are passed on to \code{\link{stat_function}}, when the distribution estimation method is 2NM, KDE, or DC.
 #' Otherwise, they are passed on to \code{\link{geom_line}}.
 #'
 #' @return A plot of estimated latent distribution.
@@ -16,15 +15,10 @@
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @examples
-#' \dontrun{
 #' # Data generation and model fitting
 #'
-#' data <- DataGeneration(seed = 1,
-#'                        #model_D = rep(1, 10),
-#'                        N=1000,
-#'                        nitem_D = 0,
-#'                        nitem_P = 8,
-#'                        categ = rep(3:4,each = 4),
+#' data <- DataGeneration(N=1000,
+#'                        nitem_P = 10,
 #'                        latent_dist = "2NM",
 #'                        d = 1.664,
 #'                        sd_ratio = 2,
@@ -37,8 +31,8 @@
 #'
 #' plot(x=M1, linewidth = 1, color = 'red') +
 #'   ggplot2::lims(x = c(-6, 6), y = c(0, .5))
-#'}
-plot.irtest <- function(x, ...){
+#'
+plot.IRTest <- function(x, ...){
   if(x[["Options"]][["latent_dist"]] %in% c("EHM", "LLS")){
     plt <- ggplot2::ggplot(
       mapping=aes(

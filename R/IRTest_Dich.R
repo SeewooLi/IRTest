@@ -133,14 +133,10 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # A preparation of dichotomous item response data
 #'
-#' data <- DataGeneration(seed = 1,
-#'                        model_D = rep(1, 10),
-#'                        N=500,
+#' data <- DataGeneration(N=500,
 #'                        nitem_D = 10,
-#'                        nitem_P = 0,
 #'                        latent_dist = "2NM",
 #'                        d = 1.664,
 #'                        sd_ratio = 2,
@@ -150,7 +146,7 @@
 #' # Analysis
 #'
 #' M1 <- IRTest_Dich(data)
-#'}
+#'
 IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal", max_iter=200,
                         threshold=0.0001, bandwidth="SJ-ste", h=NULL){
@@ -360,7 +356,10 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
   }
 
   # ability parameter estimation
-  if(ability_method == 'EAP'){
+  if(is.null(ability_method)){
+    theta <- NULL
+    theta_se <- NULL
+  } else if(ability_method == 'EAP'){
     theta <- as.numeric(E$Pk%*%E$Xk)
     theta_se <- NULL
   } else if(ability_method == 'MLE'){
@@ -396,7 +395,7 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
          density_par = density_par,
          Options = Options # specified argument values
          ),
-    class = c("dich", "irtest", "list")
+    class = c("dich", "IRTest", "list")
     )
   )
 }

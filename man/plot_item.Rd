@@ -4,7 +4,7 @@
 \alias{plot_item}
 \title{Plot of item response function}
 \usage{
-plot_item(x, item.number, type = NULL)
+plot_item(x, item.number = 1, type = NULL)
 }
 \arguments{
 \item{x}{A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, or \code{IRTest_Mix}.}
@@ -19,6 +19,26 @@ This function returns a plot of item response function.
 }
 \description{
 This function draws a item response function of an item of the fitted model.
+}
+\examples{
+# A preparation of dichotomous item response data
+
+data <- DataGeneration(N=500,
+                       nitem_D = 10,
+                       latent_dist = "2NM",
+                       d = 1.664,
+                       sd_ratio = 2,
+                       prob = 0.3)$data_D
+
+
+# Analysis
+
+M1 <- IRTest_Dich(data)
+
+# Plotting item response function
+
+plot_item(M1, item.number = 1)
+
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}

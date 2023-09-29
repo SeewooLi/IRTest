@@ -14,7 +14,25 @@
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @export
+#' @examples
+#' \donttest{
+#' # Preparation of dichotomous item response data
 #'
+#' data <- DataGeneration(N=1000,
+#'                        nitem_P = 8,
+#'                        latent_dist = "2NM",
+#'                        d = 1.414,
+#'                        sd_ratio = 2,
+#'                        prob = 0.5)$data_P
+#'
+#' # Analysis
+#'
+#' M1 <- IRTest_Poly(data)
+#'
+#' # Recommendation of category collapsing
+#'
+#' cat_clps(M1$par_est)
+#' }
 cat_clps <- function(item.matrix, range = c(-4,4), increment=0.005){
   clpsd_rslt <- list()
   item_names <- row.names(item.matrix)
@@ -45,6 +63,29 @@ cat_clps <- function(item.matrix, range = c(-4,4), increment=0.005){
 #' @param new_cat A list of a new categorization scheme
 #'
 #' @return Recategorized data
+#' @export
+#' @author Seewoo Li \email{cu@@yonsei.ac.kr}
+#' @examples
+#' # Preparation of dichotomous item response data
+#'
+#' data <- DataGeneration(N=1000,
+#'                        nitem_P = 8,
+#'                        latent_dist = "2NM",
+#'                        d = 1.414,
+#'                        sd_ratio = 2,
+#'                        prob = 0.5)$data_P
+#'
+#' # Analysis
+#'
+#' M1 <- IRTest_Poly(data)
+#'
+#' # Recommendation of category collapsing
+#'
+#' new_cat <- cat_clps(M1$par_est)
+#'
+#' # Recategorization of data
+#'
+#' recategorize(data, new_cat)
 #'
 recategorize <- function(data, new_cat){
   data <- reorder_mat(data)
