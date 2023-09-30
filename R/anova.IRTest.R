@@ -52,6 +52,7 @@ anova.IRTest <- function(object, ...){
   )
 }
 
+#' @export
 print.anova_IRTest <- function(x, ...){
   cat("Result of model comparison\n\n")
   x$p_value <- round(x$p_value, 4)
@@ -87,6 +88,7 @@ best_model <- function(..., criterion = "HQ"){
   )
 }
 
+#' @export
 print.best_model <- function(x, ...){
   cat("The best model:", x$best,"\n\n")
 
