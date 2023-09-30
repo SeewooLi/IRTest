@@ -141,7 +141,7 @@ summary(Mod1)
 
 * Parameter estimation results
 
-```{r results, fig.align='center', fig.height=4, fig.width=10, warning=FALSE}
+```{r results, message=FALSE, fig.align='center', fig.height=4, fig.width=10, warning=FALSE}
 colnames(item) <- c("a", "b", "c")
 
 knitr::kables(
