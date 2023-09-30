@@ -25,7 +25,8 @@ VignetteBuilder: knitr
 Imports:
     betafunctions,
     dcurver,
-    ggplot2
+    ggplot2,
+    usethis
 Depends: 
     R (>= 2.10)
 Config/testthat/edition: 3
