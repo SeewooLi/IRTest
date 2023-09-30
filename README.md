@@ -61,6 +61,8 @@ Followings are the functions of **IRTest**.
 
 - `factor_score` estimates factor scores of examinees.
 
+- `best_model` selects the best model using a evaluation criterion.
+
 - `item_fit` tests the statistical fit of all items individually.
 
 - `inform_f_item` calculates the information value(s) of an item.
@@ -89,6 +91,9 @@ Followings are the functions of **IRTest**.
   (or, equivalently, item response functions).
 
 - `recategorize` implements the category collapsing.
+
+- For S3 methods, `anova`, `coef`, `logLik`, `plot`, `print`, and
+  `summary` are available.
 
 ## Example
 

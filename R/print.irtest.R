@@ -87,7 +87,7 @@ print.IRTest_summary <- function(x, ...){
 
 .prt.irtest.model_fit <- function(object){
   cat('Model Fit: ', '\n')
-  cat(' log-likeli  ', -object$model_fit$deviance/2,'\n')
+  cat(' log-likeli  ', object$model_fit$ll,'\n')
   cat('   deviance  ', object$model_fit$deviance,'\n')
   cat('        AIC  ', object$model_fit$AIC,'\n')
   cat('        BIC  ', object$model_fit$BIC,'\n')

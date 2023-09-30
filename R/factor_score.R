@@ -48,8 +48,8 @@ factor_score <- function(x, ability_method = "EAP"){
       data = x$Options$data
       type = x$Options$model
     } else if(inherits(x, "mix")){
-      item = list(initialitem_D,initialitem_P)
-      data = list(data_D,data_P)
+      item = list(x$par_est$Dichotomous,x$par_est$Polytomous)
+      data = list(x$Options$data_D, x$Options$data_P)
       type = c("mix", x$Options$model_P)
     }
     mle_result <- MLE_theta(

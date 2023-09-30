@@ -2,11 +2,11 @@ bibentry(bibtype = "Manual",
          title = "IRTest: Parameter Estimation of Item Response Theory with Estimation of Latent Distribution",
          author = "Seewoo Li",
          year = "2023",
-         note = "R package version 1.11.0",
+         note = "R package version 1.12.0",
          url = "https://CRAN.R-project.org/package=IRTest",
          textVersion=paste("Li, S (2023).",
                            "IRTest: Parameter estimation of item response theory with estimation of latent distribution ",
-                           "(Version 1.11.0) ",
+                           "(Version 1.12.0) ",
                            "[Computer software package].",
                            "R package.")
                            )

@@ -53,6 +53,7 @@ summary.IRTest <- function(object, ...){
 
   sum_result$model_fit <-
     data.frame(
+      ll = -object$logL/2,
       deviance = object$logL,
       AIC = object$logL+2*sum_result$n_par$total,
       BIC = object$logL+log(sum_result$n_respondents)*sum_result$n_par$total,

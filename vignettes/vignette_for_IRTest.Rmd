@@ -59,6 +59,10 @@ Followings are the functions of **IRTest**.
   
   + `IRTest_Mix` is the estimation function for *a mixed-format test*, a test comprising both dichotomous item(s) and polytomous item(s).
   
+  + `factor_score` estimates factor scores of examinees.
+  
+  + `best_model` selects the best model using a evaluation criterion.
+  
   + `item_fit` tests the statistical fit of all items individually.
   
   + `inform_f_item` calculates the information value(s) of an item.
@@ -80,6 +84,8 @@ Followings are the functions of **IRTest**.
   + `cat_clps` recommends category collapsing based on item parameters (or, equivalently, item response functions).
   
   + `recategorize` implements the category collapsing.
+  
+  + For S3 methods, `anova`, `coef`, `logLik`, `plot`, `print`, and `summary` are available.
 
 
 \
@@ -130,18 +136,22 @@ Mod1 <- IRTest_Dich(data = data,
 
 + **Results**
 
-```{r, fig.align='center', fig.height=6, fig.width=6}
+```{r, message=FALSE, fig.align='center', fig.height=6, fig.width=6}
 ### Summary
 summary(Mod1)
 
+### Log-likelihood
+logLik(Mod1)
+
 ### The estimated item parameters
-Mod1$par_est
+coef(Mod1)
 
 ### The asymptotic standard errors of item parameters
 Mod1$se
 
 ### The estimated ability parameters
-plot(theta, Mod1$theta)
+fscore <- factor_score(Mod1, ability_method = "MLE")
+plot(theta, fscore$theta)
 abline(b=1, a=0)
 ```
 
@@ -299,18 +309,22 @@ Mod1 <- IRTest_Poly(data = data,
 
 + **Results**
 
-```{r, fig.align='center', fig.height=6, fig.width=6}
+```{r, message=FALSE, fig.align='center', fig.height=6, fig.width=6}
 ### Summary
 summary(Mod1)
 
+### Log-likelihood
+logLik(Mod1)
+
 ### The estimated item parameters
-Mod1$par_est
+coef(Mod1)
 
 ### The asymptotic standard errors of item parameters
 Mod1$se
 
 ### The estimated ability parameters
-plot(theta, Mod1$theta)
+fscore <- factor_score(Mod1, ability_method = "MLE")
+plot(theta, fscore$theta)
 abline(b=1, a=0)
 ```
 
@@ -442,9 +456,8 @@ This function returns artificial data and some useful objects for analysis (i.e.
 
 ```{r}
 Alldata <- DataGeneration(seed = 123456789,
-                          model_D = rep(2,10),
+                          model_D = 2,
                           model_P = "GRM",
-                          categ = rep(5,5),
                           N=1000,
                           nitem_D = 10,
                           nitem_P = 5,
@@ -486,18 +499,22 @@ Mod1 <- IRTest_Mix(data_D = DataD,
 
 + **Results**
 
-```{r, fig.align='center', fig.height=6, fig.width=6}
+```{r, message=FALSE, fig.align='center', fig.height=6, fig.width=6}
 ### Summary
 summary(Mod1)
 
+### Log-likelihood
+logLik(Mod1)
+
 ### The estimated item parameters
-Mod1$par_est
+coef(Mod1)
 
 ### The asymptotic standard errors of item parameters
 Mod1$se
 
 ### The estimated ability parameters
-plot(theta, Mod1$theta)
+fscore <- factor_score(Mod1, ability_method = "MLE")
+plot(theta, fscore$theta)
 abline(b=1, a=0)
 ```
 
@@ -624,5 +641,55 @@ ggplot()+
   theme_bw()
 ```
 
-----
+
+----------
+
+\break
+
+# 4. Model comparison
+
++ **Data generation and model fitting**
+
+```{r}
+data <- DataGeneration(N=2000,
+                       nitem_D = 20,
+                       latent_dist = "2NM",
+                       d = 1.664,
+                       sd_ratio = 2,
+                       prob = 0.3)$data_D
+```
+
+```{r}
+Normal <- IRTest_Dich(data)
+EHM <- IRTest_Dich(data, latent_dist = "EHM")
+NM2 <- IRTest_Dich(data, latent_dist = "2NM")
+KDM <- IRTest_Dich(data, latent_dist = "KDE")
+DC1 <- IRTest_Dich(data, latent_dist = "DC", h = 1)
+DC2 <- IRTest_Dich(data, latent_dist = "DC", h = 2)
+DC3 <- IRTest_Dich(data, latent_dist = "DC", h = 3)
+DC4 <- IRTest_Dich(data, latent_dist = "DC", h = 4)
+DC5 <- IRTest_Dich(data, latent_dist = "DC", h = 5)
+DC6 <- IRTest_Dich(data, latent_dist = "DC", h = 6)
+DC7 <- IRTest_Dich(data, latent_dist = "DC", h = 7)
+DC8 <- IRTest_Dich(data, latent_dist = "DC", h = 8)
+DC9 <- IRTest_Dich(data, latent_dist = "DC", h = 9)
+DC10<- IRTest_Dich(data, latent_dist = "DC", h = 10)
+```
+
++ **The best Davidian-curve model**
+
+```{r}
+best_model(DC1,DC2,DC3,DC4,DC5,DC6,DC7,DC8,DC9,DC10)
+```
+
++ **The best model overall**
+
+```{r}
+best_model(Normal, EHM, NM2, KDM, DC6)
+```
+
+
+
+
+
 
