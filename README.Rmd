@@ -65,7 +65,7 @@ Followings are the functions of **IRTest**.
   
   + `factor_score` estimates factor scores of examinees.
   
-  + `best_model` selects the best model using a evaluation criterion.
+  + `best_model` selects the best model using an evaluation criterion.
   
   + `item_fit` tests the statistical fit of all items individually.
   
