@@ -8,9 +8,12 @@
 #' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
 #' The default is \code{EAP}.
 #'
-#' @return The estimated ability parameter values.
-#' If \code{ability_method = "MLE"}, and if an examinee answers all or none of the items correctly,
-#' the function returns \eqn{\pm}\code{Inf}.
+#' @return
+#' \item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}.
+#' If an examinee receives a maximum or minimum score for all items, the function returns \eqn{\pm}\code{Inf}.}
+#' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
+#' If an examinee receives a maximum or minimum score for all items, the function returns \code{NA}.}
+#'
 #'
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'

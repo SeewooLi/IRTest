@@ -103,7 +103,7 @@
 #' \item{Pk}{The posterior probabilities of examinees at quadrature points.}
 #' \item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}. If an examinee receives a maximum or minimum score for all items, the function returns \eqn{\pm}\code{Inf}.}
 #' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
-#' If an examinee answers all or none of the items correctly, the function returns \code{NA}.}
+#' If an examinee receives a maximum or minimum score for all items, the function returns \code{NA}.}
 #' \item{logL}{The deviance (i.e., -2log\emph{L}).}
 #' \item{density_par}{The estimated density parameters.}
 #' \item{Options}{A replication of input arguments and other information.}

@@ -1,10 +1,12 @@
 # IRTest 1.12.0
 
 * Developed functions for medel comparison and model selection.
-* Modify `GHc` as an implicit object.
-* Provide examples.
-* From `any(class())` to `inherits()`.
-* Provide more S3 methods.
+* Modified `GHc` as an implicit object.
+* Provided examples for functions.
+* Changed from `any(class())` to `inherits()`.
+* Provided more S3 methods.
+* Updated the manual.
+* Added `coef_se` that returns S.E. of item parameter estimates.
 
 # IRTest 1.11.0
 

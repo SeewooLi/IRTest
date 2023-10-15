@@ -17,9 +17,14 @@
 #' @examples
 #' # Data generation and model fitting
 #'
-#' data <- DataGeneration(N=1000, nitem_P = 10)$data_P
+#' data <- DataGeneration(N=1000,
+#'                        nitem_D = 15,
+#'                        latent_dist = "2NM",
+#'                        d = 1.664,
+#'                        sd_ratio = 2,
+#'                        prob = 0.3)$data_D
 #'
-#' M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
+#' M1 <- IRTest_Dich(data = data, latent_dist = "KDE")
 #'
 #' # Plotting the latent distribution
 #'

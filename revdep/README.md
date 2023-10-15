@@ -42,11 +42,11 @@
   </tr>
   <tr>
    <td style="text-align:left;"> date </td>
-   <td style="text-align:left;"> 2023-09-19 </td>
+   <td style="text-align:left;"> 2023-10-16 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> rstudio </td>
-   <td style="text-align:left;"> 2023.06.2+561 Mountain Hydrangea (desktop) </td>
+   <td style="text-align:left;"> 2023.09.0+463 Desert Sunflower (desktop) </td>
   </tr>
   <tr>
    <td style="text-align:left;"> pandoc </td>
@@ -69,8 +69,32 @@
 <tbody>
   <tr>
    <td style="text-align:left;"> IRTest </td>
-   <td style="text-align:left;"> 1.7.0 </td>
    <td style="text-align:left;"> 1.11.0 </td>
+   <td style="text-align:left;"> 1.12.0 </td>
+   <td style="text-align:left;"> * </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> curl </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> 5.1.0 </td>
+   <td style="text-align:left;"> * </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> fansi </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> 1.0.5 </td>
+   <td style="text-align:left;"> * </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ggplot2 </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> 3.4.4 </td>
+   <td style="text-align:left;"> * </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> vctrs </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> 0.6.4 </td>
    <td style="text-align:left;"> * </td>
   </tr>
 </tbody>

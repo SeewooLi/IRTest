@@ -26,6 +26,8 @@ The basic concept and formula of the reliability coefficient can be expressed as
 An observed score of Item \eqn{i}, \eqn{X_i}, is decomposed as the sum of a true score \eqn{T_i} and an error \eqn{e_i}.
 Then, with the assumption of \eqn{\sigma_{T_{i}e_{j}}=\sigma_{e_{i}e_{j}}=0}, the reliability coefficient of a test is defined as;
 \deqn{\rho_{TX}=\rho_{XX^{'}}=\frac{\sigma_{T}^{2}}{\sigma_{X}^{2}}=\frac{\sigma_{T}^{2}}{\sigma_{T}^{2}+\sigma_{e}^{2}}=1-\frac{\sigma_{e}^{2}}{\sigma_{X}^{2}}}
+
+See May and Nicewander (1994) for the specific formula used in this function.
 }
 
 \item{Reliability coefficient on \eqn{\theta} scale}{
@@ -58,6 +60,8 @@ Green, B.F., Bock, R.D., Humphreys, L.G., Linn, R.L., & Reckase, M.D. (1984). Te
 Kim, S. (2012). A note on the reliability coefficients for item response model-based ability estimates. \emph{Psychometrika, 77}(1), 153-162.
 
 Kim, S., Feldt, L.S. (2010). The estimation of the IRT reliability coefficient and its lower and upper bounds, with comparisons to CTT reliability statistics. \emph{Asia Pacific Education Review, 11}, 179–188.
+
+May, K., Nicewander, A.W. (1994). Reliability and information functions for percentile ranks. \emph{Journal of Educational Measurement, 31}(4), 313-325.
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}

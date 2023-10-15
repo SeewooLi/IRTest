@@ -2,29 +2,27 @@
 
 ### Major changes
 
-* Developed an option for graded response model.
-* Made MLE available for all model-fitting functions.
-* Developed `latent_distribution`.
-* Developed `inform_f_item` and `inform_f_test`.
+* Developed functions for model comparison and model selection.
+* Added `coef_se` that returns S.E. of item parameter estimates.
 
 ### Minor changes
 
-* Outputs reflect item names in an input file.
-* Enhanced algorithm convergence for model-fitting functions.
-* `reliability` calculates a coefficient on the $\theta$ scale.
-* `reliability` uses the raw value in a given data for calculating the reliability coefficient.
-* `reliability` returns both test reliability coefficient and item reliability coefficients.
+* Modified `GHc` as an implicit object.
+* Provided examples for functions.
+* Changed from `any(class())` to `inherits()`.
+* Provided more S3 methods.
+* Updated the manual.
 
   
 ## Test environments
 
-* macOS 12.6.8 (release), R 4.3.1
+* macOS Monterey 12.7 (release), R 4.3.1
 
 * Ubuntu 22.04.3 (oldrel-1), R 4.2.3
 
 * Ubuntu 22.04.3 (release), R 4.3.1
 
-* win-builder (devel and release)
+* win-builder (devel and release), R 4.3.1
 
 
 ## R CMD check results
