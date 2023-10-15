@@ -2,18 +2,21 @@
 % Please edit documentation in R/anova.IRTest.R
 \name{best_model}
 \alias{best_model}
-\title{Determination of the best model}
+\title{Selecting the best model}
 \usage{
 best_model(..., criterion = "HQ")
 }
 \arguments{
 \item{...}{Candidate models}
 
-\item{criterion}{The criterion to be used.}
+\item{criterion}{The criterion to be used. The default is \code{HQ}.}
 }
 \value{
 The best model and model-fit indices.
 }
 \description{
-Determination of the best model
+Selecting the best model
+}
+\author{
+Seewoo Li \email{cu@yonsei.ac.kr}
 }

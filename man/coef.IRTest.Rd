@@ -14,7 +14,7 @@
 \item{...}{Other arguments.}
 }
 \value{
-Coefficients extracted from the model \code{object} object.
+Coefficients extracted from the model (\code{object}).
 }
 \description{
 A generic function which extracts model coefficients from objects returned by modeling functions.

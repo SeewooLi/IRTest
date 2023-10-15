@@ -3,7 +3,7 @@
 #' @param object A \code{IRTest}-class object from which a log-likelihood value is extracted.
 #' @param ... Other arguments.
 #'
-#' @return Extracted loglikelihood.
+#' @return Extracted log-likelihood.
 #' @export
 #'
 logLik.IRTest <- function(object, ...){

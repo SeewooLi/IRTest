@@ -19,18 +19,12 @@ If \code{ability_method = "MLE"}, and if an examinee answers all or none of the 
 the function returns \eqn{\pm}\code{Inf}.
 }
 \description{
-This estimates factor scores for examinees.
+Factor scores of examinees.
 }
 \examples{
 # A preparation of dichotomous item response data
 
-data <- DataGeneration(N=500,
-                       nitem_D = 10,
-                       latent_dist = "2NM",
-                       d = 1.664,
-                       sd_ratio = 2,
-                       prob = 0.3)$data_D
-
+data <- DataGeneration(N=500, nitem_D = 10)$data_D
 
 # Analysis
 

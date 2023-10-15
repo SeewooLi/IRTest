@@ -2,15 +2,15 @@
 % Please edit documentation in R/plot.IRTest.R
 \name{plot.IRTest}
 \alias{plot.IRTest}
-\title{Plotting the estimated latent distribution}
+\title{Plot of the estimated latent distribution}
 \usage{
 \method{plot}{IRTest}(x, ...)
 }
 \arguments{
 \item{x}{An object of \code{"IRTest"}-class obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.}
 
-\item{...}{Other argument(s) passed on to draw a plot of an estimated latent distribution.
-Arguments are passed on to \code{\link{stat_function}}, when the distribution estimation method is 2NM, KDE, or DC.
+\item{...}{Other aesthetic argument(s) for drawing the plot.
+Arguments are passed on to \code{\link{stat_function}}, if the distribution estimation method is 2NM, KDE, or DC.
 Otherwise, they are passed on to \code{\link{geom_line}}.}
 }
 \value{
@@ -22,19 +22,13 @@ This function draws a plot of the estimated latent distribution (the population 
 \examples{
 # Data generation and model fitting
 
-data <- DataGeneration(N=1000,
-                       nitem_P = 10,
-                       latent_dist = "2NM",
-                       d = 1.664,
-                       sd_ratio = 2,
-                       prob = 0.3)$data_P
+data <- DataGeneration(N=1000, nitem_P = 10)$data_P
 
 M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 
-
 # Plotting the latent distribution
 
-plot(x=M1, linewidth = 1, color = 'red') +
+plot(x = M1, linewidth = 1, color = 'red') +
   ggplot2::lims(x = c(-6, 6), y = c(0, .5))
 
 }

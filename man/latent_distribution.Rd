@@ -7,12 +7,12 @@
 latent_distribution(x, model.fit)
 }
 \arguments{
-\item{x}{A numeric vector. Value(s) in the \eqn{theta} scale to evaluate the PDF.}
+\item{x}{A numeric vector. Value(s) on the \eqn{theta} scale for evaluating the PDF.}
 
 \item{model.fit}{An object returned from an estimation function.}
 }
 \value{
-The evaluated values of PDF, a length of which equals to that of \code{x}.
+The evaluated values of the PDF, a length of which equals to that of \code{x}.
 }
 \description{
 Density function of the estimated latent distribution with mean and standard deviation equal to 0 and 1, respectively.
@@ -28,11 +28,9 @@ data <- DataGeneration(N=1000,
 
 M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 
-
 # Plotting the latent distribution
 ggplot2::ggplot()+
   ggplot2::stat_function(fun=latent_distribution, args=list(M1))+
   ggplot2::lims(x=c(-6,6), y=c(0,0.5))
-
 
 }

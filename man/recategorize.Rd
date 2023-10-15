@@ -7,9 +7,9 @@
 recategorize(data, new_cat)
 }
 \arguments{
-\item{data}{An item response matrix}
+\item{data}{An item response matrix.}
 
-\item{new_cat}{A list of a new categorization scheme}
+\item{new_cat}{A list of a new categorization scheme.}
 }
 \value{
 Recategorized data
@@ -21,11 +21,7 @@ With a recategorization scheme as an input, this function implements recategoriz
 # Preparation of dichotomous item response data
 
 data <- DataGeneration(N=1000,
-                       nitem_P = 8,
-                       latent_dist = "2NM",
-                       d = 1.414,
-                       sd_ratio = 2,
-                       prob = 0.5)$data_P
+                       nitem_P = 8)$data_P
 
 # Analysis
 

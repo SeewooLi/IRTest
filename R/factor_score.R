@@ -1,6 +1,6 @@
 #' Estimated factor scores
 #'
-#' @description This estimates factor scores for examinees.
+#' @description Factor scores of examinees.
 #'
 #'
 #' @param x A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, or \code{IRTest_Mix}.
@@ -18,13 +18,7 @@
 #' @examples
 #' # A preparation of dichotomous item response data
 #'
-#' data <- DataGeneration(N=500,
-#'                        nitem_D = 10,
-#'                        latent_dist = "2NM",
-#'                        d = 1.664,
-#'                        sd_ratio = 2,
-#'                        prob = 0.3)$data_D
-#'
+#' data <- DataGeneration(N=500, nitem_D = 10)$data_D
 #'
 #' # Analysis
 #'

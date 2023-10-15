@@ -9,21 +9,16 @@
 \arguments{
 \item{object}{An object of \code{"IRTest"}-class obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.}
 
-\item{...}{Other argument(s) passed on to summarize the results.}
+\item{...}{Other argument(s).}
 }
 \value{
-A plot of estimated latent distribution.
+Summarized information.
 }
 \description{
-These functions summarize the outputs (e.g., convergence of the estimation algorithm, parameter estimates, AIC, etc.).
+This function summarizes the output (e.g., convergence of the estimation algorithm, number of parameters, model-fit, and estimated latent distribution).
 }
 \examples{
-data <- DataGeneration(N=1000,
-                       nitem_P = 8,
-                       latent_dist = "2NM",
-                       d = 1.664,
-                       sd_ratio = 2,
-                       prob = 0.3)$data_P
+data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 
 M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 

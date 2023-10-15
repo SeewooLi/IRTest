@@ -12,7 +12,7 @@
 \item{...}{Other arguments.}
 }
 \value{
-Extracted loglikelihood.
+Extracted log-likelihood.
 }
 \description{
 Extract Log-Likelihood

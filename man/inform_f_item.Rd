@@ -4,21 +4,20 @@
 \alias{inform_f_item}
 \title{Item information function}
 \usage{
-inform_f_item(x, test, item, type = NULL)
+inform_f_item(x, test, item = 1, type = "d")
 }
 \arguments{
 \item{x}{A vector of \eqn{\theta} value(s).}
 
 \item{test}{An object returned from an estimation function.}
 
-\item{item}{A numeric value indicating an item.
-If \eqn{n} is provided, item information is calculated for the \eqn{n}th item.}
+\item{item}{A natural number indicating the \eqn{n}th item.}
 
 \item{type}{A character value for a mixed format test which determines the item type:
-\code{"d"} stands for a dichotomous item, and \code{"p"} stands for a polytomous item.}
+\code{"d"} and \code{"p"} stand for a dichotomous and polytomous item, respectively.}
 }
 \value{
-A vector of item information values of the same length as \code{x}.
+A vector of the evaluated item information values.
 }
 \description{
 Item information function

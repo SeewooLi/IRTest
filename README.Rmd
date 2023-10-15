@@ -65,6 +65,8 @@ Followings are the functions of **IRTest**.
   
   + `factor_score` estimates factor scores of examinees.
   
+  + `coef_se` returns standard errors of item parameter estimates.
+  
   + `best_model` selects the best model using an evaluation criterion.
   
   + `item_fit` tests the statistical fit of all items individually.
@@ -151,7 +153,7 @@ knitr::kables(
   kableExtra::kable_styling(font_size = 4),
 
     ### Estimated item parameters
-    knitr::kable(Mod1$par_est, format='simple', caption = "Estimated item parameters", digits = 2)%>%
+    knitr::kable(coef(Mod1), format='simple', caption = "Estimated item parameters", digits = 2)%>%
   kableExtra::kable_styling(font_size = 4)
   )
 )
@@ -173,29 +175,19 @@ abline(a=0,b=1)
 
 ```{r plotLD, fig.align='center', fig.height=4, fig.width=8}
 plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
-  lims(
-    y = c(0, .75)
-  )+
-  geom_line(
-    mapping=aes(
-      x=seq(-6,6,length=121), 
-      y=dist2(
-        seq(-6,6,length=121),
-        prob = .3, 
-        d=1.664, 
-        sd_ratio = 2
-        ), 
-      colour="True"),
-    linewidth = 1)+
-  labs(
-    title="The estimated latent density using '2NM'", colour= "Type"
-    )+
+  stat_function(
+    fun = dist2,
+    args = list(prob = .3, d = 1.664, sd_ratio = 2),
+    mapping = aes(colour = "True"),
+    linewidth = 1) +
+  lims(y = c(0, .75)) + 
+  labs(title="The estimated latent density using '2NM'", colour= "Type")+
   theme_bw()
 ```
 
 * Posterior distributions for the examinees
 
-Each examinee's posterior distribution is identified in the E-step of the estimation algorithm (i.e., EM algorithm).
+Each examinee's posterior distribution is calculated in the E-step of EM algorithm.
 Posterior distributions can be found in `Mod1$Pk`.
 
 ```{r}

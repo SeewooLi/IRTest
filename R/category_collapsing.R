@@ -1,38 +1,20 @@
-#' A recommendation for the category collapsing of items based on item parameters
+#' A recommendation for category collapsing of items based on item parameters
 #'
 #' @description
 #' In a polytomous item, one or more score categories may not have the highest probability among the categories in an acceptable \eqn{\theta} range.
-#' In this case, the category could be regarded as a redundant one in a psychometric point of view and can be collapsed into another score category.
+#' In this case, the category may possibly be regarded as redundant in a psychometric point of view and can be collapsed into another score category.
 #' This function returns a recommendation for a recategorization scheme based on item parameters.
 #'
 #' @param item.matrix A matrix of item parameters.
-#' @param range A range of \eqn{\theta} to be evaluated.
-#' @param increment A width of the grid scheme.
+#' @param range A range of \eqn{\theta} to be evaluated. The default is \code{c(-4, 4)}.
+#' @param increment A width of the grid scheme. The default is \code{0.005}.
 #'
 #' @return A list of recommended recategorization for each item.
 #'
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @export
-#' @examples
-#' \donttest{
-#' # Preparation of dichotomous item response data
 #'
-#' data <- DataGeneration(N=1000,
-#'                        nitem_P = 8,
-#'                        latent_dist = "2NM",
-#'                        d = 1.414,
-#'                        sd_ratio = 2,
-#'                        prob = 0.5)$data_P
-#'
-#' # Analysis
-#'
-#' M1 <- IRTest_Poly(data)
-#'
-#' # Recommendation of category collapsing
-#'
-#' cat_clps(M1$par_est)
-#' }
 cat_clps <- function(item.matrix, range = c(-4,4), increment=0.005){
   clpsd_rslt <- list()
   item_names <- row.names(item.matrix)
@@ -59,8 +41,8 @@ cat_clps <- function(item.matrix, range = c(-4,4), increment=0.005){
 #' @description
 #' With a recategorization scheme as an input, this function implements recategorization for the input data.
 #'
-#' @param data An item response matrix
-#' @param new_cat A list of a new categorization scheme
+#' @param data An item response matrix.
+#' @param new_cat A list of a new categorization scheme.
 #'
 #' @return Recategorized data
 #' @export
@@ -69,11 +51,7 @@ cat_clps <- function(item.matrix, range = c(-4,4), increment=0.005){
 #' # Preparation of dichotomous item response data
 #'
 #' data <- DataGeneration(N=1000,
-#'                        nitem_P = 8,
-#'                        latent_dist = "2NM",
-#'                        d = 1.414,
-#'                        sd_ratio = 2,
-#'                        prob = 0.5)$data_P
+#'                        nitem_P = 8)$data_P
 #'
 #' # Analysis
 #'

@@ -3,6 +3,8 @@
 #' @param object An object of \code{"IRTest"}-class.
 #' @param ... Additional objects of \code{"IRTest"}-class to be compared.
 #'
+#' @author Seewoo Li \email{cu@@yonsei.ac.kr}
+#'
 #' @return Model-fit indices and results of likelihood ratio test (LRT).
 #' @export
 #'
@@ -60,10 +62,12 @@ print.anova_IRTest <- function(x, ...){
   invisible(x)
 }
 
-#' Determination of the best model
+#' Selecting the best model
 #'
 #' @param ... Candidate models
-#' @param criterion The criterion to be used.
+#' @param criterion The criterion to be used. The default is \code{HQ}.
+#'
+#' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @return The best model and model-fit indices.
 #' @export

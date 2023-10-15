@@ -1,20 +1,15 @@
 #' Summary of the results
 #'
-#' @description These functions summarize the outputs (e.g., convergence of the estimation algorithm, parameter estimates, AIC, etc.).
+#' @description This function summarizes the output (e.g., convergence of the estimation algorithm, number of parameters, model-fit, and estimated latent distribution).
 #'
 #' @param object An object of \code{"IRTest"}-class obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.
-#' @param ... Other argument(s) passed on to summarize the results.
+#' @param ... Other argument(s).
 #'
-#' @return A plot of estimated latent distribution.
+#' @return Summarized information.
 #' @export
 #'
 #' @examples
-#' data <- DataGeneration(N=1000,
-#'                        nitem_P = 8,
-#'                        latent_dist = "2NM",
-#'                        d = 1.664,
-#'                        sd_ratio = 2,
-#'                        prob = 0.3)$data_P
+#' data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 #'
 #' M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 #'

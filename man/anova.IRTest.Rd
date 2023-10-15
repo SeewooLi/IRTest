@@ -17,3 +17,6 @@ Model-fit indices and results of likelihood ratio test (LRT).
 \description{
 Model comparison
 }
+\author{
+Seewoo Li \email{cu@yonsei.ac.kr}
+}

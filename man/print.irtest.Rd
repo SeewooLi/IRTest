@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.IRTest.R
 \name{print.IRTest}
 \alias{print.IRTest}
-\title{Print of the result}
+\title{Printing the result}
 \usage{
 \method{print}{IRTest}(x, ...)
 }
@@ -18,12 +18,7 @@ Printed texts on the console recommending the usage of \code{summary} function a
 This function prints the summarized information.
 }
 \examples{
-data <- DataGeneration(N=1000,
-                       nitem_P = 8,
-                       latent_dist = "2NM",
-                       d = 1.664,
-                       sd_ratio = 2,
-                       prob = 0.3)$data_P
+data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 
 M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 

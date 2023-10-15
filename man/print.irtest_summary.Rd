@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.IRTest.R
 \name{print.IRTest_summary}
 \alias{print.IRTest_summary}
-\title{Print of the summary}
+\title{Printing the summary}
 \usage{
 \method{print}{IRTest_summary}(x, ...)
 }
@@ -12,22 +12,16 @@
 \item{...}{Additional arguments (currently non-functioning).}
 }
 \value{
-Printed summarized texts on the console.
+Summarized texts on the console.
 }
 \description{
 This function prints the summarized information.
 }
 \examples{
-data <- DataGeneration(N=1000,
-                          nitem_P = 8,
-                          latent_dist = "2NM",
-                          d = 1.664,
-                          sd_ratio = 2,
-                          prob = 0.3)$data_P
+data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 
 M1 <- IRTest_Poly(data = data,
-                  latent_dist = "Mixture",
-                  )
+                  latent_dist = "2NM")
 
 summary(M1)
 

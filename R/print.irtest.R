@@ -1,4 +1,4 @@
-#' Print of the result
+#' Printing the result
 #'
 #' @description This function prints the summarized information.
 #'
@@ -11,12 +11,7 @@
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @examples
-#' data <- DataGeneration(N=1000,
-#'                        nitem_P = 8,
-#'                        latent_dist = "2NM",
-#'                        d = 1.664,
-#'                        sd_ratio = 2,
-#'                        prob = 0.3)$data_P
+#' data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 #'
 #' M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 #'
@@ -40,32 +35,28 @@ print.IRTest <- function(x, ...){
   cat('Use \n')
   cat('1) `$` sign for the direct access to the elements \n')
   cat('and/or \n')
-  cat('2) `summary` function for the briefly summarized output. \n')
+  cat('2) `summary` for a briefly summarized output. \n')
+  cat('and/or \n')
+  cat('3) `coef`, `coef_se`, `factor_score`, and etc. for more flexible usages. \n')
   invisible(x)
 }
 
-#' Print of the summary
+#' Printing the summary
 #'
 #' @description This function prints the summarized information.
 #'
 #' @param x An object returned from \code{\link{summary.IRTest}}.
 #' @param ... Additional arguments (currently non-functioning).
-#' @return Printed summarized texts on the console.
+#' @return Summarized texts on the console.
 #' @export
 #'
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @examples
-#' data <- DataGeneration(N=1000,
-#'                           nitem_P = 8,
-#'                           latent_dist = "2NM",
-#'                           d = 1.664,
-#'                           sd_ratio = 2,
-#'                           prob = 0.3)$data_P
+#' data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 #'
 #' M1 <- IRTest_Poly(data = data,
-#'                   latent_dist = "Mixture",
-#'                   )
+#'                   latent_dist = "2NM")
 #'
 #' summary(M1)
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_item.R
 \name{plot_item}
 \alias{plot_item}
-\title{Plot of item response function}
+\title{Plot of item response functions}
 \usage{
 plot_item(x, item.number = 1, type = NULL)
 }
@@ -11,25 +11,19 @@ plot_item(x, item.number = 1, type = NULL)
 
 \item{item.number}{A numeric value indicating the item number.}
 
-\item{type}{Type of an item being either \code{"d"} (dichotomous item) or \code{"p"} (polytomous item); \code{item.number=1, type="d"} indicates the first dichotomous item.
-This value will be used only when a model fit of mixed-format data is passed onto the function.}
+\item{type}{A character string required if \code{inherits(x, c("mix")) == TRUE}.
+It should be either \code{"d"} (dichotomous item) or \code{"p"} (polytomous item); \code{item.number=1, type="d"} indicates the first dichotomous item.}
 }
 \value{
-This function returns a plot of item response function.
+This function returns a plot of item response functions.
 }
 \description{
-This function draws a item response function of an item of the fitted model.
+This function draws item response functions of an item of the fitted model.
 }
 \examples{
 # A preparation of dichotomous item response data
 
-data <- DataGeneration(N=500,
-                       nitem_D = 10,
-                       latent_dist = "2NM",
-                       d = 1.664,
-                       sd_ratio = 2,
-                       prob = 0.3)$data_D
-
+data <- DataGeneration(N=500, nitem_D = 10)$data_D
 
 # Analysis
 

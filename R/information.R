@@ -2,17 +2,16 @@
 #'
 #' @param x A vector of \eqn{\theta} value(s).
 #' @param test An object returned from an estimation function.
-#' @param item A numeric value indicating an item.
-#' If \eqn{n} is provided, item information is calculated for the \eqn{n}th item.
+#' @param item A natural number indicating the \eqn{n}th item.
 #' @param type A character value for a mixed format test which determines the item type:
-#' \code{"d"} stands for a dichotomous item, and \code{"p"} stands for a polytomous item.
+#' \code{"d"} and \code{"p"} stand for a dichotomous and polytomous item, respectively.
 #'
 #' @return
-#' A vector of item information values of the same length as \code{x}.
+#' A vector of the evaluated item information values.
 #' @export
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
-inform_f_item<- function(x, test, item, type = NULL){
+inform_f_item<- function(x, test, item = 1, type = "d"){
   if(any(class(test) == "dich")){
     param <- test$par_est[item,]
     probs <- P(x, param[1], param[2], param[3])

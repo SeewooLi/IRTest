@@ -3,19 +3,18 @@
 #' @description Probability density for the re-parameterized two-component normal mixture distribution.
 #'
 #' @param x A numeric vector. The location to evaluate the density function.
-#' @param prob A numeric value of \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).
+#' @param prob A numeric value of \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees belonging to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).
 #' @param d A numeric value of \eqn{\delta = \frac{\mu_2 - \mu_1}{\bar{\sigma}}} parameter of two-component Gaussian mixture distribution,
-#' where \eqn{\mu_1} is the estimated mean of the first Gaussian component,
-#' \eqn{\mu_2} is the estimated mean of the second Gaussian component,
-#' and \eqn{\bar{\sigma}} is the standard deviation of the latent distribution (Li, 2021).
-#' Without loss of generality, \eqn{\mu_2 \ge \mu_1}, thus \eqn{\delta \ge 0}, is assumed.
-#' @param sd_ratio A numeric value of \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} is the estimated standard deviation of the first Gaussian component, \eqn{\sigma_2} is the estimated standard deviation of the second Gaussian component (Li, 2021).
+#' where \eqn{\mu_1} and \eqn{\mu_2} are the estimated mean of the first and second Gaussian component, respectively.
+#' And \eqn{\bar{\sigma}} is the overall standard deviation of the latent distribution (Li, 2021).
+#' Without loss of generality, \eqn{\mu_2 \ge \mu_1} is assumed, thus \eqn{\delta \ge 0}.
+#' @param sd_ratio A numeric value of \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} and \eqn{\sigma_2} are the estimated standard deviation of the first and second Gaussian component, respectively (Li, 2021).
 #' @param overallmean A numeric value of \eqn{\bar{\mu}} that determines the overall mean of two-component Gaussian mixture distribution.
 #' @param overallsd A numeric value of \eqn{\bar{\sigma}} that determines the overall standard deviation of two-component Gaussian mixture distribution.
 #'
 #' @details
 #'\describe{
-#'\item{The overall mean and overall standard deviation can be expressed with original parameters of two-component Gaussian mixture distribution;}{
+#'\item{The overall mean and overall standard deviation obtained from original parameters;}{
 #'1) Overall mean (\eqn{\bar{\mu}})
 #'\deqn{\bar{\mu}=\pi\mu_1 + (1-\pi)\mu_2}
 #'

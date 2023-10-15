@@ -22,18 +22,18 @@ IRTest_Mix(
 )
 }
 \arguments{
-\item{data_D}{A matrix of item responses where responses are coded as 0 or 1.
+\item{data_D}{A matrix or data frame of item responses where responses are coded as 0 or 1.
 Rows and columns indicate examinees and items, respectively.}
 
-\item{data_P}{A matrix of polytomous item responses where responses are coded as \code{0, 1, ...}, or \code{m} for an \code{m+1} category item.
+\item{data_P}{A matrix or data frame of item responses coded as \code{0, 1, ..., m} for the \code{m+1} category item.
 Rows and columns indicate examinees and items, respectively.}
 
-\item{model_D}{A vector dichotomous item response models.
+\item{model_D}{A scalar or vector that represents types of item characteristic functions.
 Insert \code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
 \code{2}, \code{"2PL"} for two-parameter logistic model,
 and \code{3}, \code{"3PL"} for three-parameter logistic model. The default is \code{"2PL"}.}
 
-\item{model_P}{A character value of an item response model.
+\item{model_P}{A character value for an IRT model to be applied.
 Currently, \code{PCM}, \code{GPCM}, and \code{GRM} are available. The default is \code{"GPCM"}.}
 
 \item{range}{Range of the latent variable to be considered in the quadrature scheme.
@@ -41,22 +41,22 @@ The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
 
 \item{q}{A numeric value that represents the number of quadrature points. The default value is 121.}
 
-\item{initialitem_D}{A matrix of initial dichotomous item parameter values for starting the estimation algorithm.}
+\item{initialitem_D}{A matrix of initial item parameter values for starting the estimation algorithm. The default value is \code{NULL}.}
 
-\item{initialitem_P}{A matrix of initial polytomous item parameter values for starting the estimation algorithm.}
+\item{initialitem_P}{A matrix of initial item parameter values for starting the estimation algorithm. The default value is \code{NULL}.}
 
 \item{ability_method}{The ability parameter estimation method.
 The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
 The default is \code{EAP}.}
 
 \item{latent_dist}{A character string that determines latent distribution estimation method.
-Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} to assume normal distribution on the latent distribution,
+Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} for the normality assumption on the latent distribution,
 \code{"EHM"} for empirical histogram method (Mislevy, 1984; Mislevy & Bock, 1985),
-\code{"Mixture"} or \code{"2NM"} for the method of two-component Gaussian mixture distribution (Li, 2021; Mislevy, 1984),
+\code{"2NM"} or \code{"Mixture"} for using two-component Gaussian mixture distribution (Li, 2021; Mislevy, 1984),
 \code{"DC"} or \code{"Davidian"} for Davidian-curve method (Woods & Lin, 2009),
 \code{"KDE"} for kernel density estimation method (Li, 2022),
-and \code{"LLS"} for log-linear smoothing method (Casabianca, Lewis, 2015).
-The default value is set to \code{"Normal"} for the conventional normality assumption on latent distribution.}
+and \code{"LLS"} for log-linear smoothing method (Casabianca & Lewis, 2015).
+The default value is set to \code{"Normal"} to follow the convention.}
 
 \item{max_iter}{A numeric value that determines the maximum number of iterations in the EM-MML.
 The default value is 200.}
@@ -65,41 +65,31 @@ The default value is 200.}
 A maximum item parameter change is monitored and compared with the threshold.
 The default value is 0.0001.}
 
-\item{bandwidth}{A character value is needed when \code{"KDE"} is used for the latent distribution estimation.
-This argument determines which bandwidth estimation method is used for \code{"KDE"}.
-The default value is \code{"SJ-ste"}. See \code{\link{density}} for possible options.}
+\item{bandwidth}{A character value that can be used if \code{latent_dist = "KDE"}.
+This argument determines the bandwidth estimation method for \code{"KDE"}.
+The default value is \code{"SJ-ste"}. See \code{\link{density}} for available options.}
 
-\item{h}{A natural number less than or equal to 10 is needed when \code{"DC"} is used for the latent distribution estimation.
-This argument determines the complexity of Davidian curve.}
+\item{h}{A natural number less than or equal to 10 if \code{latent_dist = "DC" or "LLS"}.
+This argument determines the complexity of the distribution.}
 }
 \value{
-This function returns a \code{list} which contains several objects:
-\item{par_est}{The list item parameter estimates.
-The first object of \code{par_est} is the matrix of item parameter estimates for dichotomous items,
-and The second object is the matrix of item parameter estimates for polytomous items.}
-\item{se}{The standard errors for item parameter estimates.
-The first object of \code{se} is the matrix of standard errors for dichotomous items,
-and The second object is the matrix of standard errors for polytomous items.}
-\item{fk}{The estimated frequencies of examinees at each quadrature points.}
-\item{iter}{The number of EM-MML iterations required for the convergence.}
+This function returns a \code{list} of several objects:
+\item{par_est}{The list of item parameter estimates.
+The first and second objects are the matrices of dichotomous and polytomous item parameter estimates, respectively}
+\item{se}{The list of standard errors of the item parameter estimates.
+The first and second objects are the matrices of standard errors of dichotomous and polytomous item parameter estimates, respectively}
+\item{fk}{The estimated frequencies of examinees at quadrature points.}
+\item{iter}{The number of EM-MML iterations elapsed for the convergence.}
 \item{quad}{The location of quadrature points.}
 \item{diff}{The final value of the monitored maximum item parameter change.}
 \item{Ak}{The estimated discrete latent distribution.
-It is discrete (i.e., probability mass function) since quadrature scheme of EM-MML is used.}
-\item{Pk}{The posterior probabilities for each examinees at each quadrature points.}
-\item{theta}{The estimated ability parameter values.}
+It is discrete (i.e., probability mass function) by the quadrature scheme.}
+\item{Pk}{The posterior probabilities of examinees at quadrature points.}
+\item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}. If an examinee receives a maximum or minimum score for all items, the function returns \eqn{\pm}\code{Inf}.}
 \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
 If an examinee answers all or none of the items correctly, the function returns \code{NA}.}
-\item{logL}{The deviance (i.e., -2\emph{log}L).}
-\item{density_par}{
-The estimated density parameters.
-If \code{latent_dist = "2NM"}, \code{prob} is the estimated \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees;
-\code{d} is the estimated \eqn{\delta = \frac{\mu_2 - \mu_1}{\bar{\sigma}}} parameter of two-component Gaussian mixture distribution,
-where \eqn{\mu_1} is the estimated mean of the first Gaussian component,
-\eqn{\mu_2} is the estimated mean of the second Gaussian component,
-and \eqn{\bar{\sigma} = 1} is the standard deviation of the latent distribution; and
-\code{sd_ratio} is the estimated \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} is the estimated standard deviation of the first Gaussian component, \eqn{\sigma_2} is the estimated standard deviation of the second Gaussian component (Li, 2021).
-Without loss of generality, \eqn{\mu_2 \ge \mu_1}, thus \eqn{\delta \ge 0}, is assumed.}
+\item{logL}{The deviance (i.e., -2log\emph{L}).}
+\item{density_par}{The estimated density parameters.}
 \item{Options}{A replication of input arguments and other information.}
 }
 \description{
@@ -114,7 +104,7 @@ and, thus, could provide more accurate parameter estimates (Li, 2021; Woods & Li
 \details{
 \describe{
 \item{
-Dichotomous: The probabilities for correct response (\eqn{u=1}) in one-, two-, and three-parameter logistic models can be expressed as follows;
+Dichotomous: the probabilities for a correct response (\eqn{u=1})
 }{
 1) One-parameter logistic (1PL) model
 \deqn{P(u=1|\theta, b)=\frac{\exp{(\theta-b)}}{1+\exp{(\theta-b)}}}
@@ -126,26 +116,32 @@ Dichotomous: The probabilities for correct response (\eqn{u=1}) in one-, two-, a
 \deqn{P(u=1|\theta, a, b, c)=c + (1-c)\frac{\exp{(a(\theta-b))}}{1+\exp{(a(\theta-b))}}}
 
 }
+
 \item{
-Polytomous: The probability for scoring \eqn{k} (i.e., \eqn{u=k; k=0, 1, ..., m; m \ge 2})can be expressed as follows;
+Polytomous: the probability for scoring \eqn{u=k} (i.e., \eqn{k=0, 1, ..., m; m \ge 2})
 }{
-1) partial credit model (PCM)
+1) Partial credit model (PCM)
 \deqn{P(u=0|\theta, b_1, ..., b_{m})=\frac{1}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{a(\theta-b_v)}\right]}}}}
 \deqn{P(u=1|\theta, b_1, ..., b_{m})=\frac{\exp{(\theta-b_1)}}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{\theta-b_v}\right]}}}}
 \deqn{\vdots}
 \deqn{P(u=m|\theta, b_1, ..., b_{m})=\frac{\exp{\left[\sum_{v=1}^{m}{\theta-b_v}\right]}}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{\theta-b_v}\right]}}}}
 
-2) generalized partial credit model (GPCM)
+2) Generalized partial credit model (GPCM)
 \deqn{P(u=0|\theta, a, b_1, ..., b_{m})=\frac{1}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{a(\theta-b_v)}\right]}}}}
 \deqn{P(u=1|\theta, a, b_1, ..., b_{m})=\frac{\exp{(a(\theta-b_1))}}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{a(\theta-b_v)}\right]}}}}
 \deqn{\vdots}
 \deqn{P(u=m|\theta, a, b_1, ..., b_{m})=\frac{\exp{\left[\sum_{v=1}^{m}{a(\theta-b_v)}\right]}}{1+\sum_{c=1}^{m}{\exp{\left[\sum_{v=1}^{c}{a(\theta-b_v)}\right]}}}}
 
+3) Graded response model (GRM)
+\deqn{P(u=0|\theta, a, b_1, ..., b_{m})=1-\frac{1}{1+\exp{\left[-a(\theta-b_1)\right]}}}
+\deqn{P(u=1|\theta, a, b_1, ..., b_{m})=\frac{1}{1+\exp{\left[-a(\theta-b_1)\right]}}-\frac{1}{1+\exp{\left[-a(\theta-b_2)\right]}}}
+\deqn{\vdots}
+\deqn{P(u=m|\theta, a, b_1, ..., b_{m})=\frac{1}{1+\exp{\left[-a(\theta-b_m)\right]}}-0}
+
 }
 
-
 \item{
-The estimated latent distribution for each of the latent distribution estimation method can be expressed as follows;
+Latent distribution estimation methods
 }{
 1) Empirical histogram method
 \deqn{P(\theta=X_k)=A(X_k)}
@@ -168,6 +164,7 @@ The Gaussian kernel is used in this function.
 5) Log-linear smoothing method
 \deqn{P(\theta=X_{q})=\exp{\left(\beta_{0}+\sum_{m=1}^{h}{\beta_{m}X_{q}^{m}}\right)}}
 where \eqn{h} is the hyper parameter which determines the smoothness of the density, and \eqn{\theta} can take total \eqn{Q} finite values (\eqn{X_1, \dots ,X_q, \dots, X_Q}).
+
 }
 }
 }
@@ -176,8 +173,7 @@ where \eqn{h} is the hyper parameter which determines the smoothness of the dens
 
 Alldata <- DataGeneration(N=1000,
                           nitem_D = 6,
-                          nitem_P = 5,
-                          )
+                          nitem_P = 5)
 
 DataD <- Alldata$data_D   # item response data for the dichotomous items
 DataP <- Alldata$data_P   # item response data for the polytomous items

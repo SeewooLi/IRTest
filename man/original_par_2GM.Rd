@@ -2,7 +2,7 @@
 % Please edit documentation in R/original_par_2GM.R
 \name{original_par_2GM}
 \alias{original_par_2GM}
-\title{Recovering original parameters of two-component Gaussian mixture distribution from re-parameterized parameters}
+\title{Recovering original parameters of two-component Gaussian mixture distribution from re-parameterized values}
 \usage{
 original_par_2GM(
   prob = 0.5,
@@ -13,15 +13,14 @@ original_par_2GM(
 )
 }
 \arguments{
-\item{prob}{A numeric value of \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees who belong to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).}
+\item{prob}{The \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees belonging to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).}
 
-\item{d}{A numeric value of \eqn{\delta = \frac{\mu_2 - \mu_1}{\bar{\sigma}}} parameter of two-component Gaussian mixture distribution,
-where \eqn{\mu_1} is the estimated mean of the first Gaussian component,
-\eqn{\mu_2} is the estimated mean of the second Gaussian component,
-and \eqn{\bar{\sigma}} is the standard deviation of the latent distribution (Li, 2021).
-Without loss of generality, \eqn{\mu_2 \ge \mu_1}, thus \eqn{\delta \ge 0}, is assumed.}
+\item{d}{The \eqn{\delta = \frac{\mu_2 - \mu_1}{\bar{\sigma}}} parameter of two-component Gaussian mixture distribution,
+where \eqn{\mu_1} and \eqn{\mu_2} are the estimated means of the first and second Gaussian components, respectively.
+And \eqn{\bar{\sigma}} is the overall standard deviation of the latent distribution (Li, 2021).
+Without loss of generality, \eqn{\mu_2 \ge \mu_1} is assumed, thus \eqn{\delta \ge 0}.}
 
-\item{sd_ratio}{A numeric value of \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} is the estimated standard deviation of the first Gaussian component, \eqn{\sigma_2} is the estimated standard deviation of the second Gaussian component (Li, 2021).}
+\item{sd_ratio}{A numeric value of \eqn{\zeta = \frac{\sigma_2}{\sigma_1}} parameter of two-component Gaussian mixture distribution, where \eqn{\sigma_1} and \eqn{\sigma_2} are the estimated standard deviations of the first and second Gaussian components, respectively (Li, 2021).}
 
 \item{overallmean}{A numeric value of \eqn{\bar{\mu}} that determines the overall mean of two-component Gaussian mixture distribution.}
 
@@ -35,21 +34,21 @@ This function returns a vector of length 4: \code{c(m1,m2,s1,s2)}.
 \item{s2}{The scale parameter (standard deviation) of the second Gaussian component.}
 }
 \description{
-Recovering original parameters of two-component Gaussian mixture distribution from re-parameterized parameters
+Recovering original parameters of two-component Gaussian mixture distribution from re-parameterized values
 }
 \details{
 \describe{
-\item{The original two-component Gaussian mixture distribution}{
+\item{Original two-component Gaussian mixture distribution}{
 \deqn{f(x)=\pi\times \phi(x | \mu_1, \sigma_1)+(1-\pi)\times \phi(x | \mu_2, \sigma_2)}
 , where \eqn{\phi} is a Gaussian component.
 }
-\item{The re-parameterized two-component Gaussian mixture distribution}{
+\item{Re-parameterized two-component Gaussian mixture distribution}{
 \deqn{f(x)=2GM(x|\pi, \delta, \zeta, \bar{\mu}, \bar{\sigma})}
 , where \eqn{\bar{\mu}} is overall mean and \eqn{\bar{\sigma}} is overall standard deviation of the distribution.
 }
 
 \item{
-The original parameters of two-component Gaussian mixture distribution can be retrieved as follows;}{
+The original parameters retrieved from re-parameterized values}{
 1) Mean of the first Gaussian component (\code{m1}).
 \deqn{\mu_1=-(1-\pi)\delta\bar{\sigma}+\bar{\mu}}
 
