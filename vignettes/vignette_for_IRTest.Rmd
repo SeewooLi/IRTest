@@ -61,7 +61,9 @@ Followings are the functions of **IRTest**.
   
   + `factor_score` estimates factor scores of examinees.
   
-  + `best_model` selects the best model using a evaluation criterion.
+  + `coef_se` returns standard errors of item parameter estimates.
+  
+  + `best_model` selects the best model using an evaluation criterion.
   
   + `item_fit` tests the statistical fit of all items individually.
   
@@ -100,11 +102,9 @@ The function `DataGeneration` can be used in a preparation step.
 This function returns a set of artificial data and the true parameters underlying the data.
 
 ```{r}
-Alldata <- DataGeneration(seed = 123456789,
-                          model_D = rep(2, each=15),
+Alldata <- DataGeneration(model_D = 2,
                           N=1000,
                           nitem_D = 15,
-                          nitem_P = 0,
                           latent_dist = "2NM",
                           d = 1.664,
                           sd_ratio = 2,
@@ -112,8 +112,6 @@ Alldata <- DataGeneration(seed = 123456789,
 
 data <- Alldata$data_D
 theta <- Alldata$theta
-data[1:500, 1] <- NA
-data[501:1000, 2] <- NA
 colnames(data) <- paste0("item", 1:15)
 ```
 
@@ -146,13 +144,16 @@ logLik(Mod1)
 ### The estimated item parameters
 coef(Mod1)
 
-### The asymptotic standard errors of item parameters
-Mod1$se
+### Standard errors of the item parameter estimates
+coef_se(Mod1)
 
 ### The estimated ability parameters
 fscore <- factor_score(Mod1, ability_method = "MLE")
 plot(theta, fscore$theta)
 abline(b=1, a=0)
+
+### Standard errors of ability parameter estimates
+plot(fscore$theta, fscore$theta_se)
 ```
 
 
@@ -160,23 +161,14 @@ abline(b=1, a=0)
 
 ```{r, fig.align='center', fig.asp=.6, fig.width=6}
 plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
-  lims(
-    y = c(0, .75)
-  )+
+  lims(y = c(0, .75))+
   geom_line(
     mapping=aes(
       x=seq(-6,6,length=121), 
-      y=dist2(
-        seq(-6,6,length=121),
-        prob = .3, 
-        d=1.664, 
-        sd_ratio = 2
-        ), 
+      y=dist2(seq(-6,6,length=121), prob = .3, d = 1.664, sd_ratio = 2), 
       colour="True"),
     linewidth = 1)+
-  labs(
-    title="The estimated latent density using '2NM'", colour= "Type"
-    )+
+  labs(title="The estimated latent density using '2NM'", colour= "Type")+
   theme_bw()
 ```
 
@@ -275,11 +267,9 @@ ggplot()+
 
 
 ```{r}
-Alldata <- DataGeneration(seed = 123456789,
-                          model_P = "GRM",
+Alldata <- DataGeneration(model_P = "GRM",
                           categ = rep(c(3,7), each = 7),
                           N=1000,
-                          nitem_D = 0,
                           nitem_P = 14,
                           latent_dist = "2NM",
                           d = 1.664,
@@ -288,8 +278,6 @@ Alldata <- DataGeneration(seed = 123456789,
 
 data <- Alldata$data_P
 theta <- Alldata$theta
-data[1:500, 1:3] <- NA
-data[501:1000, 4:6] <- NA
 colnames(data) <- paste0("item", 1:14)
 ```
 
@@ -319,36 +307,29 @@ logLik(Mod1)
 ### The estimated item parameters
 coef(Mod1)
 
-### The asymptotic standard errors of item parameters
-Mod1$se
+### Standard errors of the item parameter estimates
+coef_se(Mod1)
 
 ### The estimated ability parameters
 fscore <- factor_score(Mod1, ability_method = "MLE")
 plot(theta, fscore$theta)
 abline(b=1, a=0)
+
+### Standard errors of ability parameter estimates
+plot(fscore$theta, fscore$theta_se)
 ```
 
 * The result of latent distribution estimation
 
 ```{r, fig.align='center', fig.asp=.6, fig.width=6}
 plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
-  lims(
-    y = c(0, .75)
-  )+
-  geom_line(
-    mapping=aes(
-      x=seq(-6,6,length=121), 
-      y=dist2(
-        seq(-6,6,length=121),
-        prob = .3, 
-        d=1.664, 
-        sd_ratio = 2
-        ), 
-      colour="True"),
-    linewidth = 1)+
-  labs(
-    title="The estimated latent density using '2NM'", colour= "Type"
-    )+
+  stat_function(
+    fun = dist2,
+    args = list(prob = .3, d = 1.664, sd_ratio = 2),
+    mapping = aes(colour = "True"),
+    linewidth = 1) +
+  lims(y = c(0, .75)) + 
+  labs(title="The estimated latent density using '2NM'", colour= "Type")+
   theme_bw()
 ```
 
@@ -455,8 +436,7 @@ This function returns artificial data and some useful objects for analysis (i.e.
 
 
 ```{r}
-Alldata <- DataGeneration(seed = 123456789,
-                          model_D = 2,
+Alldata <- DataGeneration(model_D = 2,
                           model_P = "GRM",
                           N=1000,
                           nitem_D = 10,
@@ -469,11 +449,6 @@ Alldata <- DataGeneration(seed = 123456789,
 DataD <- Alldata$data_D
 DataP <- Alldata$data_P
 theta <- Alldata$theta
-
-DataD[1:250, 1] <- NA
-DataD[251:500, 2] <- NA
-DataP[501:750, 1] <- NA
-DataP[751:1000, 2] <- NA
 colnames(DataD) <- paste0("item", 1:10)
 colnames(DataP) <- paste0("item", 1:5)
 ```
@@ -509,36 +484,29 @@ logLik(Mod1)
 ### The estimated item parameters
 coef(Mod1)
 
-### The asymptotic standard errors of item parameters
-Mod1$se
+### Standard errors of the item parameter estimates
+coef_se(Mod1)
 
 ### The estimated ability parameters
 fscore <- factor_score(Mod1, ability_method = "MLE")
 plot(theta, fscore$theta)
 abline(b=1, a=0)
+
+### Standard errors of ability parameter estimates
+plot(fscore$theta, fscore$theta_se)
 ```
 
 * The result of latent distribution estimation
 
 ```{r, fig.align='center', fig.asp=.6, fig.width=6}
 plot(Mod1, mapping = aes(colour="Estimated"), linewidth = 1) +
-  lims(
-    y = c(0, .75)
-  )+
-  geom_line(
-    mapping=aes(
-      x=seq(-6,6,length=121), 
-      y=dist2(
-        seq(-6,6,length=121),
-        prob = .3, 
-        d=1.664, 
-        sd_ratio = 2
-        ), 
-      colour="True"),
-    linewidth = 1)+
-  labs(
-    title="The estimated latent density using '2NM'", colour= "Type"
-    )+
+  stat_function(
+    fun = dist2,
+    args = list(prob = .5, d = 1.664, sd_ratio = 1),
+    mapping = aes(colour = "True"),
+    linewidth = 1) +
+  lims(y = c(0, .75)) + 
+  labs(title="The estimated latent density using '2NM'", colour= "Type")+
   theme_bw()
 ```
 
@@ -659,7 +627,7 @@ data <- DataGeneration(N=2000,
                        prob = 0.3)$data_D
 ```
 
-```{r}
+```{r, results='hide', message=FALSE}
 Normal <- IRTest_Dich(data)
 EHM <- IRTest_Dich(data, latent_dist = "EHM")
 NM2 <- IRTest_Dich(data, latent_dist = "2NM")
@@ -679,13 +647,14 @@ DC10<- IRTest_Dich(data, latent_dist = "DC", h = 10)
 + **The best Davidian-curve model**
 
 ```{r}
+anova(DC1,DC2,DC3,DC4,DC5,DC6,DC7,DC8,DC9,DC10)
 best_model(DC1,DC2,DC3,DC4,DC5,DC6,DC7,DC8,DC9,DC10)
 ```
 
 + **The best model overall**
 
 ```{r}
-best_model(Normal, EHM, NM2, KDM, DC6)
+best_model(Normal, EHM, NM2, KDM, DC6, criterion = "HQ")
 ```
 
 

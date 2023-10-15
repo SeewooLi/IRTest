@@ -53,14 +53,7 @@
 #'
 #'
 #' # Reliability coefficients
-#' rel <- reliability(M1)
-#'
-#' ## On the summed-score scale
-#' rel$summed.score.scale$test
-#' rel$summed.score.scale$item
-#'
-#' ## On the theta scale
-#' rel$theta.scale
+#' reliability(M1)
 #'
 reliability <- function(x){
 
