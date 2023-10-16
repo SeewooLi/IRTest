@@ -160,6 +160,7 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # A preparation of mixed-format item response data
 #'
 #' Alldata <- DataGeneration(N=1000,
@@ -172,7 +173,7 @@
 #' # Analysis
 #'
 #' M1 <- IRTest_Mix(DataD, DataP)
-#'
+#'}
 IRTest_Mix <- function(data_D, data_P, model_D="2PL",
                        model_P="GPCM", range = c(-6,6),q = 121,
                        initialitem_D=NULL, initialitem_P=NULL,

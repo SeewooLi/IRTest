@@ -20,6 +20,7 @@ A plot of estimated latent distribution.
 This function draws a plot of the estimated latent distribution (the population distribution of the latent variable).
 }
 \examples{
+\donttest{
 # Data generation and model fitting
 
 data <- DataGeneration(N=1000,
@@ -35,7 +36,7 @@ M1 <- IRTest_Dich(data = data, latent_dist = "KDE")
 
 plot(x = M1, linewidth = 1, color = 'red') +
   ggplot2::lims(x = c(-6, 6), y = c(0, .5))
-
+}
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}

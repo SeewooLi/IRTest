@@ -27,6 +27,7 @@
 #'
 #' @export
 #' @examples
+#' \donttest{
 #' # A preparation of dichotomous item response data
 #'
 #' data <- DataGeneration(N=500,
@@ -39,7 +40,7 @@
 #' # Item fit statistics
 #'
 #' item_fit(M1)
-#'
+#'}
 item_fit <- function(x, bins=10, bin.center='mean'){
   UseMethod("item_fit",x)
 }

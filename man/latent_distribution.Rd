@@ -18,6 +18,7 @@ The evaluated values of the PDF, a length of which equals to that of \code{x}.
 Density function of the estimated latent distribution with mean and standard deviation equal to 0 and 1, respectively.
 }
 \examples{
+\donttest{
 # Data generation and model fitting
 data <- DataGeneration(N=1000,
                        nitem_D = 15,
@@ -32,5 +33,5 @@ M1 <- IRTest_Dich(data = data, latent_dist = "KDE")
 ggplot2::ggplot()+
   ggplot2::stat_function(fun=latent_distribution, args=list(M1))+
   ggplot2::lims(x=c(-6,6), y=c(0,0.5))
-
+}
 }

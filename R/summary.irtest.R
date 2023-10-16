@@ -9,12 +9,13 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 #'
 #' M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 #'
 #' summary(M1)
-#'
+#'}
 summary.IRTest <- function(object, ...){
   sum_result <- list()
 

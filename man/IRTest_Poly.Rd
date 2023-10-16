@@ -137,6 +137,7 @@ where \eqn{h} is the hyper parameter which determines the smoothness of the dens
 }
 }
 \examples{
+\donttest{
 # Preparation of dichotomous item response data
 
 data <- DataGeneration(N=1000,
@@ -145,7 +146,7 @@ data <- DataGeneration(N=1000,
 # Analysis
 
 M1 <- IRTest_Poly(data)
-
+}
 }
 \references{
 Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.

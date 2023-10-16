@@ -21,6 +21,7 @@ This function returns a plot of item response functions.
 This function draws item response functions of an item of the fitted model.
 }
 \examples{
+\donttest{
 # A preparation of dichotomous item response data
 
 data <- DataGeneration(N=500, nitem_D = 10)$data_D
@@ -32,7 +33,7 @@ M1 <- IRTest_Dich(data)
 # Plotting item response function
 
 plot_item(M1, item.number = 1)
-
+}
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}

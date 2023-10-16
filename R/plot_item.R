@@ -15,6 +15,7 @@
 #'
 #' @export
 #' @examples
+#' \donttest{
 #' # A preparation of dichotomous item response data
 #'
 #' data <- DataGeneration(N=500, nitem_D = 10)$data_D
@@ -26,7 +27,7 @@
 #' # Plotting item response function
 #'
 #' plot_item(M1, item.number = 1)
-#'
+#'}
 plot_item <- function(x, item.number=1, type=NULL){
   UseMethod("plot_item", x)
 }

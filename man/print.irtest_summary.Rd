@@ -18,13 +18,14 @@ Summarized texts on the console.
 This function prints the summarized information.
 }
 \examples{
+\donttest{
 data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 
 M1 <- IRTest_Poly(data = data,
                   latent_dist = "2NM")
 
 summary(M1)
-
+}
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}

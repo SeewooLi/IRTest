@@ -11,12 +11,13 @@
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @examples
+#' \donttest{
 #' data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 #'
 #' M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 #'
 #' M1
-#'
+#'}
 print.IRTest <- function(x, ...){
   cat('Convergence: ', '\n')
   if(x$diff<=x$Options$threshold){
@@ -53,13 +54,14 @@ print.IRTest <- function(x, ...){
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @examples
+#' \donttest{
 #' data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 #'
 #' M1 <- IRTest_Poly(data = data,
 #'                   latent_dist = "2NM")
 #'
 #' summary(M1)
-#'
+#'}
 print.IRTest_summary <- function(x, ...){
   .prt.irtest.convergence(x)
   .prt.irtest.model_fit(x)

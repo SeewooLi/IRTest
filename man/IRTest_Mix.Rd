@@ -169,6 +169,7 @@ where \eqn{h} is the hyper parameter which determines the smoothness of the dens
 }
 }
 \examples{
+\donttest{
 # A preparation of mixed-format item response data
 
 Alldata <- DataGeneration(N=1000,
@@ -181,7 +182,7 @@ DataP <- Alldata$data_P   # item response data for the polytomous items
 # Analysis
 
 M1 <- IRTest_Mix(DataD, DataP)
-
+}
 }
 \references{
 Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.

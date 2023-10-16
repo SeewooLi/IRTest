@@ -48,6 +48,7 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' data <- DataGeneration(N=500, nitem_D = 10)$data_D
 #'
 #' # Analysis
@@ -57,7 +58,7 @@
 #'
 #' # Reliability coefficients
 #' reliability(M1)
-#'
+#'}
 reliability <- function(x){
 
   # Summed score scale

@@ -19,6 +19,7 @@
 #'
 #' @export
 #' @examples
+#' \donttest{
 #' # A preparation of dichotomous item response data
 #'
 #' data <- DataGeneration(N=500, nitem_D = 10)$data_D
@@ -30,7 +31,7 @@
 #' # Item fit statistics
 #'
 #' factor_score(M1, ability_method = "MLE")
-#'
+#'}
 factor_score <- function(x, ability_method = "EAP"){
   if(ability_method == 'EAP'){
     theta <- as.numeric(x$Pk%*%x$quad)

@@ -132,6 +132,7 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Preparation of dichotomous item response data
 #'
 #' data <- DataGeneration(N=1000,
@@ -140,7 +141,7 @@
 #' # Analysis
 #'
 #' M1 <- IRTest_Poly(data)
-#'
+#'}
 IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal",
                         max_iter=200, threshold=0.0001,bandwidth="SJ-ste",h=NULL){

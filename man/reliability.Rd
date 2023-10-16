@@ -43,6 +43,7 @@ Although the formula is often employed in several IRT studies and applications, 
 }
 }
 \examples{
+\donttest{
 data <- DataGeneration(N=500, nitem_D = 10)$data_D
 
 # Analysis
@@ -52,7 +53,7 @@ M1 <- IRTest_Dich(data)
 
 # Reliability coefficients
 reliability(M1)
-
+}
 }
 \references{
 Green, B.F., Bock, R.D., Humphreys, L.G., Linn, R.L., & Reckase, M.D. (1984). Technical guidelines for assessing computerized adaptive tests. \emph{Journal of Educational Measurement, 21}(4), 347–360.

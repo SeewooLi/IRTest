@@ -16,6 +16,7 @@
 #' @importFrom ggplot2 stat_function
 #' @importFrom ggplot2 lims
 #' @examples
+#' \donttest{
 #' # Data generation and model fitting
 #' data <- DataGeneration(N=1000,
 #'                        nitem_D = 15,
@@ -30,7 +31,7 @@
 #' ggplot2::ggplot()+
 #'   ggplot2::stat_function(fun=latent_distribution, args=list(M1))+
 #'   ggplot2::lims(x=c(-6,6), y=c(0,0.5))
-#'
+#'}
 latent_distribution <- function(x, model.fit){
   dlatent <- NULL
   if(model.fit$Options$latent_dist=="KDE"){

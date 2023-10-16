@@ -12,6 +12,7 @@
 * Changed from `any(class())` to `inherits()`.
 * Provided more S3 methods.
 * Updated the manual.
+* Examples are enclosed with `\donttest{}`.
 
   
 ## Test environments

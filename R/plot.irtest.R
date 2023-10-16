@@ -15,6 +15,7 @@
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 #' @examples
+#' \donttest{
 #' # Data generation and model fitting
 #'
 #' data <- DataGeneration(N=1000,
@@ -30,7 +31,7 @@
 #'
 #' plot(x = M1, linewidth = 1, color = 'red') +
 #'   ggplot2::lims(x = c(-6, 6), y = c(0, .5))
-#'
+#'}
 plot.IRTest <- function(x, ...){
   if(x[["Options"]][["latent_dist"]] %in% c("EHM", "LLS")){
     plt <- ggplot2::ggplot(

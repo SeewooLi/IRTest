@@ -23,6 +23,7 @@ If an examinee receives a maximum or minimum score for all items, the function r
 Factor scores of examinees.
 }
 \examples{
+\donttest{
 # A preparation of dichotomous item response data
 
 data <- DataGeneration(N=500, nitem_D = 10)$data_D
@@ -34,7 +35,7 @@ M1 <- IRTest_Dich(data)
 # Item fit statistics
 
 factor_score(M1, ability_method = "MLE")
-
+}
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}

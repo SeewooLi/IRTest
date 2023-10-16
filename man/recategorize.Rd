@@ -18,6 +18,7 @@ Recategorized data
 With a recategorization scheme as an input, this function implements recategorization for the input data.
 }
 \examples{
+\donttest{
 # Preparation of dichotomous item response data
 
 data <- DataGeneration(N=1000,
@@ -34,7 +35,7 @@ new_cat <- cat_clps(M1$par_est)
 # Recategorization of data
 
 recategorize(data, new_cat)
-
+}
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}

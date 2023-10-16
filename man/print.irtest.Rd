@@ -18,12 +18,13 @@ Printed texts on the console recommending the usage of \code{summary} function a
 This function prints the summarized information.
 }
 \examples{
+\donttest{
 data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 
 M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 
 M1
-
+}
 }
 \author{
 Seewoo Li \email{cu@yonsei.ac.kr}

@@ -48,6 +48,7 @@ cat_clps <- function(item.matrix, range = c(-4,4), increment=0.005){
 #' @export
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #' @examples
+#' \donttest{
 #' # Preparation of dichotomous item response data
 #'
 #' data <- DataGeneration(N=1000,
@@ -64,7 +65,7 @@ cat_clps <- function(item.matrix, range = c(-4,4), increment=0.005){
 #' # Recategorization of data
 #'
 #' recategorize(data, new_cat)
-#'
+#'}
 recategorize <- function(data, new_cat){
   data <- reorder_mat(data)
   for(i in 1:ncol(data)){

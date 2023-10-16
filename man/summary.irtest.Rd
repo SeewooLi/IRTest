@@ -18,10 +18,11 @@ Summarized information.
 This function summarizes the output (e.g., convergence of the estimation algorithm, number of parameters, model-fit, and estimated latent distribution).
 }
 \examples{
+\donttest{
 data <- DataGeneration(N=1000, nitem_P = 8)$data_P
 
 M1 <- IRTest_Poly(data = data, latent_dist = "KDE")
 
 summary(M1)
-
+}
 }
