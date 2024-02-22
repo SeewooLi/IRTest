@@ -4,7 +4,7 @@
 \alias{factor_score}
 \title{Estimated factor scores}
 \usage{
-factor_score(x, ability_method = "EAP")
+factor_score(x, ability_method = "EAP", quad = NULL, prior = NULL)
 }
 \arguments{
 \item{x}{A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, or \code{IRTest_Mix}.}
@@ -12,6 +12,10 @@ factor_score(x, ability_method = "EAP")
 \item{ability_method}{The ability parameter estimation method.
 The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
 The default is \code{EAP}.}
+
+\item{quad}{A vector of quadrature points for \code{EAP} calculation.}
+
+\item{prior}{A vector of the prior distribution for \code{EAP} calculation. The length of it should be the same as \code{quad}.}
 }
 \value{
 \item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}.

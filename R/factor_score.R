@@ -7,6 +7,8 @@
 #' @param ability_method The ability parameter estimation method.
 #' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
 #' The default is \code{EAP}.
+#' @param quad A vector of quadrature points for \code{EAP} calculation.
+#' @param prior A vector of the prior distribution for \code{EAP} calculation. The length of it should be the same as \code{quad}.
 #'
 #' @return
 #' \item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}.
@@ -32,12 +34,29 @@
 #'
 #' factor_score(M1, ability_method = "MLE")
 #'}
-factor_score <- function(x, ability_method = "EAP"){
+factor_score <- function(x, ability_method = "EAP", quad=NULL, prior=NULL){
   if(ability_method == 'EAP'){
-    theta <- as.numeric(x$Pk%*%x$quad)
+    if(is.null(quad)){
+      quad <- x$quad
+    }
+    if(is.null(prior)){
+      prior <- x$Ak
+    }
+    if(inherits(x, "dich")){
+      E <- Estep(item=x$par_est, data=x$Options$data, q=length(quad), Xk=quad, Ak=prior)
+    } else if(inherits(x, "poly")){
+      E <- Estep_Poly(item=x$par_est, data=x$Options$data, q=length(quad), Xk=quad, Ak=prior, model=x$Options$model)
+    } else if(inherits(x, "mix")){
+      E <- Estep_Mix(item_D=x$par_est$Dichotomous, item_P=x$par_est$Polytomous,
+                     data_D=x$Options$data_D, data_P=x$Options$data_P,
+                     q=length(quad), Xk=quad, Ak=prior, model=x$Options$model_P)
+    }
+    theta <- as.numeric(E$Pk%*%E$Xk)
     theta_se <- NULL
+    # theta <- as.numeric(x$Pk%*%x$quad)
+    # theta_se <- NULL
   } else if(ability_method == 'MLE'){
-    type <- if(inherits(x, "dich")){
+    if(inherits(x, "dich")){
       item = x$par_est
       data = x$Options$data
       type = "dich"
