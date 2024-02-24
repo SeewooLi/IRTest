@@ -26,10 +26,10 @@ inform_f_item<- function(x, test, item = 1, type = "d"){
       probs <- P_G(x, param[1], param[-1])
       probs_ <- first_deriv_grm(x, param)
     }
-    inform <- if(is.null(nrow(probs))){
-      sum((probs_^2)/probs)
+    if(is.null(nrow(probs))){
+      inform <- sum((probs_^2)/probs)
     } else {
-      rowSums((probs_^2)/probs)
+      inform <- rowSums((probs_^2)/probs)
     }
 
   } else if(any(class(test) == "mix")){
@@ -47,10 +47,10 @@ inform_f_item<- function(x, test, item = 1, type = "d"){
         probs <- P_G(x, param[1], param[-1])
         probs_ <- first_deriv_grm(x, param)
       }
-      inform <- if(is.null(nrow(probs))){
-        sum((probs_^2)/probs)
+      if(is.null(nrow(probs))){
+        inform <- sum((probs_^2)/probs)
       } else {
-        rowSums((probs_^2)/probs)
+        inform <- rowSums((probs_^2)/probs)
       }
     }
   }
