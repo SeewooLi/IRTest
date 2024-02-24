@@ -1,3 +1,5 @@
+# IRTest 1.12.1
+
 # IRTest 1.12.0
 
 * Developed functions for medel comparison and model selection.
