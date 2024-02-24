@@ -26,7 +26,12 @@ inform_f_item<- function(x, test, item = 1, type = "d"){
       probs <- P_G(x, param[1], param[-1])
       probs_ <- first_deriv_grm(x, param)
     }
-    inform <- rowSums((probs_^2)/probs)
+    inform <- if(is.null(nrow(probs))){
+      sum((probs_^2)/probs)
+    } else {
+      rowSums((probs_^2)/probs)
+    }
+
   } else if(any(class(test) == "mix")){
     if(type == "d"){
       param <- test$par_est[[1]][item,]
@@ -42,7 +47,11 @@ inform_f_item<- function(x, test, item = 1, type = "d"){
         probs <- P_G(x, param[1], param[-1])
         probs_ <- first_deriv_grm(x, param)
       }
-      inform <- rowSums((probs_^2)/probs)
+      inform <- if(is.null(nrow(probs))){
+        sum((probs_^2)/probs)
+      } else {
+        rowSums((probs_^2)/probs)
+      }
     }
   }
   return(inform)
