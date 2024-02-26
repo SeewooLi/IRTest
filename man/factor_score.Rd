@@ -20,8 +20,7 @@ The default is \code{EAP}.}
 \value{
 \item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}.
 If an examinee receives a maximum or minimum score for all items, the function returns \eqn{\pm}\code{Inf}.}
-\item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
-If an examinee receives a maximum or minimum score for all items, the function returns \code{NA}.}
+\item{theta_se}{The asymptotic standard errors of ability parameter estimates. If an examinee receives a maximum or minimum score for all items, the function returns \code{NA}.}
 }
 \description{
 Factor scores of examinees.

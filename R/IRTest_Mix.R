@@ -128,8 +128,8 @@
 #' It is discrete (i.e., probability mass function) by the quadrature scheme.}
 #' \item{Pk}{The posterior probabilities of examinees at quadrature points.}
 #' \item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}. If an examinee receives a maximum or minimum score for all items, the function returns \eqn{\pm}\code{Inf}.}
-#' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
-#' If an examinee receives a maximum or minimum score for all items, the function returns \code{NA}.}
+#' \item{theta_se}{Standard error of ability estimates. The asymptotic standard errors for \code{ability_method = "MLE"} (the function returns \code{NA} for all or none correct answers).
+#' The standard deviations of the posterior distributions for \code{ability_method = "MLE"}.}
 #' \item{logL}{The deviance (i.e., -2log\emph{L}).}
 #' \item{density_par}{The estimated density parameters.}
 #' \item{Options}{A replication of input arguments and other information.}
@@ -462,7 +462,7 @@ if(nrow(data_D)!=nrow(data_P)){
     theta_se <- NULL
   } else if(ability_method == 'EAP'){
     theta <- as.numeric(E$Pk%*%E$Xk)
-    theta_se <- NULL
+    theta_se <- sqrt(as.numeric(E$Pk%*%(E$Xk^2))-theta^2)
   } else if(ability_method == 'MLE'){
     mle_result <- MLE_theta(
       item = list(initialitem_D,initialitem_P),

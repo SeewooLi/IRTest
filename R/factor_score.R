@@ -13,8 +13,7 @@
 #' @return
 #' \item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}.
 #' If an examinee receives a maximum or minimum score for all items, the function returns \eqn{\pm}\code{Inf}.}
-#' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
-#' If an examinee receives a maximum or minimum score for all items, the function returns \code{NA}.}
+#' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. If an examinee receives a maximum or minimum score for all items, the function returns \code{NA}.}
 #'
 #'
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
@@ -52,7 +51,7 @@ factor_score <- function(x, ability_method = "EAP", quad=NULL, prior=NULL){
                      q=length(quad), Xk=quad, Ak=prior, model=x$Options$model_P)
     }
     theta <- as.numeric(E$Pk%*%E$Xk)
-    theta_se <- NULL
+    theta_se <- sqrt(as.numeric(E$Pk%*%(E$Xk^2))-theta^2)
     # theta <- as.numeric(x$Pk%*%x$quad)
     # theta_se <- NULL
   } else if(ability_method == 'MLE'){

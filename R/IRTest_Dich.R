@@ -94,9 +94,9 @@
 #' \item{Ak}{The estimated discrete latent distribution.
 #' It is discrete (i.e., probability mass function) by the quadrature scheme.}
 #' \item{Pk}{The posterior probabilities of examinees at quadrature points.}
-#' \item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}. If an examinee answers all or none of the items correctly, the function returns \eqn{\pm}\code{Inf}.}
-#' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. Available only when \code{ability_method = "MLE"}.
-#' If an examinee answers all or none of the items correctly, the function returns \code{NA}.}
+#' \item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}, the function returns \eqn{\pm}\code{Inf} for all or none correct answers.}
+#' \item{theta_se}{Standard error of ability estimates. The asymptotic standard errors for \code{ability_method = "MLE"} (the function returns \code{NA} for all or none correct answers).
+#' The standard deviations of the posterior distributions for \code{ability_method = "MLE"}.}
 #' \item{logL}{The deviance (i.e., -2log\emph{L}).}
 #' \item{density_par}{The estimated density parameters.}
 #' \item{Options}{A replication of input arguments and other information.}
@@ -348,7 +348,7 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
     theta_se <- NULL
   } else if(ability_method == 'EAP'){
     theta <- as.numeric(E$Pk%*%E$Xk)
-    theta_se <- NULL
+    theta_se <- sqrt(as.numeric(E$Pk%*%(E$Xk^2))-theta^2)
   } else if(ability_method == 'MLE'){
     mle_result <- MLE_theta(item = initialitem, data = data, type = "dich")
     theta <- mle_result[[1]]
