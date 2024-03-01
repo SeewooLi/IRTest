@@ -70,6 +70,25 @@ P_G <- function(theta, a, b){
   return(ps)
 }
 
+inform_Cont <- function(theta, a, b, nu=20){
+  mu <- P(theta, a, b)
+  inform <- (a*nu*mu*(1-mu))^2*(trigamma(nu*mu)+trigamma(nu*(1-mu)))
+  return(inform)
+}
+# plot(seq(-4,4,length=81), inform_Cont(seq(-4,4,length=81), 1, 0, 5))
+
+
+# inform_Cont <- function(theta, a, b, v=20){
+#   mu <- P(theta, a, b)
+#   v1 <- (trigamma(mu*v)+trigamma((1-mu)*v)+(digamma(mu*v)-digamma((1-mu)*v))^2) # E(\log{\frac{x}{1-x}}^2)
+#   v2 <- (digamma(v-mu*v)/gamma(v-mu*v))-(digamma(mu*v)/gamma(mu*v))
+#   v3 <- digamma(mu*v)-digamma((1-mu)*v) # E(\log{\frac{x}{1-x}})
+#   inform <- (v*a*mu*(1-mu))^2*(
+#     v1+v2^2+2*v2*v3
+#     )
+#   return(inform)
+# }
+
 add0 <- function(x){
   x[cbind(1:nrow(x),rowSums(!is.na(x))+1)] <- 0
   return(x)
@@ -158,7 +177,26 @@ logLikeli_Poly <- function(item, data, theta, model){
   return(L)
 }
 
+logLikeli_Cont <- function(item, data, theta){
+  p <- P(theta = theta, a = item[,1], b = item[,2])
 
+  L <- NULL
+  for(i in 1:nrow(item)){
+    L <- cbind(L, dbeta(x = data[,i],
+                        shape1 = p[i]*item[i,3],
+                        shape2 = (1-p[i])*item[i,3],
+                        log = TRUE)
+               )
+  }
+  L <- rowSums(L, na.rm = TRUE)
+  L[L==-Inf] <- -.Machine$double.xmax
+  return(L)
+}
+
+# log_P_cont <- function(response, theta, a, b, phi){
+#   mu <- P(theta, a, b)
+#   return(dbeta(x=response, shape1 = mu*phi, shape2 = (1-mu)*phi, log = TRUE))
+# }
 #################################################################################################################
 # E step
 #################################################################################################################
@@ -247,6 +285,27 @@ Estep_Mix <- function(item_D, item_P, data_D, data_P, range = c(-4,4), q = 100, 
   }
   fk <- colSums(Pk) # expected frequency of examinees
   return(list(Xk=Xk, Ak=Ak, fk=fk, rik_D=rik_D, rik_P=rik_P, Pk=Pk))
+}
+
+Estep_Cont <- function(item, data, range = c(-4,4), q = 81, prob = 0.5, d = 0,
+                  sd_ratio = 1,Xk=NULL, Ak=NULL){
+  if(is.null(Xk)) {
+    # quadrature points
+    Xk <- seq(range[1],range[2],length=q)
+  }
+  if(is.null(Ak)) {
+    # heights for quadrature points
+    Ak <- dist2(Xk, prob, d, sd_ratio)/sum(dist2(Xk, prob, d, sd_ratio))
+  }
+  Pk <- matrix(nrow = nrow(data), ncol = q)
+  for(i in 1:q){
+    # weighted likelihood where the weight is the latent distribution
+    Pk[,i] <- exp(logLikeli_Cont(item = item, data = data, theta = Xk[i]))*Ak[i]
+  }
+  Pk <- Pk/rowSums(Pk) # posterior weights
+  rik <- crossprod(data_C, t(t(Pk)/rowSums(t(Pk))))
+  fk <- colSums(Pk) # expected frequency of examinees
+  return(list(Xk=Xk, Ak=Ak, fk=fk, rik_D=rik,Pk=Pk))
 }
 #################################################################################################################
 # M1 step
@@ -625,6 +684,82 @@ PDs <- function(probab, param, pmat, pcummat, a_supp, par, tcum){
   }
 }
 
+Mstep_Cont <- function(E, item, data){
+  item_estimated <- item
+  item[,3] <- log(item[,3])
+  for(i in 1:nrow(item)){
+    item_estimated[i,] <- optim(item[i,], fn = LL_Cont, gr = grad_Cont, theta=E$Xk, data=data[,i], Pk = E$Pk, method = "BFGS")$par
+  }
+  item_estimated[,3] <- exp(item_estimated[,3])
+  return(item_estimated)
+}
+
+LL_Cont <- function(item, theta, data, Pk){
+  nu <- exp(item[3])
+  LL <- 0
+  for(i in 1:length(theta)){
+    mu <- P(theta = theta[i], a = item[1], b = item[2])
+    alpha <- mu*nu
+    beta <- nu*(1-mu)
+    # print(c(i, alpha,beta))
+    LL <- LL+sum(Pk[,i]*log(dbeta(data, alpha, beta)))
+    # LL <- LL+sum(Pk[,i]*(
+    #   log(gamma(nu))-log(gamma(alpha))-log(gamma(beta))+(alpha-1)*log(data)+(beta-1)*log(1-data)
+    # ))
+  }
+  return(-LL)
+}
+
+# LL_Cont <- function(item, theta, data, Pk){
+#   nu <- exp(item[3])
+#   LL <- 0
+#   LL_fun <- function(data, theta, nu){
+#     mu <- P(theta = theta, a = item[1], b = item[2])
+#     alpha <- mu*nu
+#     beta <- nu*(1-mu)
+#     return(log(dbeta(data, alpha, beta)))
+#   }
+#   LL <- sum(Pk*outer(X=data, Y=theta, FUN = LL_fun, nu=nu))
+#   return(-LL)
+# }
+
+
+grad_Cont <- function(item, theta, data, Pk){
+  item[3] <- exp(item[3])
+  La <- 0
+  Lb <- 0
+  Lnu <- 0
+  for(i in 1:length(theta)){
+    mu <- P(theta = theta[i], a = item[1], b = item[2])
+    alpha <- mu*item[3]
+    beta <- item[3]*(1-mu)
+    v1 <- log(data)-digamma(alpha)#/gamma(alpha)
+    v2 <- log(1-data)-digamma(beta)#/gamma(beta)
+    La  <- La + sum(Pk[,i]*(theta[i]-item[2])*item[3]*mu*(1-mu)*(v1-v2))
+    Lb  <- Lb + sum(-Pk[,i]*item[1]*item[3]*mu*(1-mu)*(v1-v2))
+    Lnu <- Lnu + sum(Pk[,i]*(mu*v1+(1-mu)*v2+digamma(item[3])))
+  }
+
+  return(-c(La, Lb, Lnu))
+}
+
+# grad_Cont <- function(item, theta, data, Pk){
+#   item[3] <- exp(item[3])
+#
+#   grad_fun <- function(data, theta, item){
+#     mu <- P(theta = theta, a = item[1], b = item[2])
+#     alpha <- mu*item[3]
+#     beta <- item[3]*(1-mu)
+#     v1 <- log(data)-digamma(alpha)#/gamma(alpha)
+#     v2 <- log(1-data)-digamma(beta)#/gamma(beta)
+#     La  <- (theta-item[2])*item[3]*mu*(1-mu)*(v1-v2)
+#     Lb  <- item[1]*item[3]*mu*(1-mu)*(v1-v2)
+#     Lnu <- (mu*v1+(1-mu)*v2+digamma(item[3]))
+#     return(cbind(La, Lb, Lnu))
+#   }
+#   grad <- outer(X=data, Y=theta, FUN = grad_fun, item = item)
+#   return(-c(sum(Pk*grad[[1]]), sum(Pk*grad[[2]]), sum(Pk*grad[[3]])))
+# }
 #################################################################################################################
 # M2 step
 #################################################################################################################
