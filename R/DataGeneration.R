@@ -10,6 +10,7 @@
 #' @param N A numeric value of the number of examinees.
 #' @param nitem_D A numeric value of the number of dichotomous items.
 #' @param nitem_P A numeric value of the number of polytomous items.
+#' @param nitem_C A numeric value of the number of continuous response items.
 #' @param model_D A vector or a character string that represents the probability model for the dichotomous items.
 #' @param model_P A character string that represents the probability model for the polytomous items.
 #' @param latent_dist A character string that determines the type of latent distribution.
@@ -19,6 +20,7 @@
 #' and \code{"Mixture"} or \code{"2NM"} (two-component Gaussian mixture distribution; see Li (2021) for details.)
 #' @param item_D An item parameter matrix for using fixed parameter values. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{c} parameter for the third column. Default is \code{NULL}.
 #' @param item_P An item parameter matrix for using fixed parameter values. The number of columns should be 7: \code{a} parameter for the first, and \code{b} parameters for the rest of the columns. Default is \code{NULL}.
+#' @param item_D An item parameter matrix for using fixed parameter values. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{nu} parameter for the third column. Default is \code{NULL}.
 #' @param theta An ability parameter vector for using fixed parameter values. Default is \code{NULL}.
 #' @param prob A numeric value for using \code{latent_dist = "2NM"}.
 #' It is the \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees belonging to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).
@@ -41,6 +43,7 @@
 #' @param c_u A numeric value. The lower bound of item guessing parameters (\emph{c}).
 #' @param categ A scalar or a numeric vector of length \code{nitem_P}. The default is 5.
 #' If \code{length(categ)>1}, the \emph{i}th element equals the number of categories of the \emph{i}th polyotomous item.
+#' @param possible_ans Possible options for continuous items (e.g., 0.1, 0.3, 0.5, 0.7, 0.9)
 #'
 #' @return This function returns a \code{list} of several objects:
 #' \item{theta}{A vector of ability parameters (\eqn{\theta}).}
@@ -50,6 +53,9 @@
 #' \item{item_P}{A matrix of polytomous item parameters.}
 #' \item{initialitem_P}{A matrix that contains initial item parameter values for polytomous items.}
 #' \item{data_P}{A matrix of polytomous item responses where rows indicate examinees and columns indicate items.}
+#' \item{item_D}{A matrix of continuous response item parameters.}
+#' \item{initialitem_D}{A matrix that contains initial item parameter values for continuous response items.}
+#' \item{data_D}{A matrix of continuous response item responses where rows indicate examinees and columns indicate items.}
 #'
 #' @export
 #'
@@ -89,18 +95,20 @@
 #'                           prob = 0.3)
 #'
 DataGeneration <- function(seed=1, N=2000,
-                           nitem_D=0, nitem_P=0,
+                           nitem_D=0, nitem_P=0, nitem_C=0,
                            model_D="2PL", model_P="GPCM",
                            latent_dist="Normal",
-                           item_D=NULL, item_P=NULL,
+                           item_D=NULL, item_P=NULL, item_C=NULL,
                            theta = NULL,
                            prob=0.5, d=1.7, sd_ratio=1,
                            m = 0, s = 1,
                            a_l=0.8, a_u=2.5,
                            b_m=NULL, b_sd=NULL,
-                           c_l=0, c_u=0.2, categ=5){
+                           c_l=0, c_u=0.2, categ=5,
+                           possible_ans = seq(.1,.9,length=5)){
   initialitem_D=NULL; data_D=NULL
   initialitem_P=NULL; data_P=NULL
+  initialitem_C=NULL; data_C=NULL
 
   if(!is.null(categ)&length(categ)==1){
     categ <- rep(categ, nitem_P)
@@ -205,8 +213,6 @@ DataGeneration <- function(seed=1, N=2000,
   }
 
 
-
-
   # item parameters for polytomous items
   if(is.null(item_P) & !is.null(categ)){
     if((nitem_P!=0)&(!is.null(nitem_P))){
@@ -260,7 +266,70 @@ DataGeneration <- function(seed=1, N=2000,
       }
     }
   }
+
+
+  # item parameters for polytomous items
+  if(is.null(item_C)){
+    a_l=0.5; a_u=1.5
+    if((nitem_C!=0)&(!is.null(nitem_C))){
+      data_C <- matrix(nrow = N, ncol = nitem_C)
+      item_C <- matrix(nrow = nitem_C, ncol = 3)
+      initialitem_C <- matrix(nrow = nitem_C, ncol = 3)
+      set.seed(seed)
+      item_C[,1] <- 1
+      initialitem_C[,1] <- 1
+      set.seed(seed)
+      item_C[,2] <- round(
+        sample(
+          x = seq(-2*b_sd+b_m,2*b_sd+b_m,by=0.01*b_sd),
+          size = nitem_C,
+          replace = TRUE,
+          prob = dnorm(seq(-2,2,by=0.01))
+        ),
+        digits = 2)
+
+      item_C[,1] <- round(
+        runif(nitem_C,a_l,a_u),
+        digits = 2
+      )
+      initialitem_C[,1] <- (a_l+a_u)/2
+
+      item_C[,3] <- 10
+      initialitem_C[,3] <- 10
+
+      # item responses
+      # possible_ans <- seq(0.05,.95,length=10)#c(.1, .3, .5, .7, .9)
+
+      for(i in 1:nitem_C){
+        for(j in 1:N){
+          p <- P(theta = theta[j], a = item_C[i,1], b = item_C[i,2])
+          data_C[j,i] <- possible_ans[which.min(abs(rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3]) - possible_ans))]
+        }
+      }
+    }
+  } else {
+    if((nitem_C!=0)&(!is.null(nitem_C))){
+      data_C <- matrix(nrow = N, ncol = nitem_C)
+      initialitem_C <- matrix(nrow = nitem_C, ncol = 3)
+      set.seed(seed)
+      initialitem_C[,1] <- (a_l+a_u)/2
+      initialitem_C[,1] <- 0
+      initialitem_C[,3] <- 10
+
+      # item responses
+      # possible_ans <- seq(0.05,.95,length=10)#c(.1, .3, .5, .7, .9)
+
+      for(i in 1:nitem_C){
+        for(j in 1:N){
+          p <- P(theta = theta[j], a = item_C[i,1], b = item_C[i,2])
+          data_C[j,i] <- possible_ans[which.min(abs(rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3]) - possible_ans))]
+        }
+      }
+    }
+  }
+
   return(list(theta=theta,
               item_D=item_D, initialitem_D=initialitem_D, data_D=data_D,
-              item_P=item_P, initialitem_P=initialitem_P, data_P=data_P))
+              item_P=item_P, initialitem_P=initialitem_P, data_P=data_P,
+              item_C=item_C, initialitem_C=initialitem_C, data_C=data_C))
 }
