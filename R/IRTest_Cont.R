@@ -1,4 +1,4 @@
-#' Item and ability parameters estimation for dichotomous items
+#' Item and ability parameters estimation for continuous response items
 #'
 #' @description This function estimates IRT item and ability parameters when all items are scored dichotomously.
 #' Based on Bock & Aitkin's (1981) marginal maximum likelihood and EM algorithm (EM-MML), this function provides several latent distribution estimation algorithms which could free the normality assumption on the latent variable.
