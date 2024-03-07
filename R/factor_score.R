@@ -49,6 +49,8 @@ factor_score <- function(x, ability_method = "EAP", quad=NULL, prior=NULL){
       E <- Estep_Mix(item_D=x$par_est$Dichotomous, item_P=x$par_est$Polytomous,
                      data_D=x$Options$data_D, data_P=x$Options$data_P,
                      q=length(quad), Xk=quad, Ak=prior, model=x$Options$model_P)
+    } else if(inherits(x, "cont")){
+      E <- Estep_Cont(item=x$par_est, data=x$Options$data, q=length(quad), Xk=quad, Ak=prior)
     }
     theta <- as.numeric(E$Pk%*%E$Xk)
     theta_se <- sqrt(as.numeric(E$Pk%*%(E$Xk^2))-theta^2)
@@ -67,6 +69,10 @@ factor_score <- function(x, ability_method = "EAP", quad=NULL, prior=NULL){
       item = list(x$par_est$Dichotomous,x$par_est$Polytomous)
       data = list(x$Options$data_D, x$Options$data_P)
       type = c("mix", x$Options$model_P)
+    } else if(inherits(x, "cont")){
+      item = x$par_est
+      data = x$Options$data
+      type = "cont"
     }
     mle_result <- MLE_theta(
       item = item,

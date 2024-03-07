@@ -70,27 +70,6 @@ P_G <- function(theta, a, b){
   return(ps)
 }
 
-inform_Cont <- function(theta, a, b, nu=20){
-  mu <- P(theta, a, b)
-  alpha <- mu*nu
-  beta <- nu*(1-mu)
-  inform <- (a*alpha*beta/nu)^2*(trigamma(alpha)+trigamma(beta))
-  return(inform)
-}
-# plot(seq(-4,4,length=81), inform_Cont(seq(-4,4,length=81), 1, 0, 5))
-
-
-# inform_Cont <- function(theta, a, b, v=20){
-#   mu <- P(theta, a, b)
-#   v1 <- (trigamma(mu*v)+trigamma((1-mu)*v)+(digamma(mu*v)-digamma((1-mu)*v))^2) # E(\log{\frac{x}{1-x}}^2)
-#   v2 <- (digamma(v-mu*v)/gamma(v-mu*v))-(digamma(mu*v)/gamma(mu*v))
-#   v3 <- digamma(mu*v)-digamma((1-mu)*v) # E(\log{\frac{x}{1-x}})
-#   inform <- (v*a*mu*(1-mu))^2*(
-#     v1+v2^2+2*v2*v3
-#     )
-#   return(inform)
-# }
-
 add0 <- function(x){
   x[cbind(1:nrow(x),rowSums(!is.na(x))+1)] <- 0
   return(x)
@@ -179,6 +158,8 @@ logLikeli_Poly <- function(item, data, theta, model){
   return(L)
 }
 
+#' @importFrom stats dbeta
+#'
 logLikeli_Cont <- function(item, data, theta){
   p <- P(theta = theta, a = item[,1], b = item[,2])
 
@@ -686,6 +667,8 @@ PDs <- function(probab, param, pmat, pcummat, a_supp, par, tcum){
   }
 }
 
+#' @importFrom stats optim
+#'
 Mstep_Cont <- function(E, item, data){
   item_estimated <- item
   item[,3] <- log(item[,3])
@@ -707,6 +690,8 @@ Mstep_Cont <- function(E, item, data){
 #   }
 #   return(-LL)
 # }
+#' @importFrom stats dbeta
+#'
 LL_Cont <- function(item, theta, data, Pk){
   nu <- exp(item[3])
   mu <- P(theta = rep(theta, each=nrow(Pk)), a = item[1], b = item[2])
@@ -891,10 +876,43 @@ MLE_theta <- function(item, data, type){
         se <- append(se, sqrt(-1/l1l2[2]))
       }
     }
+  } else if(all(type=="cont")){
+    for(i in 1:nrow(data)){
+      message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
+
+      th <- 0
+      thres <- 1
+      while(thres > 0.0001){
+        L1 <- L1_Cont(data = data[i,], theta = th, a = item[,1], b = item[,2], nu = item[,3])
+        L2 <- -L2_Cont(theta = th, a = item[,1], b = item[,2], nu = item[,3])
+        diff <- sum(L1, na.rm = TRUE)/sum(L2, na.rm = TRUE)
+        th <- th - diff
+        thres <- abs(diff)
+      }
+      mle <- append(mle, th)
+      se <- append(se, sqrt(-1/L2))
+    }
   }
   return(list(mle=mle,
               se=se))
 }
+
+L1_Cont <- function(data, theta, a, b, nu=20){
+  mu <- P(theta, a, b)
+  alpha <- mu*nu
+  beta <- nu*(1-mu)
+  grad <- (a*alpha*beta/nu)*(-digamma(alpha)+digamma(beta)+log(data/(1-data)))
+  return(grad)
+}
+
+L2_Cont <- function(theta, a, b, nu=20){
+  mu <- P(theta, a, b)
+  alpha <- mu*nu
+  beta <- nu*(1-mu)
+  inform <- (a*alpha*beta/nu)^2*(trigamma(alpha)+trigamma(beta))
+  return(inform)
+}
+# plot(seq(-4,4,length=81), inform_Cont(seq(-4,4,length=81), 1, 0, 5))
 
 L1L2_Poly <- function(th, item, data, type, ncat, i){
   if(type %in% c("PCM", "GPCM")){

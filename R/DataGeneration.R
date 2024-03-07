@@ -3,7 +3,7 @@
 #' @description This function generates an artificial item response dataset allowing various options.
 #'
 #' @importFrom betafunctions rBeta.4P
-#' @importFrom stats dnorm rbinom rchisq rnorm runif
+#' @importFrom stats dnorm rbinom rchisq rnorm runif rbeta
 #'
 #' @param seed A numeric value that is used for random sampling.
 #' Seed number can guarantee a replicability of the result.
@@ -20,7 +20,7 @@
 #' and \code{"Mixture"} or \code{"2NM"} (two-component Gaussian mixture distribution; see Li (2021) for details.)
 #' @param item_D An item parameter matrix for using fixed parameter values. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{c} parameter for the third column. Default is \code{NULL}.
 #' @param item_P An item parameter matrix for using fixed parameter values. The number of columns should be 7: \code{a} parameter for the first, and \code{b} parameters for the rest of the columns. Default is \code{NULL}.
-#' @param item_D An item parameter matrix for using fixed parameter values. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{nu} parameter for the third column. Default is \code{NULL}.
+#' @param item_C An item parameter matrix for using fixed parameter values. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{nu} parameter for the third column. Default is \code{NULL}.
 #' @param theta An ability parameter vector for using fixed parameter values. Default is \code{NULL}.
 #' @param prob A numeric value for using \code{latent_dist = "2NM"}.
 #' It is the \eqn{\pi = \frac{n_1}{N}} parameter of two-component Gaussian mixture distribution, where \eqn{n_1} is the estimated number of examinees belonging to the first Gaussian component and \eqn{N} is the total number of examinees (Li, 2021).

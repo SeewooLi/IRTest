@@ -102,20 +102,17 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
       iter <- iter +1
 
       E <- Estep_Cont(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range, Xk=Xk, Ak=Ak)
-      M1 <- M1step(E, item=initialitem, model=model)
-      initialitem <- M1[[1]]
+      initialitem <- Mstep_Cont(E, initialitem, data)
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
 
-      if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
-        initialitem[,1] <- initialitem[,1]*ld_est$s
-        initialitem[,2] <- initialitem[,2]/ld_est$s
-        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
-      }
-
-      diff <- max(abs(I-initialitem), na.rm = TRUE)
+      diff <- max(
+        max(abs(I[,-3]-initialitem[,-3]), na.rm = TRUE),
+        max(abs(log(I[,3])-log(initialitem[,3])), na.rm = TRUE),
+        na.rm = TRUE
+      )
       I <- initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
@@ -128,18 +125,15 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
       iter <- iter +1
 
       E <- Estep_Cont(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range)
-      M1 <- M1step(E, item=initialitem, model=model)
+      initialitem <- Mstep_Cont(E, initialitem, data)
       M2 <- M2step(E)
       prob = M2$prob; d = M2$d; sd_ratio = M2$sd_ratio
 
-      initialitem <- M1[[1]]
-      if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
-        initialitem[,1] <- initialitem[,1]*M2$s
-        initialitem[,2] <- initialitem[,2]/M2$s
-        M1[[2]][,2] <- M1[[2]][,2]/M2$s
-      }
-
-      diff <- max(abs(I-initialitem), na.rm = TRUE)
+      diff <- max(
+        max(abs(I[,-3]-initialitem[,-3]), na.rm = TRUE),
+        max(abs(log(I[,3])-log(initialitem[,3])), na.rm = TRUE),
+        na.rm = TRUE
+      )
       I <- initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
@@ -155,20 +149,17 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
 
       E <- Estep_Cont(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1,
                  range=range, Xk=Xk, Ak=Ak)
-      M1 <- M1step(E, item=initialitem, model=model)
-      initialitem <- M1[[1]]
+      initialitem <- Mstep_Cont(E, initialitem, data)
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth, N=N, q=q)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
 
-      if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
-        initialitem[,1] <- initialitem[,1]*ld_est$s
-        initialitem[,2] <- initialitem[,2]/ld_est$s
-        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
-      }
-
-      diff <- max(abs(I-initialitem), na.rm = TRUE)
+      diff <- max(
+        max(abs(I[,-3]-initialitem[,-3]), na.rm = TRUE),
+        max(abs(log(I[,3])-log(initialitem[,3])), na.rm = TRUE),
+        na.rm = TRUE
+      )
       I <- initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
@@ -187,21 +178,18 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
       iter <- iter +1
 
       E <- Estep_Cont(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
-      M1 <- M1step(E, item=initialitem, model = model)
-      initialitem <- M1[[1]]
+      initialitem <- Mstep_Cont(E, initialitem, data)
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par,N=N)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
       density_par <- ld_est$par
 
-      if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
-        initialitem[,1] <- initialitem[,1]*ld_est$s
-        initialitem[,2] <- initialitem[,2]/ld_est$s
-        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
-      }
-
-      diff <- max(abs(I-initialitem), na.rm = TRUE)
+      diff <- max(
+        max(abs(I[,-3]-initialitem[,-3]), na.rm = TRUE),
+        max(abs(log(I[,3])-log(initialitem[,3])), na.rm = TRUE),
+        na.rm = TRUE
+      )
       I <- initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
@@ -216,25 +204,17 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
 
       E <- Estep_Cont(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1,
                  range=range, Xk=Xk, Ak=Ak)
-      M1 <- M1step(E, item=initialitem, model=model)
-      initialitem <- M1[[1]]
+      initialitem <- Mstep_Cont(E, initialitem, data)
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
       Xk <- ld_est$Xk
       Ak <- ld_est$posterior_density
 
-      if(all(model %in% c(1, "1PL", "Rasch", "RASCH"))){
-        initialitem[,1] <- initialitem[,1]*ld_est$s
-        initialitem[,2] <- initialitem[,2]/ld_est$s
-        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
-        if(iter>3){
-          density_par <- ld_est$par
-        }
-      } else {
-        density_par <- ld_est$par
-      }
-
-      diff <- max(abs(I-initialitem), na.rm = TRUE)
+      diff <- max(
+        max(abs(I[,-3]-initialitem[,-3]), na.rm = TRUE),
+        max(abs(log(I[,3])-log(initialitem[,3])), na.rm = TRUE),
+        na.rm = TRUE
+      )
       I <- initialitem
       message("\r","\r","Method = ",latent_dist,", EM cycle = ",iter,", Max-Change = ",diff,sep="",appendLF=FALSE)
       flush.console()
@@ -249,13 +229,12 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
     theta <- as.numeric(E$Pk%*%E$Xk)
     theta_se <- sqrt(as.numeric(E$Pk%*%(E$Xk^2))-theta^2)
   } else if(ability_method == 'MLE'){
-    mle_result <- MLE_theta(item = initialitem, data = data, type = "dich")
+    mle_result <- MLE_theta(item = initialitem, data = data, type = "cont")
     theta <- mle_result[[1]]
     theta_se <- mle_result[[2]]
   }
-  dn <- list(colnames(data),c("a", "b", "c"))
+  dn <- list(colnames(data),c("a", "b", "nu"))
   dimnames(initialitem) <- dn
-  # dimnames(M1[[2]]) <- dn
 
   # preparation for outputs
 
@@ -268,7 +247,6 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
   logL <- logL + as.numeric(E$fk%*%log(Ak)) - sum(E$Pk*log(E$Pk))
   return(structure(
     list(par_est=initialitem,
-         # se=M1[[2]],
          fk=E$fk,
          iter=iter,
          quad=Xk,
@@ -281,7 +259,7 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
          density_par = density_par,
          Options = Options # specified argument values
     ),
-    class = c("dich", "IRTest", "list")
+    class = c("cont", "IRTest", "list")
   )
   )
 }

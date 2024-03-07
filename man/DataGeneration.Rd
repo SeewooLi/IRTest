@@ -54,9 +54,11 @@ Currently available options are \code{"beta"} (four-parameter beta distribution;
 \code{"normal"}, \code{"Normal"}, or \code{"N"} (standard normal distribution; \code{\link{rnorm}}),
 and \code{"Mixture"} or \code{"2NM"} (two-component Gaussian mixture distribution; see Li (2021) for details.)}
 
-\item{item_D}{An item parameter matrix for using fixed parameter values. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{nu} parameter for the third column. Default is \code{NULL}.}
+\item{item_D}{An item parameter matrix for using fixed parameter values. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{c} parameter for the third column. Default is \code{NULL}.}
 
 \item{item_P}{An item parameter matrix for using fixed parameter values. The number of columns should be 7: \code{a} parameter for the first, and \code{b} parameters for the rest of the columns. Default is \code{NULL}.}
+
+\item{item_C}{An item parameter matrix for using fixed parameter values. The number of columns should be 3: \code{a} parameter for the first, \code{b} parameter for the second, and \code{nu} parameter for the third column. Default is \code{NULL}.}
 
 \item{theta}{An ability parameter vector for using fixed parameter values. Default is \code{NULL}.}
 

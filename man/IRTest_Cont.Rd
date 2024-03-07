@@ -2,7 +2,7 @@
 % Please edit documentation in R/IRTest_Cont.R
 \name{IRTest_Cont}
 \alias{IRTest_Cont}
-\title{Item and ability parameters estimation for dichotomous items}
+\title{Item and ability parameters estimation for continuous response items}
 \usage{
 IRTest_Cont(
   data,
