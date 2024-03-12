@@ -19,6 +19,7 @@ inform_f_item<- function(x, test, item = 1, type = "d"){
     inform <- probs_^2/(probs*(1-probs))
   } else if(any(class(test) == "poly")){
     param <- test$par_est[item,]
+    param <- param[!is.na(param)]
     if(test$Options$model %in% c("PCM", "GPCM")){
       probs <- P_P(x, param[1], param[-1])
       probs_ <- first_deriv_gpcm(x, param)
@@ -40,6 +41,7 @@ inform_f_item<- function(x, test, item = 1, type = "d"){
       inform <- probs_^2/(probs*(1-probs))
     } else if(type == "p"){
       param <- test$par_est[[2]][item,]
+      param <- param[!is.na(param)]
       if(test$Options$model_P %in% c("PCM", "GPCM")){
         probs <- P_P(x, param[1], param[-1])
         probs_ <- first_deriv_gpcm(x, param)
