@@ -92,6 +92,7 @@ first_deriv_grm <- function(x, param){
 }
 
 first_deriv_gpcm <- function(x, param){
+  param <- param[!is.na(param)]
   cats <- ((1:sum(!is.na(param)))-1)
   probs <- P_P(x, param[1], param[-1])
   ws <- as.vector(probs%*%cats)
