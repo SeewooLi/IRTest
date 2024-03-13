@@ -133,10 +133,11 @@ logLikeli <- function(item, data, theta){
 }
 
 logLikeli_Poly <- function(item, data, theta, model){
+  b_pars <- if(nrow(item)==1) item[,-1,drop=FALSE] else item[,-1]
   if(model %in% c("PCM", "GPCM")){
-    pmat <- P_P(theta = theta, a = item[,1], b = item[,-1,drop=FALSE])
+    pmat <- P_P(theta = theta, a = item[,1], b = b_pars)
   } else if(model == "GRM"){
-    pmat <- P_G(theta = theta, a = item[,1], b = item[,-1,drop=FALSE])
+    pmat <- P_G(theta = theta, a = item[,1], b = b_pars)
   }
 
   L <- NULL
