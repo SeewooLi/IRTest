@@ -50,11 +50,14 @@ For the development version, it can be installed on R-console with:
 
 Followings are the functions of **IRTest**.
 
-- `IRTest_Dich` is the estimation function when all items are
+- `IRTest_Dich` is the estimation function when items are
   *dichotomously* scored.
 
-- `IRTest_Poly` is the estimation function when all items are
-  *polytomously* scored.
+- `IRTest_Poly` is the estimation function when items are *polytomously*
+  scored.
+
+- `IRTest_Cont` is the estimation function when items are *continuously*
+  scored.
 
 - `IRTest_Mix` is the estimation function for *a mixed-format test*, a
   test comprising both dichotomous item(s) and polytomous item(s).
@@ -161,9 +164,7 @@ summary(Mod1)
 #>        dist   3 
 #>       total   23 
 #> 
-#> The Number of Items:  
-#> dichotomous   10 
-#> polyotomous   0 
+#> The Number of Items:  10 
 #> 
 #> The Estimated Latent Distribution:  
 #> method - 2NM 

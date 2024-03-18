@@ -69,7 +69,7 @@ summary.IRTest <- function(object, ...){
   return(
     structure(
       sum_result,
-      class = c('IRTest_summary', 'list')
+      class = c(class(object)[1], 'IRTest_summary', 'list')
     )
   )
 }
@@ -84,9 +84,9 @@ summary.IRTest <- function(object, ...){
       sum(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH")) +
       2*sum(object$Options$model %in% c(2, "2PL")) +
       3*sum(object$Options$model %in% c(3, "3PL"))
-    # if(all(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH"))){
-    #   n_par$item <- n_par$item-1
-    # }
+  } else if(inherits(object, c("cont"))){
+    n_par$item <-
+      length(as.vector(object$par_est))
   } else if(inherits(object, c("poly"))){
     if(object$Options$model == "PCM"){
       n_par$item <- sum(!is.na(object$par_est[,-1]))
@@ -147,12 +147,8 @@ summary.IRTest <- function(object, ...){
 }
 
 .n_item_used <- function(object){
-  if(inherits(object, c("dich"))){
-    data.frame(dich = nrow(object$par_est),
-               poly = 0)
-  } else if(inherits(object, c("poly"))){
-    data.frame(dich = 0,
-               poly = nrow(object$par_est))
+  if(inherits(object, c("dich", "poly", "cont"))){
+    nrow(object$par_est)
   } else if(inherits(object, c("mix"))){
     data.frame(dich = nrow(object$par_est$Dichotomous),
                poly = nrow(object$par_est$Polytomous))

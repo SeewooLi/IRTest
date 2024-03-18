@@ -12,12 +12,15 @@
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}
 #'
 inform_f_item<- function(x, test, item = 1, type = "d"){
-  if(any(class(test) == "dich")){
+  if(inherits(test, "dich")){
     param <- test$par_est[item,]
     probs <- P(x, param[1], param[2], param[3])
     probs_ <- first_deriv_dich(x, param)
     inform <- probs_^2/(probs*(1-probs))
-  } else if(any(class(test) == "poly")){
+  } else if(inherits(test, "cont")){
+    param <- test$par_est[item,]
+    inform <- L2_Cont(theta = x, a = param[1], b = param[2], nu = param[3])
+  } else if(inherits(test, "poly")){
     param <- test$par_est[item,]
     param <- param[!is.na(param)]
     if(test$Options$model %in% c("PCM", "GPCM")){
@@ -33,7 +36,7 @@ inform_f_item<- function(x, test, item = 1, type = "d"){
       inform <- rowSums((probs_^2)/probs)
     }
 
-  } else if(any(class(test) == "mix")){
+  } else if(inherits(test, "mix")){
     if(type == "d"){
       param <- test$par_est[[1]][item,]
       probs <- P(x, param[1], param[2], param[3])
@@ -71,11 +74,11 @@ inform_f_item<- function(x, test, item = 1, type = "d"){
 #'
 inform_f_test <- function(x, test){
   inform <- 0
-  if(any(class(test) %in% c("dich", "poly"))){
+  if(inherits(test, c("dich", "poly", "cont"))){
     for(i in 1:nrow(test$par_est)){
       inform <- inform + inform_f_item(x, test, i)
     }
-  } else if(any(class(test) %in% c("mix"))){
+  } else if(inherits(test, "mix")){
     for(j in 1:2){
       for(i in 1:nrow(test$par_est[[j]])){
         inform <- inform + inform_f_item(x, test, i, c("d", "p")[j])

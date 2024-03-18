@@ -116,21 +116,26 @@ This function generates an artificial item response dataset allowing various opt
 \examples{
 # Dichotomous item responses
 
-Alldata <- DataGeneration(N=500,
+Alldata <- DataGeneration(N = 500,
                           nitem_D = 10)
 
 
 # Polytomous item responses
 
-Alldata <- DataGeneration(N=1000,
+Alldata <- DataGeneration(N = 1000,
                           nitem_P = 10)
 
 
 # Mixed-format items
 
-Alldata <- DataGeneration(N=1000,
+Alldata <- DataGeneration(N = 1000,
                           nitem_D = 20,
                           nitem_P = 10)
+
+# Continuous items
+
+AllData <- DataGeneration(N = 1000,
+                          nitem_C = 10)
 
 # Dataset from non-normal latent density using two-component Gaussian mixture distribution
 

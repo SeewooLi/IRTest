@@ -4,12 +4,10 @@
 \alias{anova.IRTest}
 \title{Model comparison}
 \usage{
-\method{anova}{IRTest}(object, ...)
+\method{anova}{IRTest}(...)
 }
 \arguments{
-\item{object}{An object of \code{"IRTest"}-class.}
-
-\item{...}{Additional objects of \code{"IRTest"}-class to be compared.}
+\item{...}{Objects of \code{"IRTest"}-class to be compared.}
 }
 \value{
 Model-fit indices and results of likelihood ratio test (LRT).

@@ -69,21 +69,26 @@
 #' @examples
 #' # Dichotomous item responses
 #'
-#' Alldata <- DataGeneration(N=500,
+#' Alldata <- DataGeneration(N = 500,
 #'                           nitem_D = 10)
 #'
 #'
 #' # Polytomous item responses
 #'
-#' Alldata <- DataGeneration(N=1000,
+#' Alldata <- DataGeneration(N = 1000,
 #'                           nitem_P = 10)
 #'
 #'
 #' # Mixed-format items
 #'
-#' Alldata <- DataGeneration(N=1000,
+#' Alldata <- DataGeneration(N = 1000,
 #'                           nitem_D = 20,
 #'                           nitem_P = 10)
+#'
+#' # Continuous items
+#'
+#' AllData <- DataGeneration(N = 1000,
+#'                           nitem_C = 10)
 #'
 #' # Dataset from non-normal latent density using two-component Gaussian mixture distribution
 #'
@@ -287,6 +292,7 @@ DataGeneration <- function(seed=1, N=2000,
           prob = dnorm(seq(-2,2,by=0.01))
         ),
         digits = 2)
+      initialitem_C[,2] <- 0
 
       item_C[,1] <- round(
         runif(nitem_C,a_l,a_u),
@@ -313,7 +319,7 @@ DataGeneration <- function(seed=1, N=2000,
       initialitem_C <- matrix(nrow = nitem_C, ncol = 3)
       set.seed(seed)
       initialitem_C[,1] <- (a_l+a_u)/2
-      initialitem_C[,1] <- 0
+      initialitem_C[,2] <- 0
       initialitem_C[,3] <- 10
 
       # item responses

@@ -57,9 +57,11 @@ devtools::install_github("SeewooLi/IRTest")
 
 Followings are the functions of **IRTest**.
 
-  + `IRTest_Dich` is the estimation function when all items are *dichotomously* scored.
+  + `IRTest_Dich` is the estimation function when items are *dichotomously* scored.
   
-  + `IRTest_Poly` is the estimation function when all items are *polytomously* scored.
+  + `IRTest_Poly` is the estimation function when items are *polytomously* scored.
+  
+  + `IRTest_Cont` is the estimation function when items are *continuously* scored.
   
   + `IRTest_Mix` is the estimation function for *a mixed-format test*, a test comprising both dichotomous item(s) and polytomous item(s).
   

@@ -97,9 +97,14 @@ print.IRTest_summary <- function(x, ...){
 }
 
 .prt.irtest.n_item <- function(object){
-  cat('The Number of Items: ', '\n')
-  cat('dichotomous  ', object$n_item$dich, '\n')
-  cat('polyotomous  ', object$n_item$poly, '\n')
+  if(inherits(object, "mix")){
+    cat('The Number of Items: ', '\n')
+    cat('dichotomous  ', object$n_item$dich, '\n')
+    cat('polyotomous  ', object$n_item$poly, '\n')
+  }
+  else {
+    cat('The Number of Items: ', object$n_item, '\n')
+  }
   cat('\n')
 }
 

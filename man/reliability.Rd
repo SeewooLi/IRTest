@@ -7,7 +7,7 @@
 reliability(x)
 }
 \arguments{
-\item{x}{A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, or \code{IRTest_Mix}.}
+\item{x}{A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, \code{IRTest_Cont}, or \code{IRTest_Mix}.}
 }
 \value{
 Estimated marginal reliability coefficients.

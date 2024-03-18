@@ -3,7 +3,7 @@
 #' @description Factor scores of examinees.
 #'
 #'
-#' @param x A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, or \code{IRTest_Mix}.
+#' @param x A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, \code{IRTest_Cont}, or \code{IRTest_Mix}.
 #' @param ability_method The ability parameter estimation method.
 #' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
 #' The default is \code{EAP}.
@@ -13,7 +13,9 @@
 #' @return
 #' \item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}.
 #' If an examinee receives a maximum or minimum score for all items, the function returns \eqn{\pm}\code{Inf}.}
-#' \item{theta_se}{The asymptotic standard errors of ability parameter estimates. If an examinee receives a maximum or minimum score for all items, the function returns \code{NA}.}
+#' \item{theta_se}{The standard errors of ability parameter estimates.
+#' It returns standard deviations of posteriors for \code{EAP}s and asymptotic standard errors (i.e., square root of inverse Fisher information) for \code{MLE}.
+#' If an examinee receives a maximum or minimum score for all items, the function returns \code{NA} for \code{MLE}.}
 #'
 #'
 #' @author Seewoo Li \email{cu@@yonsei.ac.kr}

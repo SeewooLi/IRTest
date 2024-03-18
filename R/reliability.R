@@ -1,6 +1,6 @@
 #' Marginal reliability coefficient of IRT
 #'
-#' @param x A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, or \code{IRTest_Mix}.
+#' @param x A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, \code{IRTest_Cont}, or \code{IRTest_Mix}.
 #'
 #' @return Estimated marginal reliability coefficients.
 #'
@@ -66,57 +66,61 @@ reliability <- function(x){
   Xk <- x$quad
   param <- x$par_est
 
-  if(inherits(x, c("dich", "poly"))){
-    n_item <- nrow(param)
-    true_score_matrix <- matrix(nrow = length(Xk), ncol = n_item)
-    squared <- matrix(nrow = length(Xk), ncol = n_item)
+  if(inherits(x, "cont")){
+    rxx1 <- NULL
+    rxx2 <- NULL
+  } else {
+    if(inherits(x, c("dich", "poly"))){
+      n_item <- nrow(param)
+      true_score_matrix <- matrix(nrow = length(Xk), ncol = n_item)
+      squared <- matrix(nrow = length(Xk), ncol = n_item)
 
-    cats <- x$Options$categories
+      cats <- x$Options$categories
 
-    if(inherits(x, c("dich"))){
-      for(i in 1:n_item){
-        ppp <- P(Xk, a = param[i,1], b = param[i,2], c = param[i,3])
-        true_score_matrix[,i] <- cbind(1-ppp,ppp)%*%cats[[i]]
-        squared[,i] <- cbind(1-ppp,ppp)%*%cats[[i]]^2
-      }
-    } else if(inherits(x, c("poly"))){
-      for(i in 1:n_item){
-        if(x$Options$model %in% c("PCM", "GPCM")){
-          ppp <- P_P(Xk, a = param[i,1], b = param[i,-1])
-        } else if(x$Options$model %in% c("GRM")){
-          ppp <- P_G(Xk, a = param[i,1], b = param[i,-1])
+      if(inherits(x, c("dich"))){
+        for(i in 1:n_item){
+          ppp <- P(Xk, a = param[i,1], b = param[i,2], c = param[i,3])
+          true_score_matrix[,i] <- cbind(1-ppp,ppp)%*%cats[[i]]
+          squared[,i] <- cbind(1-ppp,ppp)%*%cats[[i]]^2
         }
-        true_score_matrix[,i] <- ppp%*%cats[[i]]
-        squared[,i] <- ppp%*%cats[[i]]^2
+      } else if(inherits(x, c("poly"))){
+        for(i in 1:n_item){
+          if(x$Options$model %in% c("PCM", "GPCM")){
+            ppp <- P_P(Xk, a = param[i,1], b = param[i,-1])
+          } else if(x$Options$model %in% c("GRM")){
+            ppp <- P_G(Xk, a = param[i,1], b = param[i,-1])
+          }
+          true_score_matrix[,i] <- ppp%*%cats[[i]]
+          squared[,i] <- ppp%*%cats[[i]]^2
+        }
+      }
+    } else if(inherits(x, c("mix"))){
+      n_item_D <- nrow(param$Dichotomous)
+      n_item_P <- nrow(param$Polytomous)
+
+      true_score_matrix <- matrix(nrow = length(Xk), ncol = n_item_D+n_item_P)
+      squared <- matrix(nrow = length(Xk), ncol = n_item_D+n_item_P)
+
+      cats <- x$Options$categories
+
+      for(i in 1:n_item_D){
+        ppp <- P(Xk,
+                 a = param$Dichotomous[i,1],
+                 b = param$Dichotomous[i,2],
+                 c = param$Dichotomous[i,3])
+        true_score_matrix[,i] <- cbind(1-ppp,ppp)%*%cats$Dichotomous[[i]]
+        squared[,i] <- cbind(1-ppp,ppp)%*%cats$Dichotomous[[i]]^2
+      }
+      for(i in 1:n_item_P){
+        if(x$Options$model_P %in% c("PCM", "GPCM")){
+          ppp <- P_P(Xk, a = param$Polytomous[i,1], b = param$Polytomous[i,-1])
+        } else if(x$Options$model_P %in% c("GRM")){
+          ppp <- P_G(Xk, a = param$Polytomous[i,1], b = param$Polytomous[i,-1])
+        }
+        true_score_matrix[,n_item_D+i] <- ppp%*%cats$Polytomous[[i]]
+        squared[,n_item_D+i] <- ppp%*%cats$Polytomous[[i]]^2
       }
     }
-  } else if(inherits(x, c("mix"))){
-    n_item_D <- nrow(param$Dichotomous)
-    n_item_P <- nrow(param$Polytomous)
-
-    true_score_matrix <- matrix(nrow = length(Xk), ncol = n_item_D+n_item_P)
-    squared <- matrix(nrow = length(Xk), ncol = n_item_D+n_item_P)
-
-    cats <- x$Options$categories
-
-    for(i in 1:n_item_D){
-      ppp <- P(Xk,
-               a = param$Dichotomous[i,1],
-               b = param$Dichotomous[i,2],
-               c = param$Dichotomous[i,3])
-      true_score_matrix[,i] <- cbind(1-ppp,ppp)%*%cats$Dichotomous[[i]]
-      squared[,i] <- cbind(1-ppp,ppp)%*%cats$Dichotomous[[i]]^2
-    }
-    for(i in 1:n_item_P){
-      if(x$Options$model_P %in% c("PCM", "GPCM")){
-        ppp <- P_P(Xk, a = param$Polytomous[i,1], b = param$Polytomous[i,-1])
-      } else if(x$Options$model_P %in% c("GRM")){
-        ppp <- P_G(Xk, a = param$Polytomous[i,1], b = param$Polytomous[i,-1])
-      }
-      true_score_matrix[,n_item_D+i] <- ppp%*%cats$Polytomous[[i]]
-      squared[,n_item_D+i] <- ppp%*%cats$Polytomous[[i]]^2
-    }
-  }
 
     ## test level
     sigma2_e <- sum(Ak%*%(squared-true_score_matrix^2))
@@ -136,6 +140,8 @@ reliability <- function(x){
     } else {
       names(rxx2) <- row.names(param)
     }
+  }
+
 
   # theta scale
     if(x$Options$latent_dist %in% c("EHM", "LLS")){

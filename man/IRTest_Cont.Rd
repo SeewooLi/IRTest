@@ -55,9 +55,97 @@ The default value is \code{"SJ-ste"}. See \code{\link{density}} for available op
 \item{h}{A natural number less than or equal to 10 if \code{latent_dist = "DC" or "LLS"}.
 This argument determines the complexity of the distribution.}
 }
+\value{
+This function returns a \code{list} of several objects:
+\item{par_est}{The item parameter estimates.}
+\item{se}{The asymptotic standard errors for item parameter estimates.}
+\item{fk}{The estimated frequencies of examinees at quadrature points.}
+\item{iter}{The number of EM-MML iterations elapsed for the convergence.}
+\item{quad}{The location of quadrature points.}
+\item{diff}{The final value of the monitored maximum item parameter change.}
+\item{Ak}{The estimated discrete latent distribution.
+It is discrete (i.e., probability mass function) by the quadrature scheme.}
+\item{Pk}{The posterior probabilities of examinees at quadrature points.}
+\item{theta}{The estimated ability parameter values. If \code{ability_method = "MLE"}, the function returns \eqn{\pm}\code{Inf} for all or none correct answers.}
+\item{theta_se}{Standard error of ability estimates. The asymptotic standard errors for \code{ability_method = "MLE"} (the function returns \code{NA} for all or none correct answers).
+The standard deviations of the posterior distributions for \code{ability_method = "MLE"}.}
+\item{logL}{The deviance (i.e., -2log\emph{L}).}
+\item{density_par}{The estimated density parameters.}
+\item{Options}{A replication of input arguments and other information.}
+}
 \description{
-This function estimates IRT item and ability parameters when all items are scored dichotomously.
+This function estimates IRT item and ability parameters when all items are scored continuously.
 Based on Bock & Aitkin's (1981) marginal maximum likelihood and EM algorithm (EM-MML), this function provides several latent distribution estimation algorithms which could free the normality assumption on the latent variable.
 If the normality assumption is violated, application of these latent distribution estimation methods could reflect non-normal characteristics of the unknown true latent distribution,
-and, thus, could provide more accurate parameter estimates (Li, 2021; Woods & Lin, 2009; Woods & Thissen, 2006).
+thereby providing more accurate parameter estimates (Li, 2021; Woods & Lin, 2009; Woods & Thissen, 2006).
+}
+\details{
+\describe{
+\item{
+The probability of a response \eqn{u=x}, where \eqn{0<u<1} (see Martinez, 2023)
+}{
+\deqn{P(u=x | a, b, \nu) = \frac{1}{B(\mu\nu, \,\nu(1-\mu))} u^{\mu\nu-1} (1-u)^{\nu(1-\mu)-1}}
+
+where \eqn{\mu = \frac{e^{a(\theta -b)}}{1+e^{a(\theta -b)}}}.
+}
+
+\item{
+Latent distribution estimation methods
+}{
+1) Empirical histogram method
+\deqn{P(\theta=X_k)=A(X_k)}
+where \eqn{k=1, 2, ..., q}, \eqn{X_k} is the location of the \eqn{k}th quadrature point, and \eqn{A(X_k)} is a value of probability mass function evaluated at \eqn{X_k}.
+Empirical histogram method thus has \eqn{q-1} parameters.
+
+2) Two-component Gaussian mixture distribution
+\deqn{P(\theta=X)=\pi \phi(X; \mu_1, \sigma_1)+(1-\pi) \phi(X; \mu_2, \sigma_2)}
+where \eqn{\phi(X; \mu, \sigma)} is the value of a Gaussian component with mean \eqn{\mu} and standard deviation \eqn{\sigma} evaluated at \eqn{X}.
+
+3) Davidian curve method
+\deqn{P(\theta=X)=\left\{\sum_{\lambda=0}^{h}{{m}_{\lambda}{X}^{\lambda}}\right\}^{2}\phi(X; 0, 1)}
+where \eqn{h} corresponds to the argument \code{h} and determines the degree of the polynomial.
+
+4) Kernel density estimation method
+\deqn{P(\theta=X)=\frac{1}{Nh}\sum_{j=1}^{N}{K\left(\frac{X-\theta_j}{h}\right)}}
+where \eqn{N} is the number of examinees, \eqn{\theta_j} is \eqn{j}th examinee's ability parameter,
+\eqn{h} is the bandwidth which corresponds to the argument \code{bandwidth}, and \eqn{K( \cdot )} is a kernel function.
+The Gaussian kernel is used in this function.
+
+5) Log-linear smoothing method
+\deqn{P(\theta=X_{q})=\exp{\left(\beta_{0}+\sum_{m=1}^{h}{\beta_{m}X_{q}^{m}}\right)}}
+where \eqn{h} is the hyper parameter which determines the smoothness of the density, and \eqn{\theta} can take total \eqn{Q} finite values (\eqn{X_1, \dots ,X_q, \dots, X_Q}).
+}
+}
+}
+\examples{
+\donttest{
+# Generating a continuous item response data
+data <- DataGeneration(N = 1000, nitem_C = 10)$data_C
+
+# Analysis
+M1 <- IRTest_Cont(data, max_iter = 3) # increase `max_iter` in real analyses.
+}
+
+}
+\references{
+Bock, R. D., & Aitkin, M. (1981). Marginal maximum likelihood estimation of item parameters: Application of an EM algorithm. \emph{Psychometrika, 46}(4), 443-459.
+
+Casabianca, J. M., & Lewis, C. (2015). IRT item parameter recovery with marginal maximum likelihood estimation using loglinear smoothing models. \emph{Journal of Educational and Behavioral Statistics, 40}(6), 547-578.
+
+Li, S. (2021). Using a two-component normal mixture distribution as a latent distribution in estimating parameters of item response models. \emph{Journal of Educational Evaluation, 34}(4), 759-789.
+
+Li, S. (2022). \emph{The effect of estimating latent distribution using kernel density estimation method on the accuracy and efficiency of parameter estimation of item response models} [Master's thesis, Yonsei University, Seoul]. Yonsei University Library.
+
+Martinez, A. J. (2023). Beta item factor analysis for asymmetric, bounded, and continuous item response data. \emph{OSF}. DOI:10.31234/osf.io/tp8sx.
+
+Mislevy, R. J. (1984). Estimating latent distributions. \emph{Psychometrika, 49}(3), 359-381.
+
+Mislevy, R. J., & Bock, R. D. (1985). Implementation of the EM algorithm in the estimation of item parameters: The BILOG computer program. In D. J. Weiss (Ed.). \emph{Proceedings of the 1982 item response theory and computerized adaptive testing conference} (pp. 189-202). University of Minnesota, Department of Psychology, Computerized Adaptive Testing Conference.
+
+Woods, C. M., & Lin, N. (2009). Item response theory with estimation of the latent density using Davidian curves. \emph{Applied Psychological Measurement, 33}(2), 102-117.
+
+Woods, C. M., & Thissen, D. (2006). Item response theory with estimation of the latent population distribution using spline-based densities. \emph{Psychometrika, 71}(2), 281-301.
+}
+\author{
+Seewoo Li \email{cu@yonsei.ac.kr}
 }

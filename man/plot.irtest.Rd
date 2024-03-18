@@ -7,7 +7,7 @@
 \method{plot}{IRTest}(x, ...)
 }
 \arguments{
-\item{x}{An object of \code{"IRTest"}-class obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, or \code{\link{IRTest_Mix}}.}
+\item{x}{An object of \code{"IRTest"}-class obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, \code{\link{IRTest_Cont}}, or \code{\link{IRTest_Mix}}.}
 
 \item{...}{Other aesthetic argument(s) for drawing the plot.
 Arguments are passed on to \code{\link{stat_function}}, if the distribution estimation method is 2NM, KDE, or DC.
