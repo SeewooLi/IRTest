@@ -93,8 +93,10 @@ Followings are the functions of **IRTest**.
 
 
 \
-\
-\
+
+---
+
+\break
 
 # 1. Dichotomous items
 
@@ -118,8 +120,6 @@ colnames(data) <- paste0("item", 1:15)
 ```
 
 \
-\
-\
 
 + **Analysis** (parameter estimation)
 
@@ -130,8 +130,6 @@ Mod1 <- IRTest_Dich(data = data,
                     h=4)
 ```
 
-\
-\
 \
 
 + **Results**
@@ -284,7 +282,6 @@ colnames(data) <- paste0("item", 1:14)
 ```
 
 \
-\
 
 + **Analysis** (parameter estimation)
 
@@ -294,7 +291,6 @@ Mod1 <- IRTest_Poly(data = data,
                     latent_dist = "KDE")
 ```
 
-\
 \
 
 + **Results**
@@ -430,10 +426,163 @@ ggplot()+
 \break
 
 \
-\
-\
 
 # 3. Continuous items
+
++ **Statistical details of the continuous IRT**
+
+
+<details>
+<summary><b>Beta distribution (click)</b></summary>
+
+$$
+\begin{align}
+f(x) &= \frac{1}{Beta(\alpha, \beta)}x^{\alpha-1}(1-x)^{(\beta-1)} \\
+&= \frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}x^{\alpha-1}(1-x)^{(\beta-1)}
+\end{align}
+$$
+
+$E(x)=\frac{\alpha}{\alpha+\beta}$ and $Var(x)=\frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta=1)}$
+If we reparameterize $\mu=\frac{\alpha}{\alpha+\beta}$ and $\nu=\alpha+\beta$,
+
+$$
+f(x) = \frac{\Gamma(\nu)}{\Gamma(\mu\nu)\Gamma(\nu(1-\mu))}x^{\mu\nu-1}(1-x)^{(\nu(1-\mu)-1)}
+$$
+No Jacobian transformation required since $\mu$ and $\nu$ are parameters of the $f(x)$, not variables.
+
+</details>
+
+
+<details>
+<summary><b>Useful equations (click)</b></summary>
+
+$\psi(\bullet)$ and $\psi_1(\bullet)$ denote for digamma and trigamma functions, 
+respectively.
+
+$$
+\begin{align}
+E[\log{x}] &= \int_{0}^{1}{\log{x}f(x) \,dx} \\
+&= \int_{0}^{1}{\log{x} \frac{1}{Beta(\alpha, \beta)}x^{\alpha-1}(1-x)^{(\beta-1)} \,dx} \\
+&= \frac{1}{Beta(\alpha, \beta)} \int_{0}^{1}{\log{(x)} x^{\alpha-1}(1-x)^{(\beta-1)} \,dx} \\
+&= \frac{1}{Beta(\alpha, \beta)} \int_{0}^{1}{\frac{\partial x^{\alpha-1}(1-x)^{(\beta-1)}}{\partial \alpha} \,dx} \\
+&= \frac{1}{Beta(\alpha, \beta)} \frac{\partial}{\partial \alpha}\int_{0}^{1}{ x^{\alpha-1}(1-x)^{(\beta-1)} \,dx} \\
+&= \frac{1}{Beta(\alpha, \beta)} \frac{\partial Beta(\alpha, \beta)}{\partial \alpha} \\
+&= \frac{\partial \log{[Beta(\alpha, \beta)]}}{\partial \alpha} \\
+&= \frac{\partial \log{[\Gamma(\alpha)]}}{\partial \alpha} - \frac{\partial \log{[\Gamma(\alpha + \beta)]}}{\partial \alpha} \\
+&= \psi(\alpha) - \psi(\alpha+\beta) 
+\end{align}
+$$
+
+Similarly, $E[\log{1-x}]=\psi(\beta) - \psi(\alpha+\beta)$.
+
+
+Furthermore, using $\frac{\partial Beta(\alpha,\beta)}{\partial \alpha} = Beta(\alpha,\beta)\left(\psi(\alpha)-\psi(\alpha+\beta)\right)$ and $\frac{\partial^2 Beta(\alpha,\beta)}{\partial \alpha^2} = Beta(\alpha,\beta)\left(\psi(\alpha)-\psi(\alpha+\beta)\right)^2 + Beta(\alpha,\beta)\left(\psi_1(\alpha)-\psi_1(\alpha+\beta)\right)$,
+
+$$
+\begin{align}
+E\left[(\log{x})^2\right] &= \frac{1}{Beta(\alpha, \beta)} \frac{\partial^2 Beta(\alpha, \beta)}{\partial \alpha^2} \\
+&= \left(\psi(\alpha)-\psi(\alpha+\beta)\right)^2 + \left(\psi_1(\alpha)-\psi_1(\alpha+\beta)\right)
+\end{align}
+$$
+
+This leads to,
+
+$$
+\begin{align}
+Var\left[\log{x}\right] &= E\left[(\log{x})^2\right] - E\left[\log{x}\right]^2 \\
+&=\psi_1(\alpha)-\psi_1(\alpha+\beta)
+\end{align}
+$$
+
+
+</details>
+
+
+
+
+<details>
+<summary><b>Continuous IRT (click)</b></summary>
+
++ Expected item response
+
+$$
+\mu = \frac{e^{a(\theta -b)}}{1+e^{a(\theta -b)}} \\
+\frac{\partial \mu}{\partial \theta} = a\mu(1-\mu)
+$$
+
++ Probability of a response
+
+$$
+f(x)=P(x|\, \theta, a, b, \nu) = \frac{\Gamma(\nu)}{\Gamma(\mu\nu)\Gamma(\nu(1-\mu))} x^{\mu\nu-1} (1-x)^{\nu(1-\mu)-1} \\
+$$
+
++ Gradient
+
+$$
+\log{f} = \log{\Gamma(\nu)}-\log{\Gamma(\mu\nu)}-\log{\Gamma(\nu(1-\mu))} + (\mu\nu-1)\log{x} + (\nu(1-\mu)-1) \log{(1-x)}
+$$
+
+$$
+\frac{\partial \log{f}}{\partial \theta} = a\nu\mu(1-\mu)\left[-\psi{(\mu\nu)}+\psi{(\nu(1-\mu))}+ \log{\left(\frac{x}{1-x}\right)}\right]
+$$
+
++ Information
+
+
+$$
+E\left[\frac{\partial \log{f}}{\partial \theta} \right]^2 = 
+(a\nu\mu(1-\mu))^2\left[E\left[ \log{\left(\frac{x}{1-x}\right)^2}\right] 
+-2 \left(\psi{(\mu\nu)}-\psi{(\nu(1-\mu))}\right )E\left[ \log{\left(\frac{x}{1-x}\right)}\right]
++\left(\psi{(\mu\nu)}-\psi{(\nu(1-\mu))}\right )^2
+\right] 
+$$
+
+$$
+\begin{align}
+E\left[ \log{\left(\frac{x}{1-x}\right)^2}\right] 
+&= E\left[ \log{\left(x\right)^2}\right]
+-2 E\left[ \log{\left(x\right)}\log{\left(1-x\right)}\right]
++ E\left[ \log{\left(1-x\right)^2}\right] \\
+&= Var\left[ \log{\left(x\right)}\right]+E\left[ \log{\left(x\right)}\right]^2 \\
+&\qquad -2 Cov\left[ \log{\left(x\right)}\log{\left(1-x\right)}\right]-2E\left[ \log{\left(x\right)}\right]E\left[ \log{\left(1-x\right)}\right] \\
+&\qquad + Var\left[ \log{\left(1-x\right)}\right]+E\left[ \log{\left(1-x\right)}\right]^2 \\
+&= \psi_{1}(\alpha)-\psi_{1}(\alpha+\beta) +E\left[ \log{\left(x\right)}\right]^2 \\
+&\qquad +2 \psi_{1}(\alpha+\beta)-2E\left[ \log{\left(x\right)}\right]E\left[ \log{\left(1-x\right)}\right] \\
+&\qquad + \psi_{1}(\beta)-\psi_{1}(\alpha+\beta)+E\left[ \log{\left(1-x\right)}\right]^2 \\
+&= \psi_{1}(\alpha)-\psi_{1}(\alpha+\beta) +\left[ \psi(\alpha)-\psi(\alpha+\beta)\right]^2 \\
+&\qquad +2 \psi_{1}(\alpha+\beta)-2 \left(\psi(\alpha)-\psi(\alpha+\beta)\right)\left(\psi(\beta)-\psi(\alpha+\beta)\right)  \\
+&\qquad + \psi_{1}(\beta)-\psi_{1}(\alpha+\beta)+\left[\psi(\beta)-\psi(\alpha+\beta)\right]^2 \\
+&= \psi_{1}(\alpha) +\psi_{1}(\beta) +\left[\psi(\alpha)-\psi(\beta)\right]^2
+\end{align}
+$$
+
+$$
+\begin{align}
+E\left[\left(\frac{\partial \log{f}}{\partial \theta}\right)^2 \right] & = 
+(a\nu\mu(1-\mu))^2\left[E\left[ \log{\left(\frac{x}{1-x}\right)^2}\right] 
+-2 \left(\psi{(\mu\nu)}-\psi{(\nu(1-\mu))}\right )E\left[ \log{\left(\frac{x}{1-x}\right)}\right]
++\left(\psi{(\mu\nu)}-\psi{(\nu(1-\mu))}\right )^2
+\right] \\
+&= (a\nu\mu(1-\mu))^2\left[\psi_{1}(\alpha) +\psi_{1}(\beta)  
++\left[\psi(\alpha)-\psi(\beta)\right]^2
+-2 \left(\psi{(\alpha)}-\psi{(\beta)}\right )\left(\psi{(\alpha)}-\psi{(\beta)}\right )
++\left(\psi{(\alpha)}-\psi{(\beta)}\right )^2
+\right] \\
+&= (a\nu\mu(1-\mu))^2\left[\psi_{1}(\alpha) +\psi_{1}(\beta)  
+\right] \\
+\end{align}
+$$
+
+$$
+I(\theta) = -E\left[\left(\frac{\partial \log{f}}{\partial \theta}\right)^2 \right] =- (a\nu\mu(1-\mu))^2\left[\psi_{1}(\alpha) +\psi_{1}(\beta)\right]
+$$
+
+
+
+</details>
+
+\
+\
 
 + **Preparing data**
 
@@ -456,8 +605,6 @@ colnames(data) <- paste0("item", 1:4)
 ```
 
 \
-\
-\
 
 + **Analysis** (parameter estimation)
 
@@ -469,8 +616,6 @@ Mod1 <- IRTest_Cont(data = data,
                     threshold = 0.01)
 ```
 
-\
-\
 \
 
 + **Results**
@@ -776,7 +921,7 @@ ggplot()+
 
 \break
 
-# 4. Model comparison
+# 5. Model comparison
 
 + **Data generation and model fitting**
 
