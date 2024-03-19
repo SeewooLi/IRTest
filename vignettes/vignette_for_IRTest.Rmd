@@ -781,8 +781,8 @@ ggplot()+
 + **Data generation and model fitting**
 
 ```{r}
-data <- DataGeneration(N=2000,
-                       nitem_D = 20,
+data <- DataGeneration(N=1000,
+                       nitem_D = 10,
                        latent_dist = "2NM",
                        d = 1.664,
                        sd_ratio = 2,
@@ -795,11 +795,11 @@ model_fits[[1]] <- IRTest_Dich(data)
 model_fits[[2]] <- IRTest_Dich(data, latent_dist = "EHM")
 model_fits[[3]] <- IRTest_Dich(data, latent_dist = "2NM")
 model_fits[[4]] <- IRTest_Dich(data, latent_dist = "KDE")
-for(i in 5:14){
-  model_fits[[i]] <- IRTest_Dich(data, latent_dist = "DC", h = 1)
+for(i in 1:10){
+  model_fits[[i+4]] <- IRTest_Dich(data, latent_dist = "DC", h = i)
 }
 
-names(model_fits) <- c("Normal", "EHM", "NM2", "KDM", paste0("DC", 1:10))
+names(model_fits) <- c("Normal", "EHM", "2NM", "KDM", paste0("DC", 1:10))
 ```
 
 + **The best Davidian-curve model**
@@ -812,7 +812,7 @@ do.call(what = "best_model", args = model_fits[5:14])
 + **The best model overall**
 
 ```{r}
-do.call(what = "best_model", args = c(model_fits[c(1:4,10)], criterion ="AIC"))
+do.call(what = "best_model", args = c(model_fits[c(1:4,5)], criterion ="AIC"))
 ```
 
 

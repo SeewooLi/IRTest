@@ -20,9 +20,11 @@ anova.IRTest <- function(...){
   n_pars <- NULL
   chi <- NULL
   p_value <- NULL
-  model_names <- if(is.null(names(match.call()))){
-    unlist(lapply(substitute(list(...)), deparse)[-1])
-  } else names(match.call())[-1]
+  if(is.null(names(match.call()))){
+    model_names <- unlist(lapply(substitute(list(...)), deparse)[-1])
+  } else {
+    model_names <- names(match.call())
+  }
 
 
   for(i in 1:length(obs)){
@@ -49,7 +51,7 @@ anova.IRTest <- function(...){
         n_pars = n_pars,
         chi = chi,
         p_value = p_value,
-        row.names = model_names
+        row.names = if(length(obs)==length(model_names)) model_names else model_names[-1]
       ),
       class = c('anova_IRTest', 'data.frame')
     )
