@@ -2,28 +2,24 @@
 
 ### Major changes
 
-* Developed functions for model comparison and model selection.
-* Added `coef_se` that returns S.E. of item parameter estimates.
+* In addition to dichotomous and polytomous responses, IRT analysis for continuous item responses is now available.
+  - `IRTest_Cont` has been added.
+  - Other utility functions of IRTest are applicable to an output of `IRTest_Cont`.
 
 ### Minor changes
 
-* Modified `GHc` as an implicit object.
-* Provided examples for functions.
-* Changed from `any(class())` to `inherits()`.
-* Provided more S3 methods.
-* Updated the manual.
-* Examples are enclosed with `\donttest{}`.
+* Modified estimation functions to be utilized in ability estimation of adaptive testing.
 
   
 ## Test environments
 
-* macOS Monterey 12.7 (release), R 4.3.1
+* macOS Monterey 12.7.3 (release), R 4.3.3
 
-* Ubuntu 22.04.3 (oldrel-1), R 4.2.3
+* Ubuntu 22.04.4 (oldrel-1), R 4.2.3
 
-* Ubuntu 22.04.3 (release), R 4.3.1
+* Ubuntu 22.04.4 (release), R 4.3.3
 
-* win-builder (devel and release), R 4.3.1
+* win-builder (devel and release), R 4.3.3
 
 
 ## R CMD check results

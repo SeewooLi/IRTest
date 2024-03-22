@@ -1,104 +1,24 @@
 # Platform
 
-<table>
- <thead>
-  <tr>
-   <th style="text-align:left;"> field </th>
-   <th style="text-align:left;"> value </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> version </td>
-   <td style="text-align:left;"> R version 4.3.1 (2023-06-16 ucrt) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> os </td>
-   <td style="text-align:left;"> Windows 10 x64 (build 19045) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> system </td>
-   <td style="text-align:left;"> x86_64, mingw32 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ui </td>
-   <td style="text-align:left;"> RStudio </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> language </td>
-   <td style="text-align:left;"> (EN) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> collate </td>
-   <td style="text-align:left;"> Korean_Korea.utf8 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ctype </td>
-   <td style="text-align:left;"> Korean_Korea.utf8 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> tz </td>
-   <td style="text-align:left;"> Asia/Seoul </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> date </td>
-   <td style="text-align:left;"> 2023-10-16 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> rstudio </td>
-   <td style="text-align:left;"> 2023.09.0+463 Desert Sunflower (desktop) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> pandoc </td>
-   <td style="text-align:left;"> 3.1.1 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown) </td>
-  </tr>
-</tbody>
-</table>
+|field    |value                                                                                |
+|:--------|:------------------------------------------------------------------------------------|
+|version  |R version 4.3.3 (2024-02-29 ucrt)                                                    |
+|os       |Windows 10 x64 (build 19045)                                                         |
+|system   |x86_64, mingw32                                                                      |
+|ui       |RStudio                                                                              |
+|language |(EN)                                                                                 |
+|collate  |Korean_Korea.utf8                                                                    |
+|ctype    |Korean_Korea.utf8                                                                    |
+|tz       |Asia/Seoul                                                                           |
+|date     |2024-03-23                                                                           |
+|rstudio  |2023.12.1+402 Ocean Storm (desktop)                                                  |
+|pandoc   |3.1.1 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown) |
 
 # Dependencies
 
-<table>
- <thead>
-  <tr>
-   <th style="text-align:left;"> package </th>
-   <th style="text-align:left;"> old </th>
-   <th style="text-align:left;"> new </th>
-   <th style="text-align:left;"> Δ </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> IRTest </td>
-   <td style="text-align:left;"> 1.11.0 </td>
-   <td style="text-align:left;"> 1.12.0 </td>
-   <td style="text-align:left;"> * </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> curl </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 5.1.0 </td>
-   <td style="text-align:left;"> * </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> fansi </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 1.0.5 </td>
-   <td style="text-align:left;"> * </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ggplot2 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 3.4.4 </td>
-   <td style="text-align:left;"> * </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> vctrs </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 0.6.4 </td>
-   <td style="text-align:left;"> * </td>
-  </tr>
-</tbody>
-</table>
+|package |old    |new   |Δ |
+|:-------|:------|:-----|:--|
+|IRTest  |1.12.0 |2.0.0 |*  |
 
 # Revdeps
 

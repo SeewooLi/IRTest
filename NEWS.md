@@ -1,6 +1,12 @@
 # IRTest 2.0.0
 
+* IRT analysis for continuous item responses is now available.
+  - `IRTest_Cont` has been added.
+  - Other utility functions of IRTest are applicable to an output of `IRTest_Cont`.
+
 # IRTest 1.12.1
+
+* Modified estimation functions to be utilized in ability estimation of adaptive testing.
 
 # IRTest 1.12.0
 
