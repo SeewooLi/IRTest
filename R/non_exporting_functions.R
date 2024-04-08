@@ -797,7 +797,9 @@ MLE_theta <- function(item, data, type){
       } else {
         th <- 0
         thres <- 1
-        while(thres > 0.0001){
+        iter <- 0
+        while((thres > 0.0001) & (iter < 100)){
+          iter <- iter + 1
           p_ <- P(theta = th, a = item[,1], b = item[,2], c = item[,3])
           p <- p_*(1-item[,3])+item[,3]
           L1 <- sum(
@@ -828,7 +830,9 @@ MLE_theta <- function(item, data, type){
       } else {
         th <- 0
         thres <- 1
-        while(thres > 0.0001){
+        iter <- 0
+        while((thres > 0.0001) & (iter < 100)){
+          iter <- iter + 1
           l1l2 <- L1L2_Poly(th, item, data, type, ncat,i )
           diff <- l1l2[1]/l1l2[2]
           th <- th - diff
@@ -853,7 +857,9 @@ MLE_theta <- function(item, data, type){
       } else {
         th <- 0
         thres <- 1
-        while(thres > 0.0001){
+        iter <- 0
+        while((thres > 0.0001) & (iter < 100)){
+          iter <- iter + 1
           # dichotomous items
           p_ <- P(theta = th, a = item[[1]][,1], b = item[[1]][,2], c = item[[1]][,3])
           p <- p_*(1-item[[1]][,3])+item[[1]][,3]
@@ -883,7 +889,9 @@ MLE_theta <- function(item, data, type){
 
       th <- 0
       thres <- 1
-      while(thres > 0.0001){
+      iter <- 0
+      while((thres > 0.0001) & (iter < 100)){
+        iter <- iter + 1
         L1 <- L1_Cont(data = data[i,], theta = th, a = item[,1], b = item[,2], nu = item[,3])
         L2 <- -L2_Cont(theta = th, a = item[,1], b = item[,2], nu = item[,3])
         diff <- sum(L1, na.rm = TRUE)/sum(L2, na.rm = TRUE)

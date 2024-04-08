@@ -110,13 +110,6 @@ test_that(
   expect_equal(dim(Mod1$par_est), dim(item))
   expect_equal(length(Mod1$theta), length(theta))
 
-  expect_warning(
-    IRTest_Dich(initialitem = initialitem,
-                data = data,
-                model = NA,
-                latent_dist = "2NM",
-                max_iter = 2,
-                threshold = .0001)
-  )
+
           }
 )

@@ -153,6 +153,6 @@ test_that(
   plot(Mod1)
   reliability(Mod1)
   plot_item(Mod1,1,type="d")
-  plot_item(Mod1,1,type="p")
+  expect_no_error(plot_item(Mod1,1,type="p"))
 }
 )
