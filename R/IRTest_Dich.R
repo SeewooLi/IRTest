@@ -19,7 +19,7 @@
 #' @param q A numeric value that represents the number of quadrature points. The default value is 121.
 #' @param initialitem A matrix of initial item parameter values for starting the estimation algorithm. The default value is \code{NULL}.
 #' @param ability_method The ability parameter estimation method.
-#' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
+#' The available options are Expected \emph{a posteriori} (\code{EAP}), Maximum Likelihood Estimates (\code{MLE}), and weighted likelihood estimates (\code{WLE}).
 #' The default is \code{EAP}.
 #' @param latent_dist A character string that determines latent distribution estimation method.
 #' Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} for the normality assumption on the latent distribution,
@@ -353,6 +353,10 @@ IRTest_Dich <- function(data, model="2PL", range = c(-6,6), q = 121, initialitem
     mle_result <- MLE_theta(item = initialitem, data = data, type = "dich")
     theta <- mle_result[[1]]
     theta_se <- mle_result[[2]]
+  } else if(ability_method == 'WLE'){
+    wle_result <- WLE_theta(item = initialitem, data = data, type = "dich")
+    theta <- wle_result[[1]]
+    theta_se <- wle_result[[2]]
   }
   dn <- list(colnames(data),c("a", "b", "c"))
   dimnames(initialitem) <- dn

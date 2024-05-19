@@ -800,7 +800,7 @@ MLE_theta <- function(item, data, type){
         iter <- 0
         while((thres > 0.0001) & (iter < 100)){
           iter <- iter + 1
-          p_ <- P(theta = th, a = item[,1], b = item[,2], c = item[,3])
+          p_ <- P(theta = th, a = item[,1], b = item[,2], c = 0)
           p <- p_*(1-item[,3])+item[,3]
           L1 <- sum(
             item[,1]*p_/p*(data[i,]-p),
@@ -861,7 +861,7 @@ MLE_theta <- function(item, data, type){
         while((thres > 0.0001) & (iter < 100)){
           iter <- iter + 1
           # dichotomous items
-          p_ <- P(theta = th, a = item[[1]][,1], b = item[[1]][,2], c = item[[1]][,3])
+          p_ <- P(theta = th, a = item[[1]][,1], b = item[[1]][,2], c = 0)
           p <- p_*(1-item[[1]][,3])+item[[1]][,3]
           L1 <- sum(
             item[[1]][,1]*p_/p*(data[[1]][i,]-p),
@@ -895,6 +895,109 @@ MLE_theta <- function(item, data, type){
         L1 <- L1_Cont(data = data[i,], theta = th, a = item[,1], b = item[,2], nu = item[,3])
         L2 <- -L2_Cont(theta = th, a = item[,1], b = item[,2], nu = item[,3])
         diff <- sum(L1, na.rm = TRUE)/sum(L2, na.rm = TRUE)
+        th <- th - diff
+        thres <- abs(diff)
+      }
+      mle <- append(mle, th)
+      se <- append(se, sqrt(-1/sum(L2, na.rm = TRUE)))
+    }
+  }
+  return(list(mle=mle,
+              se=se))
+}
+
+WLE_theta <- function(item, data, type){
+  message("\n",appendLF=FALSE)
+  mle <- NULL
+  se <- NULL
+  if(all(type=="dich")){
+    for(i in 1:nrow(data)){
+      message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
+
+      th <- 0
+      thres <- 1
+      iter <- 0
+      while((thres > 0.0001) & (iter < 100)){
+        iter <- iter + 1
+        p_ <- P(theta = th, a = item[,1], b = item[,2], c = 0)
+        p <- p_*(1-item[,3])+item[,3]
+        L1 <- sum(
+          item[,1]*p_/p*(data[i,]-p),
+          na.rm = TRUE
+        )
+        L2 <- -sum(
+          item[,1]^2*p_^2*(1-p)/p
+        )
+        diff <- (L1+wle(th, item, type))/L2
+        th <- th - diff
+        thres <- abs(diff)
+      }
+      mle <- append(mle, th)
+      se <- append(se, sqrt(-1/L2))
+
+    }
+  } else if(all(type %in% c("PCM", "GPCM", "GRM"))){
+    ncat <- rowSums(!is.na(item))-1
+    for(i in 1:nrow(data)){
+      message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
+
+      th <- 0
+      thres <- 1
+      iter <- 0
+      while((thres > 0.0001) & (iter < 100)){
+        iter <- iter + 1
+        l1l2 <- L1L2_Poly(th, item, data, type, ncat,i )
+        diff <- (l1l2[1]+wle(th, item, type))/l1l2[2]
+        th <- th - diff
+        thres <- abs(diff)
+      }
+      mle <- append(mle, th)
+      se <- append(se, sqrt(-1/l1l2[2]))
+    }
+  } else if(any(type %in% c("mix"))){
+    ncat <- rowSums(!is.na(item[[2]]))-1
+    for(i in 1:nrow(data[[1]])){
+      message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data[[1]]),sep="",appendLF=FALSE)
+
+      th <- 0
+      thres <- 1
+      iter <- 0
+      while((thres > 0.0001) & (iter < 100)){
+        iter <- iter + 1
+        # dichotomous items
+        p_ <- P(theta = th, a = item[[1]][,1], b = item[[1]][,2], c = item[[1]][,3])
+        p <- p_*(1-item[[1]][,3])+item[[1]][,3]
+        L1 <- sum(
+          item[[1]][,1]*p_/p*(data[[1]][i,]-p),
+          na.rm = TRUE
+        )
+        L2 <- -sum(
+          item[[1]][,1]^2*p_^2*(1-p)/p
+        )
+
+        # polytomous items
+        l1l2 <- L1L2_Poly(th=th, item=item[[2]], data=data[[2]], type=type[2], ncat=ncat,i=i)
+
+        # add them
+        diff <- (L1+l1l2[1]+wle(th, item[[1]], "dich")+wle(th, item[[2]], type[2]))/(L2+l1l2[2])
+        th <- th - diff
+        thres <- abs(diff)
+      }
+      mle <- append(mle, th)
+      se <- append(se, sqrt(-1/l1l2[2]))
+    }
+  } else if(all(type=="cont")){
+    for(i in 1:nrow(data)){
+      message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
+
+      th <- 0
+      thres <- 1
+      iter <- 0
+      while((thres > 0.0001) & (iter < 100)){
+        iter <- iter + 1
+        L1 <- L1_Cont(data = data[i,], theta = th, a = item[,1], b = item[,2], nu = item[,3])
+        L2 <- -L2_Cont(theta = th, a = item[,1], b = item[,2], nu = item[,3])
+        diff <- (sum(L1, na.rm = TRUE)+wle(th, item, "cont"))/sum(L2, na.rm = TRUE)
         th <- th - diff
         thres <- abs(diff)
       }
@@ -952,6 +1055,51 @@ L1L2_Poly <- function(th, item, data, type, ncat, i){
     )
   }
   return(c(L1, L2))
+}
+
+wle <- function(theta, item, type){
+  if(type == "dich"){
+    p_ <- P(theta = theta, a = item[,1], b = item[,2], c = 0)
+    p0 <- p_*(1-item[,3])+item[,3]
+    p1 <- item[,1]*(1-item[,3])*p_*(1-p_)
+    p2 <- (item[,1]^2)*(1-item[,3])*p_*(1-p_)*(1-2*p_)
+    J <- sum((p1*p2)/(p0*(1-p0)), na.rm = TRUE)
+    I <- sum((p1^2)/(p0*(1-p0)), na.rm = TRUE)
+  } else if(type %in% c("PCM", "GPCM")){
+    p0 <- P_P(theta, a = item[,1], b = item[,-1])
+    na_loc <- is.na(p0)
+    p0[na_loc] <- 0
+    N <- 0:(ncol(p0)-1)
+    outer(N, p0 %*% N, FUN = "-")[,,1]
+    p1 <- p0 * t(outer(N, p0 %*% N, FUN = "-")[,,1]) * item[,1]
+    p2 <- p1 * t(outer(N, p0 %*% N, FUN = "-")[,,1]) * item[,1] + p0 * t(outer(N, p1 %*% N, FUN = "-")[,,1]) * item[,1]
+    p0[na_loc] <- NA
+    p1[na_loc] <- NA
+    p2[na_loc] <- NA
+    J <- sum((p1*p2)/p0, na.rm = TRUE)
+    I <- sum((p1^2)/p0, na.rm = TRUE)
+  } else if(type == "GRM"){
+    p0 <- P_G(theta, item[,1], item[,-1])
+    p_ <- P(theta = theta, a = item[,1], b = item[,-1])
+    p1_ <- p_*(1-p_)*item[,1]
+    p2_ <- p1_*(1-2*p_)*item[,1]
+    p1 <- cbind(0, p1_) - add0(cbind(p1_,NA))
+    p2 <- cbind(0, p2_) - add0(cbind(p2_,NA))
+    J <- sum((p1*p2)/p0, na.rm = TRUE)
+    I <- sum((p1^2)/p0, na.rm = TRUE)
+  } else if(type == "cont"){
+    nu <- item[,3]
+    mu <- P(theta, item[,1], item[,2])
+    alpha <- mu*nu
+    beta <- nu*(1-mu)
+    J <- - sum(
+      (item[,1]/nu)^3*alpha^2*beta^2*(beta-alpha)*(trigamma(alpha)+trigamma(beta))
+             )
+    I <- sum(
+      ((item[,1]/nu)*alpha*beta)^2*(trigamma(alpha)+trigamma(beta))
+    )
+  }
+  return(J/(2*I))
 }
 
 #################################################################################################################

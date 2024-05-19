@@ -5,7 +5,7 @@
 #'
 #' @param x A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, \code{IRTest_Cont}, or \code{IRTest_Mix}.
 #' @param ability_method The ability parameter estimation method.
-#' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
+#' The available options are Expected \emph{a posteriori} (\code{EAP}), Maximum Likelihood Estimates (\code{MLE}), and weighted likelihood estimates (\code{WLE}).
 #' The default is \code{EAP}.
 #' @param quad A vector of quadrature points for \code{EAP} calculation.
 #' @param prior A vector of the prior distribution for \code{EAP} calculation. The length of it should be the same as \code{quad}.
@@ -83,6 +83,31 @@ factor_score <- function(x, ability_method = "EAP", quad=NULL, prior=NULL){
     )
     theta <- mle_result[[1]]
     theta_se <- mle_result[[2]]
+  } else if(ability_method == 'WLE'){
+    if(inherits(x, "dich")){
+      item = x$par_est
+      data = x$Options$data
+      type = "dich"
+    } else if(inherits(x, "poly")){
+      item = x$par_est
+      data = x$Options$data
+      type = x$Options$model
+    } else if(inherits(x, "mix")){
+      item = list(x$par_est$Dichotomous,x$par_est$Polytomous)
+      data = list(x$Options$data_D, x$Options$data_P)
+      type = c("mix", x$Options$model_P)
+    } else if(inherits(x, "cont")){
+      item = x$par_est
+      data = x$Options$data
+      type = "cont"
+    }
+    wle_result <- WLE_theta(
+      item = item,
+      data = data,
+      type = type
+    )
+    theta <- wle_result[[1]]
+    theta_se <- wle_result[[2]]
   }
 
   return(list(theta = theta, theta_se = theta_se))

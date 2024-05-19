@@ -27,7 +27,7 @@
 #' @param initialitem_D A matrix of initial item parameter values for starting the estimation algorithm. The default value is \code{NULL}.
 #' @param initialitem_P A matrix of initial item parameter values for starting the estimation algorithm. The default value is \code{NULL}.
 #' @param ability_method The ability parameter estimation method.
-#' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
+#' The available options are Expected \emph{a posteriori} (\code{EAP}), Maximum Likelihood Estimates (\code{MLE}), and weighted likelihood estimates (\code{WLE}).
 #' The default is \code{EAP}.
 #' @param latent_dist A character string that determines latent distribution estimation method.
 #' Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} for the normality assumption on the latent distribution,
@@ -471,6 +471,14 @@ if(nrow(data_D)!=nrow(data_P)){
       )
     theta <- mle_result[[1]]
     theta_se <- mle_result[[2]]
+  } else if(ability_method == 'WLE'){
+    wle_result <- WLE_theta(
+      item = list(initialitem_D,initialitem_P),
+      data = list(data_D,data_P),
+      type = c("mix", model_P)
+    )
+    theta <- wle_result[[1]]
+    theta_se <- wle_result[[2]]
   }
 
   dn_D <- list(colnames(data_D),c("a", "b", "c"))

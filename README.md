@@ -248,7 +248,7 @@ Estimated item parameters
 
 
 ### Plotting
-fscores <- factor_score(Mod1, ability_method = "MLE")
+fscores <- factor_score(Mod1, ability_method = "WLE")
 
 par(mfrow=c(1,3))
 plot(item[,1], Mod1$par_est[,1], xlab = "true", ylab = "estimated", main = "item discrimination parameters")

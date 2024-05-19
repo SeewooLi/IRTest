@@ -530,7 +530,7 @@ $$
 
 
 $$
-E\left[\frac{\partial \log{f}}{\partial \theta} \right]^2 = 
+E\left[ \left(\frac{\partial \log{f}}{\partial \theta}\right)^2 \right] = 
 (a\nu\mu(1-\mu))^2\left[E\left[ \log{\left(\frac{x}{1-x}\right)^2}\right] 
 -2 \left(\psi{(\mu\nu)}-\psi{(\nu(1-\mu))}\right )E\left[ \log{\left(\frac{x}{1-x}\right)}\right]
 +\left(\psi{(\mu\nu)}-\psi{(\nu(1-\mu))}\right )^2
@@ -574,7 +574,7 @@ E\left[\left(\frac{\partial \log{f}}{\partial \theta}\right)^2 \right] & =
 $$
 
 $$
-I(\theta) = -E\left[\left(\frac{\partial \log{f}}{\partial \theta}\right)^2 \right] =- (a\nu\mu(1-\mu))^2\left[\psi_{1}(\alpha) +\psi_{1}(\beta)\right]
+I(\theta) = E\left[\left(\frac{\partial \log{f}}{\partial \theta}\right)^2 \right] =  (a\nu\mu(1-\mu))^2\left[\psi_{1}(\alpha) +\psi_{1}(\beta)\right]
 $$
 
 

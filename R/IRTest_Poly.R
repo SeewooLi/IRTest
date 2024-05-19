@@ -17,7 +17,7 @@
 #' @param q A numeric value that represents the number of quadrature points. The default value is 121.
 #' @param initialitem A matrix of initial item parameter values for starting the estimation algorithm. The default value is \code{NULL}.
 #' @param ability_method The ability parameter estimation method.
-#' The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
+#' The available options are Expected \emph{a posteriori} (\code{EAP}), Maximum Likelihood Estimates (\code{MLE}), and weighted likelihood estimates (\code{WLE}).
 #' The default is \code{EAP}.
 #' @param latent_dist A character string that determines latent distribution estimation method.
 #' Insert \code{"Normal"}, \code{"normal"}, or \code{"N"} for the normality assumption on the latent distribution,
@@ -362,6 +362,10 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     mle_result <- MLE_theta(item = initialitem, data = data, type = model)
     theta <- mle_result[[1]]
     theta_se <- mle_result[[2]]
+  } else if(ability_method == 'WLE'){
+    wle_result <- WLE_theta(item = initialitem, data = data, type = model)
+    theta <- wle_result[[1]]
+    theta_se <- wle_result[[2]]
   }
   dn <- list(colnames(data),c("a", paste("b", 1:(ncol(initialitem)-1), sep="_")))
   dimnames(initialitem) <- dn
