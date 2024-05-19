@@ -46,7 +46,7 @@ The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
 \item{initialitem_P}{A matrix of initial item parameter values for starting the estimation algorithm. The default value is \code{NULL}.}
 
 \item{ability_method}{The ability parameter estimation method.
-The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
+The available options are Expected \emph{a posteriori} (\code{EAP}), Maximum Likelihood Estimates (\code{MLE}), and weighted likelihood estimates (\code{WLE}).
 The default is \code{EAP}.}
 
 \item{latent_dist}{A character string that determines latent distribution estimation method.

@@ -2,7 +2,7 @@
 # citation
 #################################################################################################################
 .onAttach <- function(libname, pkgname) {
-  package_citation <- "Li, S. (2024). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 2.0.0). R package. \n"
+  package_citation <- "Li, S. (2024). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 2.1.0). R package. \n"
   package_URL <- "URL: https://CRAN.R-project.org/package=IRTest"
   packageStartupMessage("Thank you for using IRTest!")
   packageStartupMessage("Please cite the package as: \n")
@@ -957,7 +957,7 @@ WLE_theta <- function(item, data, type){
   } else if(any(type %in% c("mix"))){
     ncat <- rowSums(!is.na(item[[2]]))-1
     for(i in 1:nrow(data[[1]])){
-      message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data[[1]]),sep="",appendLF=FALSE)
+      message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data[[1]]),sep="",appendLF=FALSE)
 
       th <- 0
       thres <- 1
@@ -988,7 +988,7 @@ WLE_theta <- function(item, data, type){
     }
   } else if(all(type=="cont")){
     for(i in 1:nrow(data)){
-      message("\r","\r","MLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
+      message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
 
       th <- 0
       thres <- 1

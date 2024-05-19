@@ -10,7 +10,7 @@ factor_score(x, ability_method = "EAP", quad = NULL, prior = NULL)
 \item{x}{A model fit object from either \code{IRTest_Dich}, \code{IRTest_Poly}, \code{IRTest_Cont}, or \code{IRTest_Mix}.}
 
 \item{ability_method}{The ability parameter estimation method.
-The available options are Expected \emph{a posteriori} (\code{EAP}) and Maximum Likelihood Estimates (\code{MLE}).
+The available options are Expected \emph{a posteriori} (\code{EAP}), Maximum Likelihood Estimates (\code{MLE}), and weighted likelihood estimates (\code{WLE}).
 The default is \code{EAP}.}
 
 \item{quad}{A vector of quadrature points for \code{EAP} calculation.}
