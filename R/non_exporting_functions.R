@@ -929,8 +929,12 @@ WLE_theta <- function(item, data, type){
           item[,1]^2*p_^2*(1-p)/p
         )
         diff <- (L1+wle(th, item[!is.na(data[i,]),], type))/L2
-        th <- th - diff
-        thres <- abs(diff)
+        if(abs(diff)>thres){
+          th <- th - diff/2
+        } else{
+          th <- th - diff
+          thres <- abs(diff)
+        }
       }
       mle <- append(mle, th)
       se <- append(se, sqrt(-1/L2))
@@ -948,8 +952,12 @@ WLE_theta <- function(item, data, type){
         iter <- iter + 1
         l1l2 <- L1L2_Poly(th, item, data, type, ncat,i )
         diff <- (l1l2[1]+wle(th, item[!is.na(data[i,]),], type))/l1l2[2]
-        th <- th - diff
-        thres <- abs(diff)
+        if(abs(diff)>thres){
+          th <- th - diff/2
+        } else{
+          th <- th - diff
+          thres <- abs(diff)
+        }
       }
       mle <- append(mle, th)
       se <- append(se, sqrt(-1/l1l2[2]))
@@ -980,8 +988,12 @@ WLE_theta <- function(item, data, type){
 
         # add them
         diff <- (L1+l1l2[1]+wle(th, item[[1]][!is.na(data[[1]][i,]),], "dich")+wle(th, item[[2]][!is.na(data[[2]][i,]),], type[2]))/(L2+l1l2[2])
-        th <- th - diff
-        thres <- abs(diff)
+        if(abs(diff)>thres){
+          th <- th - diff/2
+        } else{
+          th <- th - diff
+          thres <- abs(diff)
+        }
       }
       mle <- append(mle, th)
       se <- append(se, sqrt(-1/l1l2[2]))
@@ -998,8 +1010,12 @@ WLE_theta <- function(item, data, type){
         L1 <- L1_Cont(data = data[i,], theta = th, a = item[,1], b = item[,2], nu = item[,3])
         L2 <- -L2_Cont(theta = th, a = item[,1], b = item[,2], nu = item[,3])
         diff <- (sum(L1, na.rm = TRUE)+wle(th, item[!is.na(data[i,]),], "cont"))/sum(L2, na.rm = TRUE)
-        th <- th - diff
-        thres <- abs(diff)
+        if(abs(diff)>thres){
+          th <- th - diff/2
+        } else{
+          th <- th - diff
+          thres <- abs(diff)
+        }
       }
       mle <- append(mle, th)
       se <- append(se, sqrt(-1/sum(L2, na.rm = TRUE)))
