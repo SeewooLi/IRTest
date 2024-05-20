@@ -969,7 +969,7 @@ WLE_theta <- function(item, data, type){
         l1l2 <- L1L2_Poly(th, item, data, type, ncat,i )
         diff <- (l1l2[1]+wle(th, item[!is.na(data[i,]),], type))/l1l2[2]
         if(abs(diff)>thres){
-          th <- th - sign(diff)*thres
+          th <- th - sign(diff)*thres/2
         } else{
           th <- th - diff
           thres <- abs(diff)
