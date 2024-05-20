@@ -1130,7 +1130,7 @@ wle <- function(theta, item, type){
       ((item[,1]/nu)*alpha*beta)^2*(trigamma(alpha)+trigamma(beta))
     )
   }
-  return(J)
+  return(J/(2*I))
 }
 
 #################################################################################################################
