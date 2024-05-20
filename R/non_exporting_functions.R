@@ -810,8 +810,12 @@ MLE_theta <- function(item, data, type){
             item[,1]^2*p_^2*(1-p)/p
           )
           diff <- L1/L2
-          th <- th - diff
-          thres <- abs(diff)
+          if(abs(diff)>thres){
+            th <- th - diff/2
+          } else{
+            th <- th - diff
+            thres <- abs(diff)
+          }
         }
         mle <- append(mle, th)
         se <- append(se, sqrt(-1/L2))
@@ -835,8 +839,12 @@ MLE_theta <- function(item, data, type){
           iter <- iter + 1
           l1l2 <- L1L2_Poly(th, item, data, type, ncat,i )
           diff <- l1l2[1]/l1l2[2]
-          th <- th - diff
-          thres <- abs(diff)
+          if(abs(diff)>thres){
+            th <- th - diff/2
+          } else{
+            th <- th - diff
+            thres <- abs(diff)
+          }
         }
         mle <- append(mle, th)
         se <- append(se, sqrt(-1/l1l2[2]))
@@ -876,8 +884,12 @@ MLE_theta <- function(item, data, type){
 
           # add them
           diff <- (L1+l1l2[1])/(L2+l1l2[2])
-          th <- th - diff
-          thres <- abs(diff)
+          if(abs(diff)>thres){
+            th <- th - diff/2
+          } else{
+            th <- th - diff
+            thres <- abs(diff)
+          }
         }
         mle <- append(mle, th)
         se <- append(se, sqrt(-1/l1l2[2]))
@@ -895,8 +907,12 @@ MLE_theta <- function(item, data, type){
         L1 <- L1_Cont(data = data[i,], theta = th, a = item[,1], b = item[,2], nu = item[,3])
         L2 <- -L2_Cont(theta = th, a = item[,1], b = item[,2], nu = item[,3])
         diff <- sum(L1, na.rm = TRUE)/sum(L2, na.rm = TRUE)
-        th <- th - diff
-        thres <- abs(diff)
+        if(abs(diff)>thres){
+          th <- th - diff/2
+        } else{
+          th <- th - diff
+          thres <- abs(diff)
+        }
       }
       mle <- append(mle, th)
       se <- append(se, sqrt(-1/sum(L2, na.rm = TRUE)))
