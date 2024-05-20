@@ -967,7 +967,7 @@ WLE_theta <- function(item, data, type){
       while((thres > 0.0001) & (iter < 100)){
         iter <- iter + 1
         l1l2 <- L1L2_Poly(th, item, data, type, ncat,i )
-        diff <- (l1l2[1]+wle(th, item[!is.na(data[i,]),], type))/l1l2[2]
+        diff <- (l1l2[1]+wle(th, item[!is.na(data[i,]),], type)/2/l1l2[2])/l1l2[2]
         if(abs(diff)>thres){
           th <- th - sign(diff)*thres/2
         } else{
@@ -1096,20 +1096,19 @@ wle <- function(theta, item, type){
     p1 <- item[,1]*(1-item[,3])*p_*(1-p_)
     p2 <- (item[,1]^2)*(1-item[,3])*p_*(1-p_)*(1-2*p_)
     J <- sum((p1*p2)/(p0*(1-p0)), na.rm = TRUE)
-    I <- sum((p1^2)/(p0*(1-p0)), na.rm = TRUE)
+    # I <- sum((p1^2)/(p0*(1-p0)), na.rm = TRUE)
   } else if(type %in% c("PCM", "GPCM")){
     p0 <- P_P(theta, a = item[,1], b = item[,-1])
     na_loc <- is.na(p0)
     p0[na_loc] <- 0
     N <- 0:(ncol(p0)-1)
-    outer(N, p0 %*% N, FUN = "-")[,,1]
     p1 <- p0 * t(outer(N, p0 %*% N, FUN = "-")[,,1]) * item[,1]
     p2 <- p1 * t(outer(N, p0 %*% N, FUN = "-")[,,1]) * item[,1] + p0 * t(outer(N, p1 %*% N, FUN = "-")[,,1]) * item[,1]
     p0[na_loc] <- NA
     p1[na_loc] <- NA
     p2[na_loc] <- NA
     J <- sum((p1*p2)/p0, na.rm = TRUE)
-    I <- sum((p1^2)/p0, na.rm = TRUE)
+    # I <- sum((p1^2)/p0, na.rm = TRUE)
   } else if(type == "GRM"){
     p0 <- P_G(theta, item[,1], item[,-1])
     p_ <- P(theta = theta, a = item[,1], b = item[,-1])
@@ -1118,7 +1117,7 @@ wle <- function(theta, item, type){
     p1 <- cbind(0, p1_) - add0(cbind(p1_,NA))
     p2 <- cbind(0, p2_) - add0(cbind(p2_,NA))
     J <- sum((p1*p2)/p0, na.rm = TRUE)
-    I <- sum((p1^2)/p0, na.rm = TRUE)
+    # I <- sum((p1^2)/p0, na.rm = TRUE)
   } else if(type == "cont"){
     nu <- item[,3]
     mu <- P(theta, item[,1], item[,2])
@@ -1127,11 +1126,11 @@ wle <- function(theta, item, type){
     J <- - sum(
       (item[,1]/nu)^3*alpha^2*beta^2*(beta-alpha)*(trigamma(alpha)+trigamma(beta))
              )
-    I <- sum(
-      ((item[,1]/nu)*alpha*beta)^2*(trigamma(alpha)+trigamma(beta))
-    )
+    # I <- sum(
+    #   ((item[,1]/nu)*alpha*beta)^2*(trigamma(alpha)+trigamma(beta))
+    # )
   }
-  return(J/(2*I))
+  return(J)
 }
 
 #################################################################################################################
