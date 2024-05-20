@@ -1103,11 +1103,11 @@ wle <- function(theta, item, type){
     p0[na_loc] <- 0
     N <- 0:(ncol(p0)-1)
     p1 <- p0 * t(outer(N, p0 %*% N, FUN = "-")[,,1]) * item[,1]
-    p2 <- p1 * t(outer(N, p0 %*% N, FUN = "-")[,,1]) * item[,1] + p0 * t(outer(N, p1 %*% N, FUN = "-")[,,1]) * item[,1]
+    p2 <- p1 * t(outer(N, p0 %*% N, FUN = "-")[,,1]) * item[,1] - p0 * ((p1 %*% N) * item[,1])
     p0[na_loc] <- NA
     p1[na_loc] <- NA
     p2[na_loc] <- NA
-    J <- sum(2*(p1*p2)/p0-(p1^3)/(p0^2), na.rm = TRUE)
+    J <- sum((p1*p2)/p0, na.rm = TRUE)
     I <- sum((p1^2)/p0, na.rm = TRUE)
   } else if(type == "GRM"){
     p0 <- P_G(theta, item[,1], item[,-1])
