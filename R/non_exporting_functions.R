@@ -1103,7 +1103,7 @@ wle <- function(theta, item, type){
     p0[na_loc] <- 0
     N <- 0:(ncol(p0)-1)
     p1 <- p0 * t(outer(N, p0 %*% N, FUN = "-")[,,1]) * item[,1]
-    p2 <- p1 * t(outer(N, p0 %*% N, FUN = "-")[,,1]) * item[,1] - p0 * ((p1 %*% N) * item[,1])
+    p2 <- p1 * t(outer(N, p0 %*% N, FUN = "-")[,,1]) * item[,1] - p0 * (c(p1 %*% N) * item[,1])
     p0[na_loc] <- NA
     p1[na_loc] <- NA
     p2[na_loc] <- NA
