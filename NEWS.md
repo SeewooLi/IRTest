@@ -1,5 +1,8 @@
 # IRTest 2.1.0
 
+* Weighted likelihood estimates (WLE) are available for ability parameter estimation.
+* `adaptive_test` function is added for ability parameter estimation with fixed item parameters
+
 # IRTest 2.0.0
 
 * IRT analysis for continuous item responses is now available.

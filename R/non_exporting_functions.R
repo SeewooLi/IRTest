@@ -928,7 +928,7 @@ WLE_theta <- function(item, data, type){
         L2 <- -sum(
           item[,1]^2*p_^2*(1-p)/p
         )
-        diff <- (L1+wle(th, item, type))/L2
+        diff <- (L1+wle(th, item[!is.na(data[i,]),], type))/L2
         th <- th - diff
         thres <- abs(diff)
       }
@@ -947,7 +947,7 @@ WLE_theta <- function(item, data, type){
       while((thres > 0.0001) & (iter < 100)){
         iter <- iter + 1
         l1l2 <- L1L2_Poly(th, item, data, type, ncat,i )
-        diff <- (l1l2[1]+wle(th, item, type))/l1l2[2]
+        diff <- (l1l2[1]+wle(th, item[!is.na(data[i,]),], type))/l1l2[2]
         th <- th - diff
         thres <- abs(diff)
       }
@@ -979,7 +979,7 @@ WLE_theta <- function(item, data, type){
         l1l2 <- L1L2_Poly(th=th, item=item[[2]], data=data[[2]], type=type[2], ncat=ncat,i=i)
 
         # add them
-        diff <- (L1+l1l2[1]+wle(th, item[[1]], "dich")+wle(th, item[[2]], type[2]))/(L2+l1l2[2])
+        diff <- (L1+l1l2[1]+wle(th, item[[1]][!is.na(data[[1]][i,]),], "dich")+wle(th, item[[2]][!is.na(data[[2]][i,]),], type[2]))/(L2+l1l2[2])
         th <- th - diff
         thres <- abs(diff)
       }
@@ -997,7 +997,7 @@ WLE_theta <- function(item, data, type){
         iter <- iter + 1
         L1 <- L1_Cont(data = data[i,], theta = th, a = item[,1], b = item[,2], nu = item[,3])
         L2 <- -L2_Cont(theta = th, a = item[,1], b = item[,2], nu = item[,3])
-        diff <- (sum(L1, na.rm = TRUE)+wle(th, item, "cont"))/sum(L2, na.rm = TRUE)
+        diff <- (sum(L1, na.rm = TRUE)+wle(th, item[!is.na(data[i,]),], "cont"))/sum(L2, na.rm = TRUE)
         th <- th - diff
         thres <- abs(diff)
       }
