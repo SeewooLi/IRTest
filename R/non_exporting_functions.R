@@ -984,13 +984,13 @@ WLE_theta <- function(item, data, type){
               thres <- abs(diff)
             }
           }
-          mle <- append(mle, th)
-          se <- append(se, sqrt(-1/l1l2[2]))
+          mle <<- append(mle, th)
+          se <<- append(se, sqrt(-1/l1l2[2]))
         }, error = function(e){
           message("\n","WLE failed to converge for the entry ", i,"\n",sep="",appendLF=FALSE)
 
-          mle <- append(mle, NA)
-          se <- append(se, NA)
+          mle <<- append(mle, NA)
+          se <<- append(se, NA)
         }
       )
     }
