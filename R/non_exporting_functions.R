@@ -928,6 +928,13 @@ WLE_theta <- function(item, data, type){
   se <- NULL
   if(all(type=="dich")){
     for(i in 1:nrow(data)){
+      # tryCatch(
+      #   {
+      #
+      #   }, error = function(e){
+      #
+      #   }
+      # )
       message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
 
       th <- 0
@@ -959,24 +966,33 @@ WLE_theta <- function(item, data, type){
   } else if(all(type %in% c("PCM", "GPCM", "GRM"))){
     ncat <- rowSums(!is.na(item))-1
     for(i in 1:nrow(data)){
-      message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
+      tryCatch(
+        {
+          message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
 
-      th <- 0
-      thres <- 1
-      iter <- 0
-      while((thres > 0.0001) & (iter < 100)){
-        iter <- iter + 1
-        l1l2 <- L1L2_Poly(th, item, data, type, ncat,i )
-        diff <- (l1l2[1]+wle(th, item[!is.na(data[i,]),], type))/l1l2[2]
-        if(abs(diff)>thres){
-          th <- th - diff/2
-        } else{
-          th <- th - diff
-          thres <- abs(diff)
+          th <- 0
+          thres <- 1
+          iter <- 0
+          while((thres > 0.0001) & (iter < 100)){
+            iter <- iter + 1
+            l1l2 <- L1L2_Poly(th, item, data, type, ncat,i )
+            diff <- (l1l2[1]+wle(th, item[!is.na(data[i,]),], type))/l1l2[2]
+            if(abs(diff)>thres){
+              th <- th - diff/2
+            } else{
+              th <- th - diff
+              thres <- abs(diff)
+            }
+          }
+          mle <- append(mle, th)
+          se <- append(se, sqrt(-1/l1l2[2]))
+        }, error = function(e){
+          message("\n","WLE failed to converge for the entry ", i,"\n",sep="",appendLF=FALSE)
+
+          mle <- append(mle, NA)
+          se <- append(se, NA)
         }
-      }
-      mle <- append(mle, th)
-      se <- append(se, sqrt(-1/l1l2[2]))
+      )
     }
   } else if(any(type %in% c("mix"))){
     ncat <- rowSums(!is.na(item[[2]]))-1
