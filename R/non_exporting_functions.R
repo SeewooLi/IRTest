@@ -928,39 +928,41 @@ WLE_theta <- function(item, data, type){
   se <- NULL
   if(all(type=="dich")){
     for(i in 1:nrow(data)){
-      # tryCatch(
-      #   {
-      #
-      #   }, error = function(e){
-      #
-      #   }
-      # )
-      message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
+      tryCatch(
+        {
+          message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
 
-      th <- 0
-      thres <- 1
-      iter <- 0
-      while((thres > 0.0001) & (iter < 100)){
-        iter <- iter + 1
-        p_ <- P(theta = th, a = item[,1], b = item[,2], c = 0)
-        p <- p_*(1-item[,3])+item[,3]
-        L1 <- sum(
-          item[,1]*p_/p*(data[i,]-p),
-          na.rm = TRUE
-        )
-        L2 <- -sum(
-          item[,1]^2*p_^2*(1-p)/p
-        )
-        diff <- (L1+wle(th, item[!is.na(data[i,]),], type))/L2
-        if(abs(diff)>thres){
-          th <- th - diff/2
-        } else{
-          th <- th - diff
-          thres <- abs(diff)
+          th <- 0
+          thres <- 1
+          iter <- 0
+          while((thres > 0.0001) & (iter < 100)){
+            iter <- iter + 1
+            p_ <- P(theta = th, a = item[,1], b = item[,2], c = 0)
+            p <- p_*(1-item[,3])+item[,3]
+            L1 <- sum(
+              item[,1]*p_/p*(data[i,]-p),
+              na.rm = TRUE
+            )
+            L2 <- -sum(
+              item[,1]^2*p_^2*(1-p)/p
+            )
+            diff <- (L1+wle(th, item[!is.na(data[i,]),], type))/L2
+            if(abs(diff)>thres){
+              th <- th - diff/2
+            } else{
+              th <- th - diff
+              thres <- abs(diff)
+            }
+          }
+          mle <- append(mle, th)
+          se <- append(se, sqrt(-1/L2))
+        }, error = function(e){
+          message("\n","WLE failed to converge for the entry ", i,"\n",sep="",appendLF=FALSE)
+
+          mle <<- append(mle, NA)
+          se <<- append(se, NA)
         }
-      }
-      mle <- append(mle, th)
-      se <- append(se, sqrt(-1/L2))
+      )
 
     }
   } else if(all(type %in% c("PCM", "GPCM", "GRM"))){
@@ -997,60 +999,80 @@ WLE_theta <- function(item, data, type){
   } else if(any(type %in% c("mix"))){
     ncat <- rowSums(!is.na(item[[2]]))-1
     for(i in 1:nrow(data[[1]])){
-      message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data[[1]]),sep="",appendLF=FALSE)
+      tryCatch(
+        {
+          message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data[[1]]),sep="",appendLF=FALSE)
 
-      th <- 0
-      thres <- 1
-      iter <- 0
-      while((thres > 0.0001) & (iter < 100)){
-        iter <- iter + 1
-        # dichotomous items
-        p_ <- P(theta = th, a = item[[1]][,1], b = item[[1]][,2], c = item[[1]][,3])
-        p <- p_*(1-item[[1]][,3])+item[[1]][,3]
-        L1 <- sum(
-          item[[1]][,1]*p_/p*(data[[1]][i,]-p),
-          na.rm = TRUE
-        )
-        L2 <- -sum(
-          item[[1]][,1]^2*p_^2*(1-p)/p
-        )
+          th <- 0
+          thres <- 1
+          iter <- 0
+          while((thres > 0.0001) & (iter < 100)){
+            iter <- iter + 1
+            # dichotomous items
+            p_ <- P(theta = th, a = item[[1]][,1], b = item[[1]][,2], c = item[[1]][,3])
+            p <- p_*(1-item[[1]][,3])+item[[1]][,3]
+            L1 <- sum(
+              item[[1]][,1]*p_/p*(data[[1]][i,]-p),
+              na.rm = TRUE
+            )
+            L2 <- -sum(
+              item[[1]][,1]^2*p_^2*(1-p)/p
+            )
 
-        # polytomous items
-        l1l2 <- L1L2_Poly(th=th, item=item[[2]], data=data[[2]], type=type[2], ncat=ncat,i=i)
+            # polytomous items
+            l1l2 <- L1L2_Poly(th=th, item=item[[2]], data=data[[2]], type=type[2], ncat=ncat,i=i)
 
-        # add them
-        diff <- (L1+l1l2[1]+wle(th, item[[1]][!is.na(data[[1]][i,]),], "dich")+wle(th, item[[2]][!is.na(data[[2]][i,]),], type[2]))/(L2+l1l2[2])
-        if(abs(diff)>thres){
-          th <- th - diff/2
-        } else{
-          th <- th - diff
-          thres <- abs(diff)
+            # add them
+            diff <- (L1+l1l2[1]+wle(th, item[[1]][!is.na(data[[1]][i,]),], "dich")+wle(th, item[[2]][!is.na(data[[2]][i,]),], type[2]))/(L2+l1l2[2])
+            if(abs(diff)>thres){
+              th <- th - diff/2
+            } else{
+              th <- th - diff
+              thres <- abs(diff)
+            }
+          }
+          mle <- append(mle, th)
+          se <- append(se, sqrt(-1/l1l2[2]))
+        }, error = function(e){
+          message("\n","WLE failed to converge for the entry ", i,"\n",sep="",appendLF=FALSE)
+
+          mle <<- append(mle, NA)
+          se <<- append(se, NA)
         }
-      }
-      mle <- append(mle, th)
-      se <- append(se, sqrt(-1/l1l2[2]))
+      )
+
     }
   } else if(all(type=="cont")){
     for(i in 1:nrow(data)){
-      message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
+      tryCatch(
+        {
+          message("\r","\r","WLE for ability parameter estimation, ", i,"/",nrow(data),sep="",appendLF=FALSE)
 
-      th <- 0
-      thres <- 1
-      iter <- 0
-      while((thres > 0.0001) & (iter < 100)){
-        iter <- iter + 1
-        L1 <- L1_Cont(data = data[i,], theta = th, a = item[,1], b = item[,2], nu = item[,3])
-        L2 <- -L2_Cont(theta = th, a = item[,1], b = item[,2], nu = item[,3])
-        diff <- (sum(L1, na.rm = TRUE)+wle(th, item[!is.na(data[i,]),], "cont"))/sum(L2, na.rm = TRUE)
-        if(abs(diff)>thres){
-          th <- th - diff/2
-        } else{
-          th <- th - diff
-          thres <- abs(diff)
+          th <- 0
+          thres <- 1
+          iter <- 0
+          while((thres > 0.0001) & (iter < 100)){
+            iter <- iter + 1
+            L1 <- L1_Cont(data = data[i,], theta = th, a = item[,1], b = item[,2], nu = item[,3])
+            L2 <- -L2_Cont(theta = th, a = item[,1], b = item[,2], nu = item[,3])
+            diff <- (sum(L1, na.rm = TRUE)+wle(th, item[!is.na(data[i,]),], "cont"))/sum(L2, na.rm = TRUE)
+            if(abs(diff)>thres){
+              th <- th - diff/2
+            } else{
+              th <- th - diff
+              thres <- abs(diff)
+            }
+          }
+          mle <- append(mle, th)
+          se <- append(se, sqrt(-1/sum(L2, na.rm = TRUE)))
+        }, error = function(e){
+          message("\n","WLE failed to converge for the entry ", i,"\n",sep="",appendLF=FALSE)
+
+          mle <<- append(mle, NA)
+          se <<- append(se, NA)
         }
-      }
-      mle <- append(mle, th)
-      se <- append(se, sqrt(-1/sum(L2, na.rm = TRUE)))
+      )
+
     }
   }
   return(list(mle=mle,
