@@ -3,7 +3,7 @@
 #' @description This function generates an artificial item response dataset allowing various options.
 #'
 #' @importFrom betafunctions rBeta.4P
-#' @importFrom stats dnorm rbinom rchisq rnorm runif rbeta
+#' @importFrom stats dnorm rbinom rchisq rnorm runif rbeta rgamma
 #'
 #' @param seed A numeric value that is used for random sampling.
 #' Seed number can guarantee a replicability of the result.
@@ -300,7 +300,7 @@ DataGeneration <- function(seed=1, N=2000,
       )
       initialitem_C[,1] <- (a_l+a_u)/2
 
-      item_C[,3] <- 10
+      item_C[,3] <- round(rgamma(nitem_C, shape = 10, scale = 1), 2)
       initialitem_C[,3] <- 10
 
       # item responses

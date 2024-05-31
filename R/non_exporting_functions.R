@@ -668,29 +668,56 @@ PDs <- function(probab, param, pmat, pcummat, a_supp, par, tcum){
   }
 }
 
-#' @importFrom stats optim
-#'
-Mstep_Cont <- function(E, item, data){
+# Mstep_Cont2 <- function(E, item, data){
+#   item_estimated <- item
+#   item[,3] <- log(item[,3])
+#   for(i in 1:nrow(item)){
+#     item_estimated[i,] <- optim(item[i,], fn = LL_Cont, gr = grad_Cont, theta=E$Xk, data=data[,i], Pk = E$Pk, method = "BFGS")$par
+#   }
+#   item_estimated[,3] <- exp(item_estimated[,3])
+#   return(list(item_estimated,NULL))
+# }
+
+Mstep_Cont <- function(E, item, data, threshold = 1e-7, max_iter = 20){
+  nitem <- nrow(item)
   item_estimated <- item
-  item[,3] <- log(item[,3])
-  for(i in 1:nrow(item)){
-    item_estimated[i,] <- optim(item[i,], fn = LL_Cont, gr = grad_Cont, theta=E$Xk, data=data[,i], Pk = E$Pk, method = "BFGS")$par
+  se <- matrix(nrow = nrow(item), ncol = ncol(item))
+  for(i in 1:nitem){
+    par <- item[i,]
+    par[3] <- log(par[3])
+    iter <- 0
+    div <- 3
+    repeat{
+      iter <- iter + 1
+
+      l1l2 <- cont_L1L2(item = par, Xk = E$Xk, data = data[,i], Pk = E$Pk, fk = E$fk)
+      diff <- l1l2[[1]]%*%l1l2[[2]]
+
+      if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
+        par <- par
+      } else{
+        if( sum(abs(diff)) > div){
+          if(max(abs(diff[-1]))/abs(diff[1])>1000){
+            par[1] <- -par[1]
+          } else{
+            par <- par-diff/2
+          }
+        } else {
+          par <- par-diff
+          div <- sum(abs(diff))
+        }
+      }
+      if( div <= threshold | iter > max_iter) break
+    }
+    par[3] <- exp(par[3])
+    item_estimated[i,] <- par
+    se[i,] <- suppressWarnings(sqrt(-diag(l1l2[[2]])))
   }
-  item_estimated[,3] <- exp(item_estimated[,3])
-  return(item_estimated)
+
+  return(list(item_estimated, se))
 }
 
-# LL_Cont <- function(item, theta, data, Pk){
-#   nu <- exp(item[3])
-#   LL <- 0
-#   for(i in 1:length(theta)){
-#     mu <- P(theta = theta[i], a = item[1], b = item[2])
-#     alpha <- mu*nu
-#     beta <- nu*(1-mu)
-#     LL <- LL+sum(Pk[,i]*log(dbeta(data, alpha, beta)), na.rm = TRUE)
-#   }
-#   return(-LL)
-# }
+
 #' @importFrom stats dbeta
 #'
 LL_Cont <- function(item, theta, data, Pk){
@@ -702,24 +729,7 @@ LL_Cont <- function(item, theta, data, Pk){
   return(-LL)
 }
 
-# grad_Cont <- function(item, theta, data, Pk){
-#   item[3] <- exp(item[3])
-#   La <- 0
-#   Lb <- 0
-#   Lnu <- 0
-#   for(i in 1:length(theta)){
-#     mu <- P(theta = theta[i], a = item[1], b = item[2])
-#     alpha <- mu*item[3]
-#     beta <- item[3]*(1-mu)
-#     v1 <- log(data)-digamma(alpha)
-#     v2 <- log(1-data)-digamma(beta)
-#     La  <- La + sum(Pk[,i]*(theta[i]-item[2])*item[3]*mu*(1-mu)*(v1-v2), na.rm = TRUE)
-#     Lb  <- Lb + sum(-Pk[,i]*item[1]*item[3]*mu*(1-mu)*(v1-v2), na.rm = TRUE)
-#     Lnu <- Lnu + sum(Pk[,i]*(mu*v1+(1-mu)*v2+digamma(item[3])), na.rm = TRUE)
-#   }
-#
-#   return(-c(La, Lb, Lnu))
-# }
+
 grad_Cont <- function(item, theta, data, Pk){
   nu <- exp(item[3])
   mu <- P(theta = rep(theta, each=nrow(Pk)), a = item[1], b = item[2])
@@ -731,6 +741,60 @@ grad_Cont <- function(item, theta, data, Pk){
   Lb <- sum(-as.vector(Pk)*item[1]*nu*mu*(1-mu)*(v1-v2), na.rm = TRUE)
   Lnu <- sum(as.vector(Pk)*(mu*v1+(1-mu)*v2+digamma(nu)), na.rm = TRUE)
   return(-c(La, Lb, Lnu))
+}
+
+cont_L1L2 <- function(item, Xk, data, Pk, fk){
+  nu <- exp(item[3])
+  mu <- P(theta = Xk, a = item[1], b = item[2])
+  aph <- mu*nu
+  bt <- nu*(1-mu)
+  s1 <- as.vector(crossprod(log(data[!is.na(data)]), Pk[!is.na(data),]))
+  s2 <- as.vector(crossprod(log(1-data[!is.na(data)]), Pk[!is.na(data),]))
+  La <- sum(
+    (Xk-item[2])*aph*bt/nu*(s1-s2-fk*(digamma(aph)-digamma(bt))),
+    na.rm = TRUE)
+  Lb <- -item[1]*sum(
+    aph*bt/nu*(s1-s2-fk*(digamma(aph)-digamma(bt))),
+    na.rm = TRUE)
+  Lxi <- nu*sum(
+    fk*digamma(nu)+mu*(s1-fk*digamma(aph))+(1-mu)*(s2-fk*digamma(bt)),
+    na.rm = TRUE)
+
+  Laa <- -sum(
+    (((Xk-item[2])*aph*bt/nu)^2)*fk*(trigamma(aph)+trigamma(bt)),
+    na.rm = TRUE
+  )
+  Lab <- item[1]*sum(
+    (Xk-item[2])*((aph*bt/nu)^2)*fk*(trigamma(aph)+trigamma(bt)),
+    na.rm = TRUE
+  )
+  Lbb <- -(item[1]^2)*sum(
+    ((aph*bt/nu)^2)*fk*(trigamma(aph)+trigamma(bt)),
+    na.rm = TRUE
+  )
+  Laxi <- -sum(
+    (Xk-item[2])*aph*bt*fk*(mu*trigamma(aph)-(1-mu)*trigamma(bt)),
+    na.rm = TRUE
+  )
+  Lbxi <- item[1]*sum(
+    aph*bt*fk*(mu*trigamma(aph)-(1-mu)*trigamma(bt)),
+    na.rm = TRUE
+  )
+  Lxixi <- (nu^2)*sum(fk)*trigamma(nu) - sum(
+    fk*((aph^2)*trigamma(aph)+(bt^2)*trigamma(bt)),
+    na.rm = TRUE)
+
+  LL_matrix <- matrix(c(
+    Laa, Lab, Laxi,
+    Lab, Lbb, Lbxi,
+    Laxi, Lbxi, Lxixi
+  ),
+  nrow = 3,
+  byrow = TRUE)
+
+  return(list(L1 = c(La, Lb, Lxi),
+              L2 = solve(LL_matrix))
+         )
 }
 
 #################################################################################################################

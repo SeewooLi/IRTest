@@ -155,7 +155,8 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
       iter <- iter +1
 
       E <- Estep_Cont(item = initialitem, data = data, range = range, q = q, Xk=Xk, Ak=Ak)
-      initialitem <- Mstep_Cont(E, initialitem, data)
+      M1 <- Mstep_Cont(E, initialitem, data)
+      initialitem <- M1[[1]]
 
       diff <- max(
         max(abs(I[,-3]-initialitem[,-3]), na.rm = TRUE),
@@ -175,7 +176,8 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
       iter <- iter +1
 
       E <- Estep_Cont(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range, Xk=Xk, Ak=Ak)
-      initialitem <- Mstep_Cont(E, initialitem, data)
+      M1 <- Mstep_Cont(E, initialitem, data)
+      initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
       Xk <- ld_est$Xk
@@ -198,7 +200,9 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
       iter <- iter +1
 
       E <- Estep_Cont(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range)
-      initialitem <- Mstep_Cont(E, initialitem, data)
+      M1 <- Mstep_Cont(E, initialitem, data)
+      initialitem <- M1[[1]]
+
       M2 <- M2step(E)
       prob = M2$prob; d = M2$d; sd_ratio = M2$sd_ratio
 
@@ -222,7 +226,8 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
 
       E <- Estep_Cont(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1,
                  range=range, Xk=Xk, Ak=Ak)
-      initialitem <- Mstep_Cont(E, initialitem, data)
+      M1 <- Mstep_Cont(E, initialitem, data)
+      initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth, N=N, q=q)
       Xk <- ld_est$Xk
@@ -251,7 +256,8 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
       iter <- iter +1
 
       E <- Estep_Cont(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak)
-      initialitem <- Mstep_Cont(E, initialitem, data)
+      M1 <- Mstep_Cont(E, initialitem, data)
+      initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par,N=N)
       Xk <- ld_est$Xk
@@ -277,7 +283,8 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
 
       E <- Estep_Cont(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1,
                  range=range, Xk=Xk, Ak=Ak)
-      initialitem <- Mstep_Cont(E, initialitem, data)
+      M1 <- Mstep_Cont(E, initialitem, data)
+      initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
       Xk <- ld_est$Xk
@@ -312,6 +319,7 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
   }
   dn <- list(colnames(data),c("a", "b", "nu"))
   dimnames(initialitem) <- dn
+  dimnames(M1[[2]]) <- list(colnames(data),c("a", "b", "log(nu)"))
 
   # preparation for outputs
 
@@ -324,6 +332,7 @@ IRTest_Cont <- function(data, range = c(-6,6), q = 121, initialitem=NULL,
   logL <- logL + as.numeric(E$fk%*%log(Ak)) - sum(E$Pk*log(E$Pk))
   return(structure(
     list(par_est=initialitem,
+         se=M1[[2]],
          fk=E$fk,
          iter=iter,
          quad=Xk,

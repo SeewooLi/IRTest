@@ -89,6 +89,8 @@ Followings are the functions of **IRTest**.
   
   + `recategorize` implements the category collapsing.
   
+  + `adaptive_test` estimates ability parameter(s) which can be utilized for computer adaptive testing (CAT).
+  
   + For S3 methods, `anova`, `coef`, `logLik`, `plot`, `print`, and `summary` are available.
 
 
@@ -473,7 +475,7 @@ E[\log{x}] &= \int_{0}^{1}{\log{x}f(x) \,dx} \\
 \end{align}
 $$
 
-Similarly, $E[\log{1-x}]=\psi(\beta) - \psi(\alpha+\beta)$.
+Similarly, $E[\log{(1-x)}]=\psi(\beta) - \psi(\alpha+\beta)$.
 
 
 Furthermore, using $\frac{\partial Beta(\alpha,\beta)}{\partial \alpha} = Beta(\alpha,\beta)\left(\psi(\alpha)-\psi(\alpha+\beta)\right)$ and $\frac{\partial^2 Beta(\alpha,\beta)}{\partial \alpha^2} = Beta(\alpha,\beta)\left(\psi(\alpha)-\psi(\alpha+\beta)\right)^2 + Beta(\alpha,\beta)\left(\psi_1(\alpha)-\psi_1(\alpha+\beta)\right)$,
@@ -507,7 +509,10 @@ $$
 
 $$
 \mu = \frac{e^{a(\theta -b)}}{1+e^{a(\theta -b)}} \\
-\frac{\partial \mu}{\partial \theta} = a\mu(1-\mu)
+\frac{\partial \mu}{\partial \theta} = a\mu(1-\mu) \\
+\frac{\partial \mu}{\partial a} = (\theta - b)\mu(1-\mu) \\
+\frac{\partial \mu}{\partial b} = -a\mu(1-\mu) \\
+\frac{\partial \mu}{\partial \nu} = 0
 $$
 
 + Probability of a response
@@ -577,6 +582,74 @@ $$
 I(\theta) = E\left[\left(\frac{\partial \log{f}}{\partial \theta}\right)^2 \right] =  (a\nu\mu(1-\mu))^2\left[\psi_{1}(\alpha) +\psi_{1}(\beta)\right]
 $$
 
++ Log-likelihood in the M-step of the MML-EM procedure
+
+Marginal log-likelihood of an item can be expressed as follows:
+
+$$
+\ell = \sum_{j} \sum_{q}\gamma_{jq}\log{L_{jq}},
+$$
+
+where $\gamma_{jq}=E\left[\Pr\left(\theta_j \in \theta_{q}^{*}\right)\right]$ is 
+the expected probability of respondent $j$'s ability ($\theta_j$) belonging to 
+the $\theta_{q}^{*}$ of the quadrature scheme and is calculated at the E-step 
+of the MML-EM procedure, and $L_{jq}$ is the likelihood of respondent $j$'s 
+response at $\theta_{q}^{*}$ for the item of current interest.
+
++ First derivative of the likelihood
+
+$$
+\frac{\partial \ell}{\partial a} = \sum_{q}
+\left(\theta_{q}-b\right)\nu\mu_{q}\left(1-\mu_{q}\right)\left[
+S_{1q}-S_{2q}-f_q\left[ \psi(\mu_{q}\nu)-\psi(\nu(1-\mu_{q})) \right] 
+\right] \\
+\frac{\partial \ell}{\partial b} = -a\sum_{q}\nu\mu_{q}\left(1-\mu_{q}\right)\left[
+S_{1q}-S_{2q}-f_q\left[ \psi(\mu_{q}\nu)-\psi(\nu(1-\mu_{q})) \right]
+\right] \\
+\frac{\partial \ell}{\partial \nu} = N\psi(\nu) +\sum_{q}\left[
+\mu_{q}(S_{1q}-f_q\psi(\mu_{q}\nu)) + (1-\mu_{q})(S_{2q}-f_q\psi(\nu(1-\mu_{q})))
+\right]
+$$
+
+where $S_{1q} = \sum_{j}{\gamma_{jq}\log{x_j}}$ and $S_{2q} = \sum_{j}{\gamma_{jq}\log{(1-x_j)}}$.
+Since $E_q[S_{1q}]=f_q\left[\psi(\mu_{q}\nu))-\psi(\nu)\right]$ and
+$E_q[S_{2q}]=f_q\left[\psi(\nu(1-\mu_{q})))-\psi(\nu)\right]$, the expected values of
+the first derivatives are 0.
+
+To keep $\nu$ positive, let $\nu = \exp{\xi}$; $\frac{\partial\nu}{\partial\xi}=\exp{\xi}=\nu$.
+
+$$
+\frac{\partial \ell}{\partial \xi} = N\nu\psi(\nu) +\nu\sum_{q}\left[
+\mu_{q}(S_{1q}-f_q\psi(\mu_{q}\nu)) + (1-\mu_{q})(S_{2q}-f_q\psi(\nu(1-\mu_{q})))
+\right]
+$$
+
+
++ Second derivative of the likelihood
+
+$$
+E\left( \frac{\partial^2\ell}{\partial a^2}\right) = -\sum_{q}
+\left\{\left(\theta_{q}-b\right)\nu\mu_{q}\left(1-\mu_{q}\right)\right\}^{2}f_{q}\left[ \psi_{1}(\mu_{q}\nu)+\psi_{1}(\nu(1-\mu_{q})) \right] \\
+E\left(\frac{\partial^2\ell}{\partial a \partial b}\right) = a\sum_{q}
+\left(\theta_{q}-b\right)\left\{\nu\mu_{q}\left(1-\mu_{q}\right)\right\}^{2}f_{q}\left[ \psi_{1}(\mu_{q}\nu)+\psi_{1}(\nu(1-\mu_{q})) \right] \\
+E\left(\frac{\partial^2\ell}{\partial a \partial \nu}\right) = -\sum_{q}
+\left(\theta_{q}-b\right)\nu\mu_{q}\left(1-\mu_{q}\right)f_q\left[ \mu_{q}\psi_{1}(\mu_{q}\nu)-(1-\mu_{q})\psi_{1}(\nu(1-\mu_{q})) \right] \\
+E\left(\frac{\partial^2\ell}{\partial b^2}\right) = -a^{2}\sum_{q}
+\left\{\nu\mu_{q}\left(1-\mu_{q}\right)\right\}^{2}f_{q}\left[ \psi_{1}(\mu_{q}\nu)+\psi_{1}(\nu(1-\mu_{q})) \right] \\
+E\left(\frac{\partial^2\ell}{\partial b \partial \nu}\right) = a\sum_{q}
+\nu\mu_{q}\left(1-\mu_{q}\right)f_q\left[ \mu_{q}\psi_{1}(\mu_{q}\nu)-(1-\mu_{q})\psi_{1}(\nu(1-\mu_{q})) \right] \\
+E\left(\frac{\partial^2\ell}{\partial \nu^2}\right) = N\psi_{1}(\nu) - \sum_{q}f_q\left[ \mu_{q}^{2}\psi_{1}(\mu_{q}\nu)+(1-\mu_{q})^{2}\psi_{1}(\nu(1-\mu_{q})) \right]
+$$
+
+If we use $\xi$ instead of $\nu$,
+
+$$
+E\left(\frac{\partial^2\ell}{\partial a \partial \xi}\right) = -\sum_{q}
+\left(\theta_{q}-b\right)\nu^{2}\mu_{q}\left(1-\mu_{q}\right)f_q\left[ \mu_{q}\psi_{1}(\mu_{q}\nu)-(1-\mu_{q})\psi_{1}(\nu(1-\mu_{q})) \right] \\
+E\left(\frac{\partial^2\ell}{\partial b \partial \xi}\right) = a\sum_{q}
+\nu^{2}\mu_{q}\left(1-\mu_{q}\right)f_q\left[ \mu_{q}\psi_{1}(\mu_{q}\nu)-(1-\mu_{q})\psi_{1}(\nu(1-\mu_{q})) \right] \\
+E\left(\frac{\partial^2\ell}{\partial \xi^2}\right) = N\nu^{2}\psi_{1}(\nu) - \nu^{2}\sum_{q}f_q\left[ \mu_{q}^{2}\psi_{1}(\mu_{q}\nu)+(1-\mu_{q})^{2}\psi_{1}(\nu(1-\mu_{q})) \right]
+$$
 
 
 </details>
@@ -590,8 +663,8 @@ The function `DataGeneration` can be used in a preparation step.
 This function returns a set of artificial data and the true parameters underlying the data.
 
 ```{r}
-Alldata <- DataGeneration(N=500,
-                          nitem_C = 4,
+Alldata <- DataGeneration(N=1000,
+                          nitem_C = 8,
                           latent_dist = "2NM",
                           a_l = .3, 
                           a_u = .7,
@@ -601,7 +674,7 @@ Alldata <- DataGeneration(N=500,
 
 data <- Alldata$data_C
 theta <- Alldata$theta
-colnames(data) <- paste0("item", 1:4)
+colnames(data) <- paste0("item", 1:8)
 ```
 
 \
@@ -610,10 +683,7 @@ colnames(data) <- paste0("item", 1:4)
 
 ```{r, results='hide', message=FALSE}
 Mod1 <- IRTest_Cont(data = data,
-                    latent_dist = "2NM",
-                    range = c(-4,4),
-                    q = 81,
-                    threshold = 0.01)
+                    latent_dist = "KDE")
 ```
 
 \
@@ -631,7 +701,7 @@ logLik(Mod1)
 coef(Mod1)
 
 ### The estimated ability parameters
-fscore <- factor_score(Mod1, ability_method = "MLE")
+fscore <- factor_score(Mod1, ability_method = "WLE")
 plot(theta, fscore$theta)
 abline(b=1, a=0)
 
@@ -679,13 +749,13 @@ Posterior distributions can be found in `Mod1$Pk`.
 
 ```{r, fig.align='center', fig.asp=.7, fig.width=6}
 set.seed(1)
-selected_examinees <- sample(1:500,6)
+selected_examinees <- sample(1:1000,6)
 post_sample <- 
   data.frame(
-    X = rep(seq(-4,4, length.out=81),6), 
+    X = rep(seq(-6,6, length.out=121),6), 
     prior = rep(Mod1$Ak/(Mod1$quad[2]-Mod1$quad[1]), 6),
     posterior = 10*c(t(Mod1$Pk[selected_examinees,])), 
-    ID = rep(paste("examinee", selected_examinees), each=81)
+    ID = rep(paste("examinee", selected_examinees), each=121)
     )
 
 ggplot(data=post_sample, mapping=aes(x=X))+
@@ -723,6 +793,26 @@ ggplot()+
     fun=inform_f_item,
     args = list(Mod1, 4),
     mapping = aes(color="Item 4")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1, 5),
+    mapping = aes(color="Item 5")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1, 6),
+    mapping = aes(color="Item 6")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1, 7),
+    mapping = aes(color="Item 7")
+  )+
+  stat_function(
+    fun=inform_f_item,
+    args = list(Mod1, 8),
+    mapping = aes(color="Item 8")
   )+
   lims(x=c(-6,6))+
   labs(title="Test information function", x=expression(theta), y='information')+
