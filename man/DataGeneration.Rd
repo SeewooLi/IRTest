@@ -29,7 +29,7 @@ DataGeneration(
   c_l = 0,
   c_u = 0.2,
   categ = 5,
-  possible_ans = seq(0.1, 0.9, length = 5)
+  possible_ans = c(0.1, 0.3, 0.5, 0.7, 0.9)
 )
 }
 \arguments{

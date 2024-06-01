@@ -1471,3 +1471,50 @@ DC.LL <- function (phi, theta, freq) {
 DC.grad <- function (phi, theta, freq) {
   -freq%*%dcurver::dc_grad(theta, phi)
 }
+
+#################################################################################################################
+# Uniform to categorical values
+#################################################################################################################
+yyy <- function(x){
+  y <- exp(x)/(1+exp(x))^2
+  return(y/sum(y))
+}
+
+logistic_means <- function(x){
+  cuts <- 1/x*1:(x-1)
+  cuts <- c(1e-15, cuts, (1-1e-15))
+  cuts <- log(cuts/(1-cuts))
+
+  means <- NULL
+  for(i in 1:x){
+    xxx <- seq(cuts[i],cuts[i+1],0.0001)
+    means <- append(
+      means,
+      sum(xxx * yyy(xxx))
+    )
+  }
+  return(means)
+}
+
+logit_inv <- function(x)exp(x)/(1+exp(x))
+
+unif2cat <- function(data, labels = NULL, x = 5){
+  if(is.null(labels)){
+    cuts <- 1/x*(1:(x-1))
+    cuts <- log(cuts/(1-cuts))
+    breaks <- c(-Inf, cuts, Inf)
+    labels <- logit_inv(logistic_means(x))
+    cut_data <- cut(log(data/(1-data)), breaks = breaks, labels = FALSE)
+    return(labels[cut_data])
+  } else {
+    if(length(data) == 1){
+      return(labels[which.min(abs(data - labels))])
+    } else {
+      cuts <- 1/x*(1:x)
+      cuts <- cuts - (cuts[2]-cuts[1])/2
+      labss <- apply(abs(outer(data, cuts, FUN = "-")), MARGIN = 1, FUN = which.min)
+      return(cuts[labss])
+    }
+  }
+}
+

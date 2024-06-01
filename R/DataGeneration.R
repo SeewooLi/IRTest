@@ -110,7 +110,7 @@ DataGeneration <- function(seed=1, N=2000,
                            a_l=0.8, a_u=2.5,
                            b_m=NULL, b_sd=NULL,
                            c_l=0, c_u=0.2, categ=5,
-                           possible_ans = seq(.1,.9,length=5)){
+                           possible_ans = c(.1,.3,.5,.7,.9)){
   initialitem_D=NULL; data_D=NULL
   initialitem_P=NULL; data_P=NULL
   initialitem_C=NULL; data_C=NULL
@@ -306,10 +306,14 @@ DataGeneration <- function(seed=1, N=2000,
       # item responses
       # possible_ans <- seq(0.05,.95,length=10)#c(.1, .3, .5, .7, .9)
 
+      if(length(possible_ans) == 1){
+        possible_ans <- logit_inv(logistic_means(possible_ans))
+      }
+
       for(i in 1:nitem_C){
         for(j in 1:N){
           p <- P(theta = theta[j], a = item_C[i,1], b = item_C[i,2])
-          data_C[j,i] <- possible_ans[which.min(abs(rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3]) - possible_ans))]
+          data_C[j,i] <- unif2cat(rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3]), labels = possible_ans)
         }
       }
     }
@@ -325,10 +329,14 @@ DataGeneration <- function(seed=1, N=2000,
       # item responses
       # possible_ans <- seq(0.05,.95,length=10)#c(.1, .3, .5, .7, .9)
 
+      if(length(possible_ans) == 1){
+        possible_ans <- logit_inv(logistic_means(possible_ans))
+      }
+
       for(i in 1:nitem_C){
         for(j in 1:N){
           p <- P(theta = theta[j], a = item_C[i,1], b = item_C[i,2])
-          data_C[j,i] <- possible_ans[which.min(abs(rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3]) - possible_ans))]
+          data_C[j,i] <- unif2cat(rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3]), labels = possible_ans)
         }
       }
     }
