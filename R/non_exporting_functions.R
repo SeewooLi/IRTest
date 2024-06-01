@@ -690,7 +690,7 @@ Mstep_Cont <- function(E, item, data, threshold = 1e-7, max_iter = 20){
     repeat{
       iter <- iter + 1
 
-      l1l2 <- cont_L1L2(item = par, Xk = E$Xk, data = data[,i], Pk = E$Pk, fk = E$fk)
+      l1l2 <- cont_L1L2(item = par, Xk = E$Xk, data = data[,i], Pk = E$Pk)
       diff <- l1l2[[1]]%*%l1l2[[2]]
 
       if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
@@ -743,7 +743,8 @@ grad_Cont <- function(item, theta, data, Pk){
   return(-c(La, Lb, Lnu))
 }
 
-cont_L1L2 <- function(item, Xk, data, Pk, fk){
+cont_L1L2 <- function(item, Xk, data, Pk){
+  fk <- colSums(Pk[!is.na(data),])
   nu <- exp(item[3])
   mu <- P(theta = Xk, a = item[1], b = item[2])
   aph <- mu*nu
