@@ -872,7 +872,7 @@ MLE_theta <- function(item, data, type){
             na.rm = TRUE
           )
           L2 <- -sum(
-            item[,1]^2*p_^2*(1-p)/p
+            item[!is.na(data[i,]),1]^2*p_^2*(1-p)/p
           )
           diff <- L1/L2
           if(abs(diff)>thres){
@@ -941,7 +941,7 @@ MLE_theta <- function(item, data, type){
             na.rm = TRUE
           )
           L2 <- -sum(
-            item[[1]][,1]^2*p_^2*(1-p)/p
+            item[[1]][!is.na(data[[1]][i,]),1]^2*p_^2*(1-p)/p
           )
 
           # polytomous items
@@ -970,7 +970,7 @@ MLE_theta <- function(item, data, type){
       while((thres > 0.0001) & (iter < 100)){
         iter <- iter + 1
         L1 <- L1_Cont(data = data[i,], theta = th, a = item[,1], b = item[,2], nu = item[,3])
-        L2 <- -L2_Cont(theta = th, a = item[,1], b = item[,2], nu = item[,3])
+        L2 <- -L2_Cont(theta = th, a = item[!is.na(data[i,]),1], b = item[!is.na(data[i,]),2], nu = item[!is.na(data[i,]),3])
         diff <- sum(L1, na.rm = TRUE)/sum(L2, na.rm = TRUE)
         if(abs(diff)>thres){
           th <- th - diff/2
@@ -1009,7 +1009,7 @@ WLE_theta <- function(item, data, type){
               na.rm = TRUE
             )
             L2 <- -sum(
-              item[,1]^2*p_^2*(1-p)/p
+              item[!is.na(data[i,]),1]^2*p_^2*(1-p)/p
             )
             diff <- (L1+wle(th, item[!is.na(data[i,]),], type))/L2
             if(abs(diff)>thres){
@@ -1081,7 +1081,7 @@ WLE_theta <- function(item, data, type){
               na.rm = TRUE
             )
             L2 <- -sum(
-              item[[1]][,1]^2*p_^2*(1-p)/p
+              item[[1]][!is.na(data[[1]][i,]),1]^2*p_^2*(1-p)/p
             )
 
             # polytomous items
@@ -1119,7 +1119,7 @@ WLE_theta <- function(item, data, type){
           while((thres > 0.0001) & (iter < 100)){
             iter <- iter + 1
             L1 <- L1_Cont(data = data[i,], theta = th, a = item[,1], b = item[,2], nu = item[,3])
-            L2 <- -L2_Cont(theta = th, a = item[,1], b = item[,2], nu = item[,3])
+            L2 <- -L2_Cont(theta = th, a = item[!is.na(data[i,]),1], b = item[!is.na(data[i,]),2], nu = item[!is.na(data[i,]),3])
             diff <- (sum(L1, na.rm = TRUE)+wle(th, item[!is.na(data[i,]),], "cont"))/sum(L2, na.rm = TRUE)
             if(abs(diff)>thres){
               th <- th - diff/2
