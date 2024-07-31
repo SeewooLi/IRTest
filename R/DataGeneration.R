@@ -273,9 +273,8 @@ DataGeneration <- function(seed=1, N=2000,
   }
 
 
-  # item parameters for polytomous items
+  # item parameters for continuous items
   if(is.null(item_C)){
-    a_l=0.5; a_u=1.5
     if((nitem_C!=0)&(!is.null(nitem_C))){
       data_C <- matrix(nrow = N, ncol = nitem_C)
       item_C <- matrix(nrow = nitem_C, ncol = 3)
@@ -305,15 +304,22 @@ DataGeneration <- function(seed=1, N=2000,
 
       # item responses
       # possible_ans <- seq(0.05,.95,length=10)#c(.1, .3, .5, .7, .9)
-
-      if(length(possible_ans) == 1){
-        possible_ans <- logit_inv(logistic_means(possible_ans))
-      }
-
-      for(i in 1:nitem_C){
-        for(j in 1:N){
-          p <- P(theta = theta[j], a = item_C[i,1], b = item_C[i,2])
-          data_C[j,i] <- unif2cat(rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3]), labels = possible_ans)
+      if(is.null(possible_ans)){
+        for(i in 1:nitem_C){
+          for(j in 1:N){
+            p <- P(theta = theta[j], a = item_C[i,1], b = item_C[i,2])
+            data_C[j,i] <- rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3])
+          }
+        }
+      }else{
+        if(length(possible_ans) == 1){
+          possible_ans <- logit_inv(logistic_means(possible_ans))
+        }
+        for(i in 1:nitem_C){
+          for(j in 1:N){
+            p <- P(theta = theta[j], a = item_C[i,1], b = item_C[i,2])
+            data_C[j,i] <- unif2cat(rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3]), labels = possible_ans)
+          }
         }
       }
     }
@@ -328,15 +334,22 @@ DataGeneration <- function(seed=1, N=2000,
 
       # item responses
       # possible_ans <- seq(0.05,.95,length=10)#c(.1, .3, .5, .7, .9)
-
-      if(length(possible_ans) == 1){
-        possible_ans <- logit_inv(logistic_means(possible_ans))
-      }
-
-      for(i in 1:nitem_C){
-        for(j in 1:N){
-          p <- P(theta = theta[j], a = item_C[i,1], b = item_C[i,2])
-          data_C[j,i] <- unif2cat(rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3]), labels = possible_ans)
+      if(is.null(possible_ans)){
+        for(i in 1:nitem_C){
+          for(j in 1:N){
+            p <- P(theta = theta[j], a = item_C[i,1], b = item_C[i,2])
+            data_C[j,i] <- rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3])
+          }
+        }
+      }else{
+        if(length(possible_ans) == 1){
+          possible_ans <- logit_inv(logistic_means(possible_ans))
+        }
+        for(i in 1:nitem_C){
+          for(j in 1:N){
+            p <- P(theta = theta[j], a = item_C[i,1], b = item_C[i,2])
+            data_C[j,i] <- unif2cat(rbeta(1, p*item_C[i,3], (1-p)*item_C[i,3]), labels = possible_ans)
+          }
         }
       }
     }
