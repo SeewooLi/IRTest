@@ -694,7 +694,7 @@ Mstep_Cont <- function(E, item, data, threshold = 1e-7, max_iter = 20){
       diff <- l1l2[[1]]%*%l1l2[[2]]
 
       if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
-        par <- par
+        par <- c(1, 0, 10) # par
       } else{
         if( sum(abs(diff)) > div){
           if(max(abs(diff[-1]))/abs(diff[1])>1000){
