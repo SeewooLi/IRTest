@@ -697,7 +697,7 @@ Mstep_Cont <- function(E, item, data, threshold = 1e-7, max_iter = 20){
         par <- par
       } else{
         if( sum(abs(diff)) > div){
-          if((max(abs(diff[-1]))/abs(diff[1])>1000) & (abs(par[1]) < abs(par[1]-diff[1]))){
+          if((max(abs(diff[-1]))/abs(diff[1])>1000) & (abs(par[1]) >= abs(par[1]-diff[1]))){
             par[1] <- -par[1]
           } else{
             par <- par-diff/2
