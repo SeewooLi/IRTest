@@ -17,13 +17,13 @@
   
 ## Test environments
 
-* macOS Monterey 12.7.3 (release), R 4.3.3
+* macOS Sonoma 14.6.1, R 4.4.1
 
-* Ubuntu 22.04.4 (oldrel-1), R 4.2.3
+* Ubuntu 22.04.5 LTS (oldrel-1), R 4.3.3
 
-* Ubuntu 22.04.4 (release), R 4.3.3
+* Ubuntu 22.04.5 LTS (release), R 4.4.1
 
-* win-builder (devel and release), R 4.3.3
+* Windows Server 2022 x64 (build 20348), R 4.4.1
 
 
 ## R CMD check results
