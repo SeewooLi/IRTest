@@ -6,8 +6,8 @@
 #'
 #' @param x An object of \code{"IRTest"}-class obtained from either \code{\link{IRTest_Dich}}, \code{\link{IRTest_Poly}}, \code{\link{IRTest_Cont}}, or \code{\link{IRTest_Mix}}.
 #' @param ... Other aesthetic argument(s) for drawing the plot.
-#' Arguments are passed on to \code{\link{stat_function}}, if the distribution estimation method is 2NM, KDE, or DC.
-#' Otherwise, they are passed on to \code{\link{geom_line}}.
+#' Arguments are passed on to \code{ggplot2::stat_function}, if the distribution estimation method is 2NM, KDE, or DC.
+#' Otherwise, they are passed on to \code{ggplot2::geom_line}.
 #'
 #' @return A plot of estimated latent distribution.
 #' @export
@@ -40,10 +40,10 @@ plot.IRTest <- function(x, ...){
         y = x$Ak*(1/(x$quad[2]-x$quad[1]))
       )
     ) +
-    geom_line(...)
+    ggplot2::geom_line(...)
   }else{
     plt <- ggplot2::ggplot() +
-      stat_function(
+      ggplot2::stat_function(
         fun = latent_distribution,
         args = list(x),
         ...

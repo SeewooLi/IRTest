@@ -49,7 +49,7 @@ Seed number can guarantee a replicability of the result.}
 \item{model_P}{A character string that represents the probability model for the polytomous items.}
 
 \item{latent_dist}{A character string that determines the type of latent distribution.
-Currently available options are \code{"beta"} (four-parameter beta distribution; \code{\link{rBeta.4P}}),
+Currently available options are \code{"beta"} (four-parameter beta distribution; \code{betafunctions::rBeta.4P}),
 \code{"chi"} (\eqn{\chi^2} distribution; \code{\link{rchisq}}),
 \code{"normal"}, \code{"Normal"}, or \code{"N"} (standard normal distribution; \code{\link{rnorm}}),
 and \code{"Mixture"} or \code{"2NM"} (two-component Gaussian mixture distribution; see Li (2021) for details.)}
