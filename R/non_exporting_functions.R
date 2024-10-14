@@ -678,7 +678,7 @@ PDs <- function(probab, param, pmat, pcummat, a_supp, par, tcum){
 #   return(list(item_estimated,NULL))
 # }
 
-Mstep_Cont <- function(E, item, data, threshold = 1e-7, max_iter = 20){
+Mstep_Cont <- function(E, item, data, model, threshold = 1e-7, max_iter = 20){
   nitem <- nrow(item)
   item_estimated <- item
   se <- matrix(nrow = nrow(item), ncol = ncol(item))
@@ -687,33 +687,56 @@ Mstep_Cont <- function(E, item, data, threshold = 1e-7, max_iter = 20){
     par[3] <- log(par[3])
     iter <- 0
     div <- 3
-    repeat{
-      iter <- iter + 1
+    if(model == 1){
+      repeat{
+        iter <- iter + 1
 
-      l1l2 <- cont_L1L2(item = par, Xk = E$Xk, data = data[,i], Pk = E$Pk)
-      diff <- l1l2[[1]]%*%l1l2[[2]]
+        l1l2 <- cont_L1L2(item = par, Xk = E$Xk, data = data[,i], Pk = E$Pk)
+        diff <- (l1l2[[1]]%*%l1l2[[2]])[-1]
 
-      if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
-        par <- par
-      } else{
-        if( sum(abs(diff)) > div){
-          if((max(abs(diff[-1]))/abs(diff[1])>1000) & (abs(par[1]) >= abs(par[1]-diff[1]))){
-            par[1] <- -par[1]
-          } else{
-            par <- par-diff/2
+        if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
+          par[-1] <- par[-1]
+        } else{
+          if( sum(abs(diff)) > div){
+            par[-1] <- par[-1]-diff/2
+          } else {
+            par[-1] <- par[-1]-diff
+            div <- sum(abs(diff))
           }
-        } else {
-          par <- par-diff
-          div <- sum(abs(diff))
         }
+        if( div <= threshold | iter > max_iter) break
       }
-      if( div <= threshold | iter > max_iter) break
-    }
-    par[3] <- exp(par[3])
-    item_estimated[i,] <- par
-    se[i,] <- suppressWarnings(sqrt(-diag(l1l2[[2]])))
-  }
+      par[3] <- exp(par[3])
+      item_estimated[i,] <- par
+      se[i,-1] <- suppressWarnings(sqrt(-diag(l1l2[[2]])))[-1]
+    }else if(model == 2){
+      repeat{
+        iter <- iter + 1
 
+        l1l2 <- cont_L1L2(item = par, Xk = E$Xk, data = data[,i], Pk = E$Pk)
+        diff <- l1l2[[1]]%*%l1l2[[2]]
+
+        if(is.infinite(sum(abs(diff)))|is.na(sum(abs(diff)))){
+          par <- par
+        } else{
+          if( sum(abs(diff)) > div){
+            if((max(abs(diff[-1]))/abs(diff[1])>1000) & (abs(par[1]) >= abs(par[1]-diff[1]))){
+              par[1] <- -par[1]
+            } else{
+              par <- par-diff/2
+            }
+          } else {
+            par <- par-diff
+            div <- sum(abs(diff))
+          }
+        }
+        if( div <= threshold | iter > max_iter) break
+      }
+      par[3] <- exp(par[3])
+      item_estimated[i,] <- par
+      se[i,] <- suppressWarnings(sqrt(-diag(l1l2[[2]])))
+    }
+  }
   return(list(item_estimated, se))
 }
 
@@ -837,7 +860,7 @@ M2step <- function(E, max_iter=200){
          d_raw=d_raw,
          d=d,
          sd_ratio=sd_ratio,
-         m=0,
+         m=prob*m1+(1-prob)*m2,
          s=s2total
          )
     )
@@ -1276,6 +1299,7 @@ latent_dist_est <- function(method, Xk, posterior, range,
                     from = range[1],
                     to=range[2])
     lin <- lin_inex(Xk, SJPI$y/sum(SJPI$y), range = range)
+    lin$m <- post_den$m
     lin$s <- post_den$s
     par <- c(SJPI$bw, SJPI$n)
   }
@@ -1292,6 +1316,7 @@ latent_dist_est <- function(method, Xk, posterior, range,
     post_den2 <- dcurver::ddc(x = Xk, phi = par)
     post_den2 <- post_den2/sum(post_den2)
     lin <- lin_inex(Xk, post_den2, range = range, rule = 2)
+    lin$m <- post_den$m
     lin$s <- post_den$s
   }
   if(method=='LLS'){
@@ -1305,6 +1330,7 @@ latent_dist_est <- function(method, Xk, posterior, range,
     post_den2 <- LLS$freq/N
     par <- LLS$beta
     lin <- lin_inex(Xk, post_den2, range = range, rule = 2)
+    lin$m <- post_den$m
     lin$s <- post_den$s
   }
 

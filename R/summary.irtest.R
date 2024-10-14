@@ -80,16 +80,26 @@ summary.IRTest <- function(object, ...){
 
   # item parameters
   if(inherits(object, c("dich"))){
-    n_par$item <-
-      sum(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH")) +
-      2*sum(object$Options$model %in% c(2, "2PL")) +
-      3*sum(object$Options$model %in% c(3, "3PL"))
+    if(all(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH"))){
+      n_par$item <-
+        length(object$Options$model) +1
+    }else{
+      n_par$item <-
+        sum(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH")) +
+        2*sum(object$Options$model %in% c(2, "2PL")) +
+        3*sum(object$Options$model %in% c(3, "3PL"))
+    }
   } else if(inherits(object, c("cont"))){
-    n_par$item <-
-      length(as.vector(object$par_est))
+    if(object$Options$model == 1){
+      n_par$item <-
+        length(as.vector(object$par_est[,-1]))+1
+    }else{
+      n_par$item <-
+        length(as.vector(object$par_est))
+    }
   } else if(inherits(object, c("poly"))){
     if(object$Options$model == "PCM"){
-      n_par$item <- sum(!is.na(object$par_est[,-1]))
+      n_par$item <- sum(!is.na(object$par_est[,-1]))+1
     } else if(object$Options$model %in% c("GPCM", "GRM")){
       n_par$item <- sum(!is.na(object$par_est))
     }
@@ -105,6 +115,9 @@ summary.IRTest <- function(object, ...){
       n_par$item <- n_par$item +
         sum(!is.na(object$par_est$Polytomous))
     }
+  }
+  if(inherits(object, c("mix"))&all(c(object$Options$model_D,object$Options$model_P) %in% c(1, "1PL", "Rasch", "RASCH","PCM"))){
+    n_par$item <- n_par$item+1
   }
 
   # latent distribution parameters
@@ -131,13 +144,6 @@ summary.IRTest <- function(object, ...){
   # Log-linear smoothing
   else if(object$Options$latent_dist%in% c("LLS")){
     n_par$dist <- object$Options$h
-  }
-
-  if(inherits(object, c("dich", "poly"))&all(object$Options$model %in% c(1, "1PL", "Rasch", "RASCH","PCM"))){
-    n_par$dist <- n_par$dist+1
-  }
-  if(inherits(object, c("mix"))&all(c(object$Options$model_D,object$Options$model_P) %in% c(1, "1PL", "Rasch", "RASCH","PCM"))){
-    n_par$dist <- n_par$dist+1
   }
 
   # the total number of parameters

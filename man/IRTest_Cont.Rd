@@ -6,6 +6,7 @@
 \usage{
 IRTest_Cont(
   data,
+  model = 2,
   range = c(-6, 6),
   q = 121,
   initialitem = NULL,
@@ -20,6 +21,10 @@ IRTest_Cont(
 \arguments{
 \item{data}{A matrix or data frame of item responses where responses are coded as 0 or 1.
 Rows and columns indicate examinees and items, respectively.}
+
+\item{model}{A scalar or vector that represents types of item characteristic functions:
+\code{1}, \code{"1PL"}, \code{"Rasch"}, or \code{"RASCH"} for one-parameter logistic model,
+and \code{2}, \code{"2PL"} for two-parameter logistic model.}
 
 \item{range}{Range of the latent variable to be considered in the quadrature scheme.
 The default is from \code{-6} to \code{6}: \code{c(-6, 6)}.}
@@ -82,7 +87,7 @@ thereby providing more accurate parameter estimates (Li, 2021; Woods & Lin, 2009
 \details{
 \describe{
 \item{
-The probability of a response \eqn{u=x}, where \eqn{0<u<1} (see Martinez, 2023)
+The probability of a response \eqn{u=x}, where \eqn{0<u<1}
 }{
 \deqn{P(u=x | a, b, \nu) = \frac{1}{B(\mu\nu, \,\nu(1-\mu))} u^{\mu\nu-1} (1-u)^{\nu(1-\mu)-1}}
 
@@ -135,8 +140,6 @@ Casabianca, J. M., & Lewis, C. (2015). IRT item parameter recovery with marginal
 Li, S. (2021). Using a two-component normal mixture distribution as a latent distribution in estimating parameters of item response models. \emph{Journal of Educational Evaluation, 34}(4), 759-789.
 
 Li, S. (2022). \emph{The effect of estimating latent distribution using kernel density estimation method on the accuracy and efficiency of parameter estimation of item response models} [Master's thesis, Yonsei University, Seoul]. Yonsei University Library.
-
-Martinez, A. J. (2023). Beta item factor analysis for asymmetric, bounded, and continuous item response data. \emph{OSF}. DOI:10.31234/osf.io/tp8sx.
 
 Mislevy, R. J. (1984). Estimating latent distributions. \emph{Psychometrika, 49}(3), 359-381.
 
