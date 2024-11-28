@@ -147,8 +147,12 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
                         max_iter=200, threshold=0.0001,bandwidth="SJ-ste",h=NULL,ncats=NULL){
 
   categories <- apply(data, MARGIN = 2, FUN = extract_cat, simplify = FALSE)
+  if(model=="likert"){
+    data <- as.matrix(data)
+  }else{
+    data <- reorder_mat(as.matrix(data))
+  }
 
-  data <- reorder_mat(as.matrix(data))
   if(is.null(initialitem)){
     if(model=="likert"){
       initialitem <- matrix(rep(c(1,0,1),ncol(data)), nrow = ncol(data), byrow = TRUE)
