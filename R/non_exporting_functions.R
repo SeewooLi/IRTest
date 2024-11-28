@@ -480,7 +480,7 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter
     if(length(ncats)==1){
       ncats <- rep(ncats, nitem)
     }
-    grids <- seq(0.0005,0.9995, length=1000)
+    grids <- seq(0.005,0.995, length=100)
   }
   ####item parameter estimation####
   for(i in 1:nitem){
@@ -718,8 +718,8 @@ Mstep_Poly <- function(E, item, model="GPCM", max_iter=5, threshold=1e-7, EMiter
           l1m <- matrix(ncol = ncats[i], nrow = q)
           l1x <- matrix(ncol = ncats[i], nrow = q)
           for(c in 1:ncats[i]){
-            l1m[,c] <- rowSums(l1mu[,ind_cat==c])*0.001
-            l1x[,c] <- rowSums(l1xi[,ind_cat==c])*0.001
+            l1m[,c] <- rowSums(l1mu[,ind_cat==c])*0.01
+            l1x[,c] <- rowSums(l1xi[,ind_cat==c])*0.01
           }
           # l1m <- l1m
           # l1x <- nu/beta(nu*mu,nu*(1-mu))*l1x
