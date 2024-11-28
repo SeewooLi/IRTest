@@ -381,13 +381,6 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     theta <- wle_result[[1]]
     theta_se <- wle_result[[2]]
   }
-  if(model=="likert"){
-    dn <- list(colnames(data),c("a", "b", "log(nu)"))
-  }else{
-    dn <- list(colnames(data),c("a", paste("b", 1:(ncol(initialitem)-1), sep="_")))
-  }
-  dimnames(initialitem) <- dn
-  dimnames(M1[[2]]) <- dn
 
   # preparation for outputs
   logL <- 0
@@ -397,6 +390,17 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
   E$Pk[E$Pk==0]<- .Machine$double.xmin
   Ak[Ak==0] <- .Machine$double.xmin
   logL <- logL + as.numeric(E$fk%*%log(Ak)) - sum(E$Pk*log(E$Pk))
+
+  if(model=="likert"){
+    dimnames(initialitem) <- list(colnames(data),c("a", "b", "nu"))
+    dimnames(M1[[2]]) <- list(colnames(data),c("a", "b", "log(nu)"))
+    initialitem[,3] <- exp(initialitem[,3])
+  }else{
+    dn <- list(colnames(data),c("a", paste("b", 1:(ncol(initialitem)-1), sep="_")))
+    dimnames(initialitem) <- dn
+    dimnames(M1[[2]]) <- dn
+  }
+
   return(structure(
     list(par_est=initialitem,
          se=M1[[2]],
