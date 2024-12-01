@@ -173,7 +173,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
   Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,
                  ability_method=ability_method,latent_dist=latent_dist,
                  max_iter=max_iter, threshold=threshold,bandwidth=bandwidth,h=h,
-                 categories=categories)
+                 categories=categories,ncats=ncats)
 
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)
@@ -221,8 +221,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats)
       initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
@@ -233,6 +233,12 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
         initialitem[,1] <- initialitem[,1]*ld_est$s
         initialitem[,-1] <- initialitem[,-1]/ld_est$s
         M1[[2]][,-1] <- M1[[2]][,-1]/ld_est$s
+      }
+      if(model == "likert"){
+        ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,2] <- (initialitem[,2]-ld_est$m)/ld_est$s
+        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
       }
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
@@ -248,8 +254,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range, model=model)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range, model=model, ncats=ncats)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats)
       initialitem <- M1[[1]]
       M2 <- M2step(E)
       prob = M2$prob; d = M2$d; sd_ratio = M2$sd_ratio
@@ -258,6 +264,12 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
         initialitem[,1] <- initialitem[,1]*M2$s
         initialitem[,-1] <- initialitem[,-1]/M2$s
         M1[[2]][,-1] <- M1[[2]][,-1]/M2$s
+      }
+      if(model == "likert"){
+        ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,2] <- (initialitem[,2]-ld_est$m)/ld_est$s
+        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
       }
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
@@ -274,8 +286,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats)
       initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth, N=N, q=q)
@@ -286,6 +298,12 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
         initialitem[,1] <- initialitem[,1]*ld_est$s
         initialitem[,-1] <- initialitem[,-1]/ld_est$s
         M1[[2]][,-1] <- M1[[2]][,-1]/ld_est$s
+      }
+      if(model == "likert"){
+        ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,2] <- (initialitem[,2]-ld_est$m)/ld_est$s
+        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
       }
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
@@ -309,8 +327,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model)
-      M1 <- Mstep_Poly(E, item=initialitem, model = model)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats)
+      M1 <- Mstep_Poly(E, item=initialitem, model = model, ncats=ncats)
       initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
@@ -322,6 +340,12 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
         initialitem[,1] <- initialitem[,1]*ld_est$s
         initialitem[,-1] <- initialitem[,-1]/ld_est$s
         M1[[2]][,-1] <- M1[[2]][,-1]/ld_est$s
+      }
+      if(model == "likert"){
+        ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,2] <- (initialitem[,2]-ld_est$m)/ld_est$s
+        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
       }
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
@@ -337,8 +361,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats)
       initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
@@ -354,6 +378,12 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
         }
       } else {
         density_par <- ld_est$par
+      }
+      if(model == "likert"){
+        ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
+        initialitem[,1] <- initialitem[,1]*ld_est$s
+        initialitem[,2] <- (initialitem[,2]-ld_est$m)/ld_est$s
+        M1[[2]][,2] <- M1[[2]][,2]/ld_est$s
       }
 
       diff <- max(abs(I-initialitem), na.rm = TRUE)
