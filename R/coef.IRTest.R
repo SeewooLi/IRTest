@@ -12,6 +12,16 @@
 #'
 coef.IRTest <- function(object, complete = TRUE, ...){
   cf <- object$par_est
+  if(inherits(object, "poly")){
+    if(object$Options$model == "likert2"){
+      cf <- cbind(
+        exp(cf[,1]),
+        t(apply(cf[,2:ncol(cf)], MARGIN = 1, FUN = cut_trans))
+      )
+      dn <- list(colnames(data),c("nu", paste("b", 1:(ncol(cf)-1), sep="_")))
+      dimnames(cf) <- dn
+    }
+  }
   if (complete)
     cf
   else cf[!is.na(cf)]

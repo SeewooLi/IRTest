@@ -144,7 +144,7 @@
 #'}
 IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialitem=NULL,
                         ability_method = 'EAP', latent_dist="Normal",
-                        max_iter=200, threshold=0.0001,bandwidth="SJ-ste",h=NULL,ncats=NULL){
+                        max_iter=200, threshold=0.0001,bandwidth="SJ-ste",h=NULL,ncats=NULL, ab_par=NULL){
 
   categories <- apply(data, MARGIN = 2, FUN = extract_cat, simplify = FALSE)
   if(model=="likert"){
@@ -173,7 +173,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
   Options = list(initialitem=initialitem, data=data, range=range, q=q, model=model,
                  ability_method=ability_method,latent_dist=latent_dist,
                  max_iter=max_iter, threshold=threshold,bandwidth=bandwidth,h=h,
-                 categories=categories,ncats=ncats)
+                 categories=categories,ncats=ncats,ab_par=ab_par)
 
   I <- initialitem
   Xk <- seq(range[1],range[2],length=q)
@@ -191,8 +191,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range, model=model, ncats=ncats)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=0.5, d=0, sd_ratio=1, range=range, model=model, ncats=ncats, ab_par=ab_par)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats, ab_par=ab_par)
       initialitem <- M1[[1]]
 
       if(model == "PCM"){
@@ -221,8 +221,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats, ab_par=ab_par)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats, ab_par=ab_par)
       initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range)
@@ -254,8 +254,9 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio, range = range, model=model, ncats=ncats)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, prob=prob, d=d, sd_ratio=sd_ratio,
+                      range = range, model=model, ncats=ncats, ab_par=ab_par)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats, ab_par=ab_par)
       initialitem <- M1[[1]]
       M2 <- M2step(E)
       prob = M2$prob; d = M2$d; sd_ratio = M2$sd_ratio
@@ -286,8 +287,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats, ab_par=ab_par)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats, ab_par=ab_par)
       initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, bandwidth=bandwidth, N=N, q=q)
@@ -327,8 +328,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats)
-      M1 <- Mstep_Poly(E, item=initialitem, model = model, ncats=ncats)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats, ab_par=ab_par)
+      M1 <- Mstep_Poly(E, item=initialitem, model = model, ncats=ncats, ab_par=ab_par)
       initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
@@ -361,8 +362,8 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     while(iter < max_iter & diff > threshold){
       iter <- iter +1
 
-      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats)
+      E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats, ab_par=ab_par)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats, ab_par=ab_parv)
       initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)
@@ -415,7 +416,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
   # preparation for outputs
   logL <- 0
   for(i in 1:q){
-    logL <- logL+sum(logLikeli_Poly(initialitem, data, theta = Xk[i], model=model, ncats=ncats)*E$Pk[,i])
+    logL <- logL+sum(logLikeli_Poly(initialitem, data, theta = Xk[i], model=model, ncats=ncats, ab_par=ab_par)*E$Pk[,i])
   }
   E$Pk[E$Pk==0]<- .Machine$double.xmin
   Ak[Ak==0] <- .Machine$double.xmin
@@ -425,6 +426,10 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
     dimnames(initialitem) <- list(colnames(data),c("a", "b", "nu"))
     dimnames(M1[[2]]) <- list(colnames(data),c("a", "b", "log(nu)"))
     initialitem[,3] <- exp(initialitem[,3])
+  }else if(model=="likert2"){
+    dn <- list(colnames(data),c("log(nu)", paste("tau", 1:(ncol(initialitem)-1), sep="_")))
+    dimnames(initialitem) <- dn
+    dimnames(M1[[2]]) <- dn
   }else{
     dn <- list(colnames(data),c("a", paste("b", 1:(ncol(initialitem)-1), sep="_")))
     dimnames(initialitem) <- dn

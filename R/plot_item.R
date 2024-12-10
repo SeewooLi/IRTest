@@ -76,13 +76,22 @@ plot_item.dich <- function(x, item.number=1, type=NULL){
 plot_item.poly <- function(x, item.number=1, type=NULL){
   item_par <- x$par_est[item.number,]
 
-  if(x$Option$model %in% c("likert")){
-    if(length(x$Option$ncats)==1){
-      ncats <- x$Option$ncats
-    } else {
-      ncats <- x$Option$ncats[item.number]
-    }
-    cscore <- (1:(ncats-1))/ncats #c(.05,.1,.4,.5)
+  if(x$Option$model %in% c("likert", "likert2")){
+    if(x$Option$model %in% c("likert")){
+      if(length(x$Option$ncats)==1){
+          ncats <- x$Option$ncats
+        } else {
+          ncats <- x$Option$ncats[item.number]
+        }
+        cscore <- (1:(ncats-1))/ncats
+      }else if(x$Option$model %in% c("likert2")){
+        ncats <- sum(!is.na(item_par))
+        cscore <- cut_trans(item_par[-1])
+        cscore <- cscore[!is.na(cscore)]
+        item_par <- c(x$Option$ab_par[item.number,], exp(item_par[1]))
+      }
+
+
 
     if(!is.null(type)){
       probs <- P(theta = seq(-6,6,0.1),
@@ -120,7 +129,7 @@ plot_item.poly <- function(x, item.number=1, type=NULL){
       probs <- as.data.frame(likert(seq(-6,6,length=121), item_par[1], item_par[2], item_par[3], cut_score = cscore))
       colnames(probs) <- paste0("P", 0:(ncats-1))
       probs <- pivot_longer(probs, cols = everything(), names_to = "category")
-      probs <- mutate(probs, x=rep(seq(-6,6,length=121),each=5))
+      probs <- mutate(probs, x=rep(seq(-6,6,length=121),each=ncats))
       x <- probs$x
       value <- probs$value
       category <- probs$category
