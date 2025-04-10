@@ -18,7 +18,7 @@ coef.IRTest <- function(object, complete = TRUE, ...){
         exp(cf[,1]),
         t(apply(cf[,2:ncol(cf)], MARGIN = 1, FUN = cut_trans))
       )
-      dn <- list(colnames(data),c("nu", paste("b", 1:(ncol(cf)-1), sep="_")))
+      dn <- list(colnames(object$Options$data),c("nu", paste("b", 1:(ncol(cf)-1), sep="_")))
       dimnames(cf) <- dn
     }
   }
