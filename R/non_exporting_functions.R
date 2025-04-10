@@ -357,7 +357,7 @@ Estep_Cont <- function(item, data, range = c(-4,4), q = 81, prob = 0.5, d = 0,
 #################################################################################################################
 # M1 step
 #################################################################################################################
-M1step <- function(E, item, model, max_iter=10, threshold=1e-7, EMiter){
+M1step <- function(E, item, model, max_iter=5, threshold=1e-7, EMiter){
   nitem <- nrow(item)
   item_estimated <- item
   se <- matrix(nrow = nrow(item), ncol = 3)
