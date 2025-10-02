@@ -226,13 +226,13 @@ DataGeneration <- function(seed=1, N=2000,
       initialitem_P <- matrix(nrow = nitem_P, ncol = max(categ))
       set.seed(seed)
       for(i in 1:nitem_P){
-        center <- rnorm(1,b_m,b_sd*.5)
+        center <- rnorm(1,b_m,b_sd)
         if(model_P=="PCM"){
           item_P[i,1] <- 1
-          item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,1))
+          item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,.5))
         } else if(model_P %in% c("GPCM", "GRM")){
           item_P[i,1] <- round(runif(1,a_l,a_u), digits = 2)
-          item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,1))
+          item_P[i,2:(categ[i])] <- sort(rnorm(categ[i]-1,center,.5))
         }
         initialitem_P[i,1] <- 1
         initialitem_P[i,2:(categ[i])] <- seq(-.5,.5,length.out=categ[i]-1)
