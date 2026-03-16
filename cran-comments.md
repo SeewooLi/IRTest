@@ -12,13 +12,13 @@
   
 ## Test environments
 
-* macOS Sonoma 14.6.1, R 4.4.1
+* macOS Sequoia 15.7.4, R version 4.5.3
 
-* Ubuntu 22.04.5 LTS (oldrel-1), R 4.3.3
+* Ubuntu 24.04.3 LTS (oldrel-1), R 4.4.3
 
-* Ubuntu 22.04.5 LTS (release), R 4.4.1
+* Ubuntu 24.04.3 LTS (release), R version 4.5.3
 
-* Windows Server 2022 x64 (build 20348), R 4.4.1
+* Windows Server 2022 x64 (build 26100), R version 4.5.3
 
 
 ## R CMD check results
