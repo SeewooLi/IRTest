@@ -1,3 +1,7 @@
+# IRTest 2.2.0
+
+* Discretized response analysis is partially supported; `dr1` assumes equal intervals and estimates the slope, intercept, and precision parameters, and `dr2` uses fixed slope and intercept parameters and estimates the category intervals.
+
 # IRTest 2.1.0
 
 * Weighted likelihood estimates (WLE) are available for ability parameter estimation.

@@ -15,7 +15,9 @@ IRTest_Poly(
   max_iter = 200,
   threshold = 1e-04,
   bandwidth = "SJ-ste",
-  h = NULL
+  h = NULL,
+  ncats = NULL,
+  ab_par = NULL
 )
 }
 \arguments{
@@ -58,6 +60,10 @@ The default value is \code{"SJ-ste"}. See \code{\link{density}} for available op
 
 \item{h}{A natural number less than or equal to 10 if \code{latent_dist = "DC" or "LLS"}.
 This argument determines the complexity of the distribution.}
+
+\item{ncats}{The number of categories for the discretized response analysis.}
+
+\item{ab_par}{\code{a} and \code{b} parameters for the discretized response analysis.}
 }
 \value{
 This function returns a \code{list} of several objects:

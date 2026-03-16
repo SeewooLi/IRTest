@@ -37,6 +37,8 @@
 #' The default value is \code{"SJ-ste"}. See \code{\link{density}} for available options.
 #' @param h A natural number less than or equal to 10 if \code{latent_dist = "DC" or "LLS"}.
 #' This argument determines the complexity of the distribution.
+#' @param ncats The number of categories for the discretized response analysis.
+#' @param ab_par \code{a} and \code{b} parameters for the discretized response analysis.
 #'
 #' @details
 #' \describe{
@@ -363,7 +365,7 @@ IRTest_Poly <- function(data, model="GPCM", range = c(-6,6), q = 121, initialite
       iter <- iter +1
 
       E <- Estep_Poly(item=initialitem, data=data, q=q, range=range, Xk=Xk, Ak=Ak, model=model, ncats=ncats, ab_par=ab_par)
-      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats, ab_par=ab_parv)
+      M1 <- Mstep_Poly(E, item=initialitem, model=model, ncats=ncats, ab_par=ab_par)
       initialitem <- M1[[1]]
 
       ld_est <- latent_dist_est(method = latent_dist, Xk = E$Xk, posterior = E$fk, range=range, par=density_par, N=N)

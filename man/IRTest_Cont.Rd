@@ -94,31 +94,36 @@ The probability of a response \eqn{u=x}, where \eqn{0<u<1}
 where \eqn{\mu = \frac{e^{a(\theta -b)}}{1+e^{a(\theta -b)}}}.
 }
 
-\item{
-Latent distribution estimation methods
-}{
+\item{Latent distribution estimation methods}{
+
 1) Empirical histogram method
-\deqn{P(\theta=X_k)=A(X_k)}
-where \eqn{k=1, 2, ..., q}, \eqn{X_k} is the location of the \eqn{k}th quadrature point, and \eqn{A(X_k)} is a value of probability mass function evaluated at \eqn{X_k}.
-Empirical histogram method thus has \eqn{q-1} parameters.
+\deqn{P(\theta=X_k)=A(X_k)}{P(theta=X_k)=A(X_k)}
+where \eqn{k=1, 2, \dots, q}{k=1, 2, ..., q}, \eqn{X_k} is the location of the \eqn{k}th
+quadrature point, and \eqn{A(X_k)} is a value of probability mass function
+evaluated at \eqn{X_k}. Empirical histogram method thus has \eqn{q-1} parameters.
 
 2) Two-component Gaussian mixture distribution
-\deqn{P(\theta=X)=\pi \phi(X; \mu_1, \sigma_1)+(1-\pi) \phi(X; \mu_2, \sigma_2)}
-where \eqn{\phi(X; \mu, \sigma)} is the value of a Gaussian component with mean \eqn{\mu} and standard deviation \eqn{\sigma} evaluated at \eqn{X}.
+\deqn{P(\theta=X)=\pi \phi(X; \mu_1, \sigma_1)+(1-\pi) \phi(X; \mu_2, \sigma_2)}{P(theta=X) = pi*phi(X; mu_1, sigma_1) + (1-pi)*phi(X; mu_2, sigma_2)}
+where \eqn{\phi(X; \mu, \sigma)} is the value of a Gaussian component with
+mean \eqn{\mu} and standard deviation \eqn{\sigma} evaluated at \eqn{X}.
 
 3) Davidian curve method
-\deqn{P(\theta=X)=\left\{\sum_{\lambda=0}^{h}{{m}_{\lambda}{X}^{\lambda}}\right\}^{2}\phi(X; 0, 1)}
-where \eqn{h} corresponds to the argument \code{h} and determines the degree of the polynomial.
+\deqn{P(\theta=X)=\left\{\sum_{\lambda=0}^{h}{m_{\lambda}X^{\lambda}}\right\}^{2}\phi(X; 0, 1)}{P(theta=X) = (sum_{lambda=0}^{h} m_{lambda} * X^{lambda})^2 * phi(X; 0, 1)}
+where \eqn{h} corresponds to the argument \code{h} and determines the degree
+of the polynomial.
 
 4) Kernel density estimation method
-\deqn{P(\theta=X)=\frac{1}{Nh}\sum_{j=1}^{N}{K\left(\frac{X-\theta_j}{h}\right)}}
-where \eqn{N} is the number of examinees, \eqn{\theta_j} is \eqn{j}th examinee's ability parameter,
-\eqn{h} is the bandwidth which corresponds to the argument \code{bandwidth}, and \eqn{K( \cdot )} is a kernel function.
+\deqn{P(\theta=X)=\frac{1}{Nh}\sum_{j=1}^{N}{K\left(\frac{X-\theta_j}{h}\right)}}{P(theta=X) = (1/Nh) * sum_{j=1}^{N} K((X-theta_j)/h)}
+where \eqn{N} is the number of examinees, \eqn{\theta_j} is \eqn{j}th
+examinee's ability parameter, \eqn{h} is the bandwidth which corresponds
+to the argument \code{bandwidth}, and \eqn{K(\cdot)}{K(.)} is a kernel function.
 The Gaussian kernel is used in this function.
 
 5) Log-linear smoothing method
-\deqn{P(\theta=X_{q})=\exp{\left(\beta_{0}+\sum_{m=1}^{h}{\beta_{m}X_{q}^{m}}\right)}}
-where \eqn{h} is the hyper parameter which determines the smoothness of the density, and \eqn{\theta} can take total \eqn{Q} finite values (\eqn{X_1, \dots ,X_q, \dots, X_Q}).
+\deqn{P(\theta=X_{q})=\exp\left(\beta_{0}+\sum_{m=1}^{h}{\beta_{m}X_{q}^{m}}\right)}{P(theta=X_q) = exp(beta_0 + sum_{m=1}^{h} beta_m * X_q^m)}
+where \eqn{h} is the hyper parameter which determines the smoothness of
+the density, and \eqn{\theta} can take total \eqn{Q} finite values
+(\eqn{X_1, \dots, X_q, \dots, X_Q}{X_1, ..., X_q, ..., X_Q}).
 }
 }
 }

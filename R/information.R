@@ -33,7 +33,7 @@ inform_f_item<- function(x, test, item = 1, type = "d"){
       if(length(test$Option$ncats)==1){
         ncats <- test$Option$ncats
       } else {
-        ncats <- test$Option$ncats[item.number]
+        ncats <- test$Option$ncats[item]
       }
       probs <- likert(x, a = param[1], b = param[2], nu = param[3], ncats = ncats)
       probs_ <- first_deriv_likert(x, param, ncats)
@@ -125,13 +125,13 @@ first_deriv_likert <- function(x, param, ncats){
   cut_score <- (1:(ncats-1))/ncats
   ind_cat <- as.numeric(cut(grids,breaks = c(0,cut_score,1),labels = 1:ncats))
 
-  mu <- P(X, param[1], param[2])
+  mu <- P(x, param[1], param[2])
   nu <- param[3]
-  p0 <- likert(X, a = param[1], b = param[2], nu = nu, ncats = ncats)
+  p0 <- likert(x, a = param[1], b = param[2], nu = nu, ncats = ncats)
 
   pmat <- t(outer(grids, nu*mu-1, FUN = "^")*outer(1-grids, nu*(1-mu)-1, FUN = "^"))/beta(nu*mu,nu*(1-mu)) # probability matrix wo the normalizing factor
   l1th <- nu*pmat*t(outer(log(grids/(1-grids)), digamma(nu*mu)-digamma(nu*(1-mu)), FUN = "-"))
-  l1t <- matrix(ncol = ncats, nrow = length(X))
+  l1t <- matrix(ncol = ncats, nrow = length(x))
   for(c in 1:ncats){
     l1t[,c] <- rowSums(l1th[,ind_cat==c])*0.01
   }

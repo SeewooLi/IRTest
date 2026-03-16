@@ -29,13 +29,13 @@ The evaluated probability density value(s).
 Probability density for the re-parameterized two-component normal mixture distribution.
 }
 \details{
-\describe{
+#' \describe{
 \item{The overall mean and overall standard deviation obtained from original parameters;}{
-1) Overall mean (\eqn{\bar{\mu}})
-\deqn{\bar{\mu}=\pi\mu_1 + (1-\pi)\mu_2}
+1) Overall mean (\eqn{\bar{\mu}}{\mu-bar})
+\deqn{\bar{\mu}=\pi\mu_1 + (1-\pi)\mu_2}{\mu-bar = \pi\mu_1 + (1-\pi)\mu_2}
 
-2) Overall standard deviation (\eqn{\bar{\sigma}})
-\deqn{\bar{\sigma}=\sqrt{\pi\sigma_{1}^{2}+(1-\pi)\sigma_{2}^{2}+\pi(1-\pi)(\mu_2-\mu_1)^2}}
+2) Overall standard deviation (\eqn{\bar{\sigma}}{\sigma-bar})
+\deqn{\bar{\sigma}=\sqrt{\pi\sigma_{1}^{2}+(1-\pi)\sigma_{2}^{2}+\pi(1-\pi)(\mu_2-\mu_1)^2}}{\sigma-bar = \sqrt{\pi\sigma_1^2 + (1-\pi)\sigma_2^2 + \pi(1-\pi)(\mu_2-\mu_1)^2}}
 }
 }
 }

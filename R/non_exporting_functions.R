@@ -2,7 +2,7 @@
 # citation
 #################################################################################################################
 .onAttach <- function(libname, pkgname) {
-  package_citation <- "Li, S. (2024). IRTest: Parameter estimation of item response theory with estimation of latent distribution (Version 2.1.0). R package. \n"
+  package_citation <- "Li, S. (2024) IRTest: An R package for item response theory with estimation of latent distribution. The R Journal. 16(4), 23-41. \n"
   package_URL <- "URL: https://CRAN.R-project.org/package=IRTest"
   packageStartupMessage("Thank you for using IRTest!")
   packageStartupMessage("Please cite the package as: \n")
@@ -75,6 +75,8 @@ add0 <- function(x){
   return(x)
 }
 
+#' @importFrom stats pbeta
+#'
 likert <- function(theta, a, b, nu, ncats=5, cut_score=NULL){
   p <- P(theta = theta, a = a, b = b)
   if(is.null(cut_score) & is.null(ncats)){
@@ -89,7 +91,7 @@ likert <- function(theta, a, b, nu, ncats=5, cut_score=NULL){
     cut_score <- t(apply(cut_score, MARGIN=1, FUN=cut_trans))
     probs <- matrix(nrow = nrow(cut_score), ncol = ncol(cut_score))
     for(i in 1:ncol(cut_score)){
-      probs[,i] <- pbeta(q = cut_score[,i],
+      probs[,i] <- stats::pbeta(q = cut_score[,i],
                          shape1 = p*nu,
                          shape2 = (1-p)*nu)
     }
@@ -98,13 +100,13 @@ likert <- function(theta, a, b, nu, ncats=5, cut_score=NULL){
     probs <- matrix(nrow = length(b), ncol = ncats-1)
 
     for(i in 1:length(cut_score)){
-      probs[,i] <- pbeta(q = cut_score[i],
+      probs[,i] <- stats::pbeta(q = cut_score[i],
                          shape1 = p*nu,
                          shape2 = (1-p)*nu)
     }
     return(cbind(probs,1)-cbind(0,probs))
   }else if(length(theta)==1){
-    probs <- pbeta(q = cut_score,
+    probs <- stats::pbeta(q = cut_score,
                    shape1 = p*nu,
                    shape2 = (1-p)*nu)
     return(c(probs,1)-c(0,probs))
@@ -112,7 +114,7 @@ likert <- function(theta, a, b, nu, ncats=5, cut_score=NULL){
     probs <- matrix(nrow = length(theta), ncol = ncats-1)
 
     for(i in 1:length(cut_score)){
-      probs[,i] <- pbeta(q = cut_score[i],
+      probs[,i] <- stats::pbeta(q = cut_score[i],
                          shape1 = p*nu,
                          shape2 = (1-p)*nu)
     }

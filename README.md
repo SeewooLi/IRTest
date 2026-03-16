@@ -153,11 +153,11 @@ summary(Mod1)
 #> Successfully converged below the threshold of 1e-04 on 52nd iterations. 
 #> 
 #> Model Fit:  
-#>  log-likeli   -4786.734 
-#>    deviance   9573.469 
-#>         AIC   9619.469 
-#>         BIC   9732.347 
-#>          HQ   9662.37 
+#>  log-likeli   -4786.735 
+#>    deviance   9573.47 
+#>         AIC   9619.47 
+#>         BIC   9732.348 
+#>          HQ   9662.371 
 #> 
 #> The Number of Parameters:  
 #>        item   20 
@@ -232,7 +232,7 @@ True item parameters
 | item4  | 2.07 | -1.03 |   0 |
 | item5  | 1.26 | -1.97 |   0 |
 | item6  | 2.24 |  0.38 |   0 |
-| item7  | 2.21 | -1.68 |   0 |
+| item7  | 2.20 | -1.68 |   0 |
 | item8  | 2.08 | -0.45 |   0 |
 | item9  | 1.31 | -0.49 |   0 |
 | item10 | 1.06 |  0.41 |   0 |
@@ -308,16 +308,16 @@ ggplot(data=post_sample, mapping=aes(x=X))+
 ``` r
 item_fit(Mod1)
 #>            stat df p.value
-#> item1  21.05639  5  0.0008
-#> item2  39.02560  5  0.0000
-#> item3  18.38326  5  0.0025
-#> item4  26.05405  5  0.0001
-#> item5  14.32893  5  0.0136
-#> item6  38.58140  5  0.0000
-#> item7  25.55899  5  0.0001
-#> item8  14.43694  5  0.0131
-#> item9  18.29131  5  0.0026
-#> item10 65.25700  5  0.0000
+#> item1  21.05671  5  0.0008
+#> item2  39.02570  5  0.0000
+#> item3  18.38362  5  0.0025
+#> item4  26.05321  5  0.0001
+#> item5  14.32944  5  0.0136
+#> item6  38.58178  5  0.0000
+#> item7  25.55813  5  0.0001
+#> item8  14.43724  5  0.0131
+#> item9  18.29168  5  0.0026
+#> item10 65.25730  5  0.0000
 ```
 
 - Item response function
@@ -339,18 +339,18 @@ reliability(Mod1)
 #> $summed.score.scale
 #> $summed.score.scale$test
 #> test reliability 
-#>        0.8133725 
+#>        0.8133724 
 #> 
 #> $summed.score.scale$item
 #>     item1     item2     item3     item4     item5     item6     item7     item8 
-#> 0.4586843 0.3014154 0.3020563 0.3805659 0.1425990 0.4534580 0.2688948 0.4475414 
+#> 0.4586845 0.3014150 0.3020569 0.3805658 0.1425997 0.4534584 0.2689003 0.4475401 
 #>     item9    item10 
-#> 0.2661783 0.1963062 
+#> 0.2661777 0.1963059 
 #> 
 #> 
 #> $theta.scale
 #> test reliability 
-#>        0.7457047
+#>        0.7457059
 ```
 
 - Test information function

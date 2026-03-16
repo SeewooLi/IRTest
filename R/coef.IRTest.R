@@ -39,6 +39,7 @@ coef.IRTest <- function(object, complete = TRUE, ...){
 #' @export
 #'
 coef_se <- function(object, complete = TRUE){
+  message("This function returns complete data standard errors. Additional correction is required to get observed data standard errors.")
   cf <- object$se
   if (complete)
     cf

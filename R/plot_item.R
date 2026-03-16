@@ -72,6 +72,7 @@ plot_item.dich <- function(x, item.number=1, type=NULL){
 #' @importFrom ggplot2 lims
 #' @importFrom ggplot2 labs
 #' @importFrom ggplot2 theme_bw
+#' @importFrom tidyr pivot_longer
 #'
 plot_item.poly <- function(x, item.number=1, type=NULL){
   item_par <- x$par_est[item.number,]
@@ -128,8 +129,8 @@ plot_item.poly <- function(x, item.number=1, type=NULL){
     } else {
       probs <- as.data.frame(likert(seq(-6,6,length=121), item_par[1], item_par[2], item_par[3], cut_score = cscore))
       colnames(probs) <- paste0("P", 0:(ncats-1))
-      probs <- pivot_longer(probs, cols = everything(), names_to = "category")
-      probs <- mutate(probs, x=rep(seq(-6,6,length=121),each=ncats))
+      probs <- tidyr::pivot_longer(probs, cols = colnames(probs), names_to = "category")
+      probs$x <- rep(seq(-6,6,length=121),each=ncats)
       x <- probs$x
       value <- probs$value
       category <- probs$category
